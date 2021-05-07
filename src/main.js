@@ -15,6 +15,8 @@ Vue.prototype.$api = api
 
 Vue.config.productionTip = false
 
+console.log('env',process.env.NODE_ENV);
+
 new Vue({
   router,
   store,

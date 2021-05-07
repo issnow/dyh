@@ -14,7 +14,7 @@
 </template>
 
 <script>
-  import inputText from '$component/inputText'
+  import inputText from '@component/inputText'
   import {
     getData
   } from '@api/main'

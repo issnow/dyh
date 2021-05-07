@@ -24,11 +24,11 @@ const routes = [
   // },
   {
     path: '/',
-    component: ()=>import(/* webpackChunkName: "list" */ '$view/list.vue')
+    component: ()=>import(/* webpackChunkName: "list" */ '@view/list.vue')
   },
   {
     path: '/mycard',
-    component: ()=>import(/* webpackChunkName: "mycard" */ '$view/myCard.vue')
+    component: ()=>import(/* webpackChunkName: "mycard" */ '@view/myCard.vue')
   },
 ]
 

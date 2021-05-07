@@ -33,7 +33,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "$css/var.scss";
+@import "@css/var.scss";
 #app {
   height: 100%;
 }
@@ -65,7 +65,7 @@ body > .el-container {
 
 </style>
 <style lang="scss">
-@import "$css/var.scss";
+@import "@css/var.scss";
 
 .el-aside {
   .el-menu-item {
