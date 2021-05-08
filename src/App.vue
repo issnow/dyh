@@ -50,6 +50,15 @@ export default {
   text-align: center;
   line-height: 200px;
   
+  ::v-deep .el-menu-item {
+    color: $fontColorGray;
+    &:focus, &:hover {
+      background-color: $bgColorBlack;
+    }
+    &.is-active {
+      color: $fontColorWhite;
+    }
+  }
 }
 
 .el-main {
@@ -63,19 +72,4 @@ body > .el-container {
   margin-bottom: 40px;
 }
 
-</style>
-<style lang="scss">
-@import "@css/var.scss";
-
-.el-aside {
-  .el-menu-item {
-    color: $fontColorGray;
-    &:focus, &:hover {
-      background-color: $bgColorBlack;
-    }
-    &.is-active {
-      color: $fontColorWhite;
-    }
-  }
-}
 </style>

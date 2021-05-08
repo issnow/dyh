@@ -25,6 +25,9 @@ import {
   Select,
   Option,
   OptionGroup,
+  Dialog,
+  Form,
+  FormItem
 } from 'element-ui';
 Vue.use(Button)
 Vue.use(Container)
@@ -51,3 +54,6 @@ Vue.use(Switch);
 Vue.use(Select);
 Vue.use(Option);
 Vue.use(OptionGroup);
+Vue.use(Dialog);
+Vue.use(Form);
+Vue.use(FormItem);

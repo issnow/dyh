@@ -32,6 +32,7 @@ module.exports = {
   //   }
   // }
   configureWebpack: config => {
+
     config.resolve.alias = {
       ...config.resolve.alias,
       '@component': path.resolve(__dirname, 'src/components'),
@@ -56,5 +57,6 @@ module.exports = {
         }
       }
     }
+    
   }
 }

@@ -3,7 +3,7 @@
     <!-- <input type="text" v-model="value" @change='change'> -->
     <el-input
       style="width: 100px"
-      class='marginT20'
+      class='mt20'
       v-model="input"
       placeholder="请输入内容"
       @input="change"
