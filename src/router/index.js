@@ -1,35 +1,82 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-// import Home from '../views/Home.vue'
+import Layout from '../layout'
 
 Vue.use(VueRouter)
 
 const routes = [
-  // {
-  //   path: '/',
-  //   name: 'Home',
-  //   component: Home
-  // },
-  // {
-  //   path: '/about',
-  //   name: 'About',
-  //   route level code-splitting
-  //   this generates a separate chunk (about.[hash].js) for this route
-  //   which is lazy-loaded when the route is visited.
-  //   component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
-  // },
-  // {
-  //   path: '/app',
-  //   component: ()=>import(/* webpackChunkName: "page" */ '../views/4字传父.vue')
-  // },
+  {
+    path:'/login',
+    component: ()=>import('@view/login/index'),
+    hidden: true
+  },
   {
     path: '/',
-    component: ()=>import(/* webpackChunkName: "list" */ '@view/list.vue')
+    redirect: '/user',
   },
   {
-    path: '/mycard',
-    component: ()=>import(/* webpackChunkName: "mycard" */ '@view/myCard.vue')
+    path: '/user',
+    component: Layout,
+    // redirect: '/user',
+    meta: {
+      title: '用户管理'
+    },
+    children: [
+      {
+        // path: 'userlist',
+        path: '',
+        component: () => import('@/views/user/userlist'),
+        name: 'userlist',
+        meta: { title: '用户列表', icon: 'dashboard', affix: true }
+      },
+      {
+        path: 'usercenter',
+        component: () => import('@/views/user/usercenter'),
+        name: 'usercenter',
+        meta: { title: '个人中心', icon: 'dashboard', affix: true }
+      }
+    ]
   },
+  {
+    path: '/work',
+    component: Layout,
+    meta: {
+      title: '作品管理'
+    },
+    children: [
+      {
+        path: 'manager',
+        component: () => import('@/views/work/manager'),
+        name: 'manager',
+        meta: { title: '作品管理', icon: 'dashboard', affix: true }
+      },
+      {
+        path: 'detail',
+        component: () => import('@/views/work/detail'),
+        name: 'detail',
+        meta: { title: '作品详情', icon: 'dashboard', affix: true }
+      }
+    ]
+  },
+  {
+    path: '/pro',
+    component: Layout,
+    meta: {
+      title: '项目管理'
+    },
+    children: [
+      {
+        path: 'list',
+        component: ()=>import('@/views/pro/list'),
+        name: 'proList',
+        meta: { title: '项目列表', icon: 'dashboard', affix: true }
+      }
+    ]
+  },
+  {
+    path: '/add',
+    component: ()=>import('@view/add/index.vue')
+  }
 ]
 
 const router = new VueRouter({
