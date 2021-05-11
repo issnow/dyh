@@ -1,6 +1,6 @@
 <template>
   <div>
-    header
+    作品管理
   </div>
 </template>
 
