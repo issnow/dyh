@@ -32,32 +32,23 @@
         </el-table-column>
         <el-table-column
           prop="name"
-          label="创作人">
+          label="创作人"
+          width="200">
         </el-table-column>
         <el-table-column
           prop="province"
-          label="类型"
-          width="80">
+          label="状态"
+          width="100">
         </el-table-column>
         <el-table-column
           prop="city"
-          label="画幅"
+          label="联系人"
           width="100">
         </el-table-column>
         <el-table-column
           prop="address"
-          label="大小"
-          width="120">
-        </el-table-column>
-        <el-table-column
-          prop="zip"
-          label="时长"
-          width="80">
-        </el-table-column>
-        <el-table-column
-          prop="zip"
           label="状态"
-          width="100">
+          width="120">
         </el-table-column>
         <el-table-column
           prop="zip"
@@ -69,9 +60,9 @@
           label="操作">
           <template slot-scope="scope">
             <el-button type="text" @click="onReview">提交审核</el-button>
-            <el-button type="text" @click="onGenerate">编辑</el-button>
+            <el-button type="text" @click="onEdit">编辑</el-button>
             <el-button type="text" @click="omDelete">删除</el-button>
-            <el-button type="text" @click="onWatch">查看</el-button>
+            <el-button type="text" @click="onDownload">下载</el-button>
           </template>
         </el-table-column>
       </el-table>

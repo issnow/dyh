@@ -59,26 +59,22 @@ const routes = [
     ]
   },
   {
-    path: '/pro',
+    path: '/project',
     component: Layout,
     meta: {
       title: '项目管理'
     },
     children: [
       {
-        path: 'list',
-        component: ()=>import('@/views/pro/list'),
-        name: 'proList',
+        path: 'projectList',
+        component: () => import('@/views/project/projectList'),
+        name: 'projectList',
         meta: { title: '项目列表', icon: 'dashboard', affix: true }
       }
     ]
   },
-  {
-    path: '/add',
-    component: ()=>import('@view/add/index.vue')
-  }
+  
 ]
-
 const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
