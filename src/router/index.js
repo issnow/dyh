@@ -8,7 +8,7 @@ const routes = [
   {
     path:'/login',
     component: ()=>import('@view/login/index'),
-    hidden: true
+    // hidden: true
   },
   {
     path: '/',
