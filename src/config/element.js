@@ -27,7 +27,10 @@ import {
   OptionGroup,
   Dialog,
   Form,
-  FormItem
+  FormItem,
+  Table,
+  TableColumn,
+  Pagination,
 } from 'element-ui';
 Vue.use(Button)
 Vue.use(Container)
@@ -57,3 +60,6 @@ Vue.use(OptionGroup);
 Vue.use(Dialog);
 Vue.use(Form);
 Vue.use(FormItem);
+Vue.use(Table);
+Vue.use(TableColumn);
+Vue.use(Pagination);
