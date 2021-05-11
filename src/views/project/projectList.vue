@@ -1,11 +1,7 @@
 <template>
   <div>
-    <el-breadcrumb separator="/">
-      <el-breadcrumb-item :to="{ path: '/' }">作品管理</el-breadcrumb-item>
-      <el-breadcrumb-item>成品管理</el-breadcrumb-item>
-    </el-breadcrumb>
-    <div>
-      <el-row class="mt20 mb20">
+    <div class="main-wrap">
+      <el-row class="mb30">
         <el-col :span="6">
           搜索：<el-input placeholder="请输入作品名称关键字" v-model="searchValue" class="work-name"></el-input>
         </el-col>
@@ -63,10 +59,10 @@
           fixed="right"
           label="操作">
           <template slot-scope="scope">
-            <el-button type="text">提交审核</el-button>
-            <el-button type="text">编辑</el-button>
-            <el-button type="text">删除</el-button>
-            <el-button type="text">下载</el-button>
+            <el-button type="text" @click="onReview">提交审核</el-button>
+            <el-button type="text" @click="onEdit">编辑</el-button>
+            <el-button type="text" @click="omDelete">删除</el-button>
+            <el-button type="text" @click="onDownload">下载</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -173,6 +169,9 @@
 </script>
 
 <style lang="scss" scoped>
+  .main-wrap{
+    padding: 30px;
+  }
   .work-name{
     display: inline-block;
     width: 220px;

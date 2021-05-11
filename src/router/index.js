@@ -69,7 +69,7 @@ const routes = [
         path: 'projectList',
         component: () => import('@/views/project/projectList'),
         name: 'projectList',
-        meta: { title: '项目管理', icon: 'dashboard', affix: true }
+        meta: { title: '项目列表', icon: 'dashboard', affix: true }
       }
     ]
   },

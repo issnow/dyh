@@ -28,9 +28,11 @@ import {
   Dialog,
   Form,
   FormItem,
+  Breadcrumb,
+  BreadcrumbItem,
   Table,
   TableColumn,
-  Pagination,
+  Pagination
 } from 'element-ui';
 Vue.use(Button)
 Vue.use(Container)
@@ -60,6 +62,8 @@ Vue.use(OptionGroup);
 Vue.use(Dialog);
 Vue.use(Form);
 Vue.use(FormItem);
+Vue.use(Breadcrumb);
+Vue.use(BreadcrumbItem);
 Vue.use(Table);
 Vue.use(TableColumn);
 Vue.use(Pagination);
