@@ -32,7 +32,13 @@ import {
   BreadcrumbItem,
   Table,
   TableColumn,
-  Pagination
+  Pagination,
+  Loading,
+  Dropdown,
+  DropdownMenu,
+  DropdownItem,
+  Message,
+  Upload
 } from 'element-ui';
 Vue.use(Button)
 Vue.use(Container)
@@ -67,3 +73,11 @@ Vue.use(BreadcrumbItem);
 Vue.use(Table);
 Vue.use(TableColumn);
 Vue.use(Pagination);
+Vue.use(Loading.directive);
+Vue.use(Dropdown);
+Vue.use(DropdownMenu);
+Vue.use(DropdownItem);
+Vue.use(Upload);
+
+Vue.prototype.$loading = Loading.service;
+Vue.prototype.$message = Message;

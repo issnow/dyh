@@ -1,11 +1,11 @@
 <template>
-  <div class="user-center">
+  <div class="user-list">
     <el-form
       :model="form"
       :rules="rules"
       ref="form"
       label-width="60px"
-      class="user-center-search"
+      class="user-list-search"
       :inline="true"
     >
       <el-row>
@@ -40,16 +40,17 @@
       </el-row>
     </el-form>
 
-    <el-table class="mb20" border :data="tableData" style="width: 100%">
-      <el-table-column prop="userID" label="用户ID" >
-      </el-table-column>
+    <el-table v-loading='loading' class="mb20" border :data="tableData" style="width: 100%">
+      <el-table-column prop="userID" label="用户ID"> </el-table-column>
       <el-table-column prop="name" label="昵称"> </el-table-column>
       <el-table-column prop="email" label="邮箱"> </el-table-column>
       <el-table-column prop="role" label="角色"> </el-table-column>
       <el-table-column prop="phone" label="联系电话"> </el-table-column>
       <el-table-column prop="status" label="状态">
         <template slot-scope="scope">
-          <span class="color-text" :class="{isEnable: scope.row.status}">{{scope.row.status?'启用': '禁用'}}</span>
+          <span class="color-text" :class="{ isEnable: scope.row.status }">{{
+            scope.row.status ? "启用" : "禁用"
+          }}</span>
         </template>
       </el-table-column>
       <el-table-column prop="organization" label="所属机构"> </el-table-column>
@@ -59,10 +60,25 @@
           <el-button @click="disabledRow(scope.row)" type="text" size="small"
             >禁用</el-button
           >
-          <el-button  @click="resetPassword(scope.row)" type="text" size="small">重置密码</el-button>
+          <el-button @click="resetPassword(scope.row)" type="text" size="small"
+            >重置密码</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
+
+    <el-pagination
+      background
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+      :current-page="page.currentPage"
+      :page-sizes="[100, 200, 300, 400]"
+      :page-size="page.pageSize"
+      layout="total, slot, prev, pager, next, sizes, jumper"
+      :total="page.total"
+    >
+      <span>第{{page.currentPage}}/{{Math.ceil(page.total / page.pageSize)}}页</span>
+    </el-pagination>
   </div>
 </template>
 
@@ -70,6 +86,7 @@
 export default {
   data() {
     return {
+      loading: false,
       form: {
         keyword: "",
         status: "",
@@ -133,9 +150,20 @@ export default {
           organization: "南京大学",
         },
       ],
+      page: {
+        currentPage: 4,
+        pageSize: 100,
+        total: 501
+      }
     };
   },
   methods: {
+    handleSizeChange(val) {
+      console.log(`每页 ${val} 条`);
+    },
+    handleCurrentChange(val) {
+      console.log(`当前页: ${val}`);
+    },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
@@ -157,8 +185,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '@css/var.scss';
-.user-center {
+@import "@css/var.scss";
+.user-list {
   padding: 30px;
   .el-table {
     .color-text {
@@ -170,7 +198,7 @@ export default {
         }
       }
       &:before {
-        content: '';
+        content: "";
         display: inline-block;
         width: 5px;
         height: 5px;
