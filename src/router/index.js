@@ -8,7 +8,7 @@ const routes = [
   {
     path:'/login',
     component: ()=>import('@view/login/index'),
-    hidden: true
+    // hidden: true
   },
   {
     path: '/',
@@ -29,12 +29,12 @@ const routes = [
         name: 'userlist',
         meta: { title: '用户列表', icon: 'dashboard', affix: true }
       },
-      {
-        path: 'usercenter',
-        component: () => import('@/views/user/usercenter'),
-        name: 'usercenter',
-        meta: { title: '个人中心', icon: 'dashboard', affix: true }
-      }
+      // {
+      //   path: 'usercenter',
+      //   component: () => import('@/views/user/usercenter'),
+      //   name: 'usercenter',
+      //   meta: { title: '个人中心', icon: 'dashboard', affix: true }
+      // }
     ]
   },
   {

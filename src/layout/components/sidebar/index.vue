@@ -22,15 +22,15 @@
       text-color="#bfcbd9"
       active-text-color="#409EFF"
     >
-      <el-submenu index='/user'>
+      <!-- <el-submenu index='/user'>
         <template slot="title">
           <i class="el-icon-location"></i>
           <span>用户管理</span>
         </template>
         <el-menu-item index="/user">用户列表</el-menu-item>
         <el-menu-item index="/user/usercenter">个人中心</el-menu-item>
-      </el-submenu>
-
+      </el-submenu> -->
+      
       <el-submenu index='/work'>
         <template slot="title">
           <i class="el-icon-location"></i>
@@ -47,6 +47,11 @@
         </template>
         <el-menu-item index="/project/projectList">项目列表</el-menu-item>
       </el-submenu>
+
+      <el-menu-item index="/user">
+        <i class="el-icon-setting"></i>
+        <span slot="title">用户管理</span>
+      </el-menu-item>
     </el-menu>
 
   </div>
