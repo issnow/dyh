@@ -12,7 +12,9 @@
     >
       <sidebar-item v-for="route in permission_routes" :key="route.path" :item="route" :base-path="route.path" />
     </el-menu> -->
-    <logo />
+    <logo
+      :collapse="isCollapse"
+    />
     <el-menu
       :default-active="activeIndex"
       class="el-menu-demo"
@@ -21,17 +23,10 @@
       background-color="#304156"
       text-color="#bfcbd9"
       active-text-color="#409EFF"
+      :collapse="isCollapse"
     >
-      <!-- <el-submenu index='/user'>
-        <template slot="title">
-          <i class="el-icon-location"></i>
-          <span>用户管理</span>
-        </template>
-        <el-menu-item index="/user">用户列表</el-menu-item>
-        <el-menu-item index="/user/usercenter">个人中心</el-menu-item>
-      </el-submenu> -->
-      
-      <el-submenu index='/work'>
+
+      <!-- <el-submenu index='/work'>
         <template slot="title">
           <i class="el-icon-location"></i>
           <span>作品管理</span>
@@ -46,12 +41,28 @@
           <span>项目管理</span>
         </template>
         <el-menu-item index="/project/projectList">项目列表</el-menu-item>
-      </el-submenu>
+      </el-submenu> -->
 
-      <el-menu-item index="/user">
+      <!-- <el-menu-item index="/workManager">
+        <i class="el-icon-setting"></i>
+        <span slot="title">作品管理</span>
+      </el-menu-item>
+      <el-menu-item index="/projectList">
+        <i class="el-icon-setting"></i>
+        <span slot="title">项目管理</span>
+      </el-menu-item>
+      <el-menu-item index="/userList">
         <i class="el-icon-setting"></i>
         <span slot="title">用户管理</span>
-      </el-menu-item>
+      </el-menu-item > -->
+
+      <sideBarItem
+        v-for="(e) in permission_routes"
+        :key="e.path"
+        :icon='e.children[0].meta.icon'
+        :title='e.children[0].meta.title'
+        :index='e.path'
+      />
     </el-menu>
 
   </div>
@@ -59,15 +70,21 @@
 
 <script>
 import logo from './logo'
+import { mapGetters } from 'vuex'
+import sideBarItem from './sideBarItem'
 export default {
   components: {
     logo,
+    sideBarItem
   },
   data() {
     return {
-      isCollapse: true,
-      activeIndex: "/user",
+      // isCollapse: true,
+      activeIndex: "/userList",
     };
+  },
+  mounted() {
+    console.log('permission_routes', this.permission_routes)
   },
   computed: {
     // activeMenu() {
@@ -79,12 +96,14 @@ export default {
     //   }
     //   return path;
     // },
-    // isCollapse() {
-    //   return !this.sidebar.opened;
-    // },
+    ...mapGetters(['sidebar', 'permission_routes']),
+    isCollapse() {
+      return !this.sidebar.opened;
+    },
   },
   created() {
     this.setCurrentRoute();
+    console.log('this',this)
   },
   methods: {
     setCurrentRoute() {

@@ -1,7 +1,7 @@
 const axios = require('axios')
 let instance = axios.create({
   // baseURL: 'http://localhost:3004/',
-  baseURL: '/',
+  baseURL: 'http://172.18.20.78/dayunhe/backend/public',
   timeout: 30000,
   withCredentials: true,
   headers: {
