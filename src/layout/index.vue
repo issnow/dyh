@@ -4,7 +4,8 @@
     <div class="main-container">
       <div class="fix-header">
         <navbar></navbar>
-        <breadcrumb></breadcrumb>
+        <!-- 面包屑 -->
+        <!-- <breadcrumb></breadcrumb> -->
       </div>
       <app-main></app-main>
     </div>

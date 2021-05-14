@@ -11,10 +11,15 @@
       <el-dropdown class="right-menu-item">
         <div class="avatar-wrapper">
           <img
+            v-if="userInfo.headicon"
+            :src="url"
+            class="user-avatar"
+          />
+          <!-- <img
             v-if="avatar"
             src="https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif?imageView2/1/w/80/h/80"
             class="user-avatar"
-          />
+          /> -->
           <i v-else class="el-icon-user-solid"></i>
         </div>
         <el-dropdown-menu slot="dropdown">
@@ -23,7 +28,7 @@
           <el-dropdown-item @click.native="handleLogout">退出登录</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
-      <div class="email">abc@moviebook.cn</div>
+      <div class="email">{{userInfo.email}}</div>
     </div>
 
     <!-- 账号设置 -->
@@ -45,11 +50,19 @@ import Hamburger from "@/components/Hamburger";
 import accountSetting from '@component/accountSetting'
 import passwordSetting from '@component/passwordSetting'
 import { logout } from '@api/user'
+import { baseURL } from "@api/request";
+import { mapGetters } from 'vuex'
 export default {
   components: {
     Hamburger,
     accountSetting,
     passwordSetting
+  },
+  computed: {
+    ...mapGetters(["userInfo"]),
+    url() {
+      return baseURL + this.userInfo.headicon;
+    },
   },
   data() {
     return {
@@ -58,7 +71,7 @@ export default {
       },
       accountVisible: false,
       passwordVisible: false,
-      avatar: true,
+      // avatar: true,
     };
   },
   methods: {
@@ -72,6 +85,7 @@ export default {
       this.passwordVisible = true
     },
     async handleLogout() {
+      sessionStorage.removeItem('isLogin')
       let {msg, status} = await logout()
       if(status == 1) {
         this.$router.push('/login')
