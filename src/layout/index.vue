@@ -13,7 +13,6 @@
 
 <script>
 import { Sidebar, AppMain, Navbar,breadcrumb } from "./components";
-
 export default {
   components: {
     Sidebar,

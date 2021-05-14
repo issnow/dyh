@@ -20,7 +20,7 @@
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item @click.native="handleAccountSetting">账号设置</el-dropdown-item>
           <el-dropdown-item @click.native="handlePasswordSetting">修改密码</el-dropdown-item>
-          <el-dropdown-item>退出登录</el-dropdown-item>
+          <el-dropdown-item @click.native="handleLogout">退出登录</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
       <div class="email">abc@moviebook.cn</div>
@@ -44,6 +44,7 @@
 import Hamburger from "@/components/Hamburger";
 import accountSetting from '@component/accountSetting'
 import passwordSetting from '@component/passwordSetting'
+import { logout } from '@api/user'
 export default {
   components: {
     Hamburger,
@@ -69,6 +70,12 @@ export default {
     },
     handlePasswordSetting() {
       this.passwordVisible = true
+    },
+    async handleLogout() {
+      let {msg, status} = await logout()
+      if(status == 1) {
+        this.$router.push('/login')
+      }
     }
   },
 };

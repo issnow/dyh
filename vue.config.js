@@ -47,14 +47,14 @@ module.exports = {
       console.log('+++', config);
       config.devServer = {
         overlay: false,
-        proxy: {
-          '/api': {
-            target: 'http://localhost:3004',
-            pathRewrite: {
-              '^/api': ''
-            }
-          }
-        }
+        // proxy: {
+        //   '/api': {
+        //     target: 'http://localhost:3004',
+        //     pathRewrite: {
+        //       '^/api': ''
+        //     }
+        //   }
+        // }
       }
     }
     

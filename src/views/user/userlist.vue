@@ -10,16 +10,16 @@
     >
       <el-row>
         <el-col :span="7">
-          <el-form-item label="搜索" prop="keyword">
+          <el-form-item label="搜索" prop="email">
             <el-input
-              v-model="form.keyword"
+              v-model="form.email"
               placeholder="请输入关键字"
             ></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="7">
-          <el-form-item label="状态" prop="status">
-            <el-select v-model="form.status" placeholder="请选择">
+          <el-form-item label="状态" prop="state">
+            <el-select v-model="form.state" placeholder="请选择">
               <el-option
                 v-for="item in selectData"
                 :key="item.value"
@@ -40,25 +40,37 @@
       </el-row>
     </el-form>
 
-    <el-table v-loading='loading' class="mb20" border :data="tableData" style="width: 100%">
-      <el-table-column prop="userID" label="用户ID"> </el-table-column>
-      <el-table-column prop="name" label="昵称"> </el-table-column>
+    <el-table
+      v-loading="loading"
+      class="mb20"
+      border
+      :data="tableData"
+      style="width: 100%"
+    >
+      <el-table-column prop="id" label="用户ID"> </el-table-column>
+      <el-table-column prop="nickname" label="昵称"> </el-table-column>
       <el-table-column prop="email" label="邮箱"> </el-table-column>
-      <el-table-column prop="role" label="角色"> </el-table-column>
-      <el-table-column prop="phone" label="联系电话"> </el-table-column>
-      <el-table-column prop="status" label="状态">
+      <el-table-column prop="role" label="角色">
         <template slot-scope="scope">
-          <span class="color-text" :class="{ isEnable: scope.row.status }">{{
-            scope.row.status ? "启用" : "禁用"
+          <span>
+            {{ scope.row.type == 1 ? "创作者" : "管理员" }}
+          </span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="phone" label="联系电话"> </el-table-column>
+      <el-table-column prop="state" label="状态">
+        <template slot-scope="scope">
+          <span class="color-text" :class="{ isEnable: scope.row.state }">{{
+            scope.row.state == 1 ? "启用" : "禁用"
           }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="organization" label="所属机构"> </el-table-column>
+      <el-table-column prop="institutions" label="所属机构"> </el-table-column>
 
       <el-table-column label="操作" min-width="130">
         <template slot-scope="scope">
           <el-button @click="disabledRow(scope.row)" type="text" size="small"
-            >禁用</el-button
+            >{{scope.row.state == 1 ? "禁用" : "启用"}}</el-button
           >
           <el-button @click="resetPassword(scope.row)" type="text" size="small"
             >重置密码</el-button
@@ -71,114 +83,161 @@
       background
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
-      :current-page="page.currentPage"
-      :page-sizes="[100, 200, 300, 400]"
+      :current-page="page.pageNo"
+      :page-sizes="[10, 20, 30, 40]"
       :page-size="page.pageSize"
       layout="total, slot, prev, pager, next, sizes, jumper"
-      :total="page.total"
+      :total="page.recordCount"
     >
-      <span>第{{page.currentPage}}/{{Math.ceil(page.total / page.pageSize)}}页</span>
+      <span>第{{ page.pageNo }}/{{ page.pageCount }}页</span>
     </el-pagination>
   </div>
 </template>
 
 <script>
+import { getTableData,setUserState,resetUserPassword } from "@api/user";
 export default {
   data() {
     return {
       loading: false,
       form: {
-        keyword: "",
-        status: "",
+        email: "",
+        state: "",
       },
       rules: {
-        keyword: [
-          { required: true, message: "请输入活动名称", trigger: "blur" },
-          { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" },
+        email: [
+          { required: true, message: "请输入关键字", trigger: "blur" },
+          // { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" },
         ],
-        status: [
-          { required: true, message: "请选择活动区域", trigger: "change" },
-        ],
+        state: [{ required: true, message: "请输入", trigger: "change" }],
       },
       selectData: [
         {
-          value: "1",
-          label: "合成中",
+          value: 1,
+          label: "启用",
         },
         {
-          value: "2",
-          label: "合成失败",
-        },
-        {
-          value: "3",
-          label: "待审核",
-        },
-        {
-          value: "4",
-          label: "审核中",
-        },
-        {
-          value: "5",
-          label: "审核失败",
-        },
-        {
-          value: "6",
-          label: "待发布",
-        },
-        {
-          value: "7",
-          label: "已发布",
+          value: 2,
+          label: "禁用",
         },
       ],
       tableData: [
         {
-          userID: 123,
-          name: "张三",
-          email: "abc@moviebook.cn",
-          role: "管理员",
-          phone: "13812345678",
-          status: true,
-          organization: "南京大学",
-        },
-        {
-          userID: 123,
-          name: "张三",
-          email: "abc@moviebook.cn",
-          role: "管理员",
-          phone: "13812345678",
-          status: false,
-          organization: "南京大学",
-        },
+          code: "28a9905e27887fa90f434ef1ff250fdd",
+          create_time: "2021-04-28 17:25:50",
+          create_user: 3,
+          email: null,
+          headicon: null,
+          id: 7,
+          institutions: null,
+          is_delete: 0,
+          modify_time: "2021-05-07 14:51:38",
+          modify_user: 3,
+          name: "2",
+          nickname: "1",
+          phone: "181012856,77",
+          state: 1,
+          type: 1,
+        }
       ],
       page: {
-        currentPage: 4,
-        pageSize: 100,
-        total: 501
-      }
+        pageNo: 1,
+        pageSize: 10,
+        // 共几条
+        recordCount: 0,
+        // 共几页
+        pageCount: 0,
+      },
     };
   },
+  mounted() {
+    this._getTableData();
+  },
   methods: {
+    async _getTableData() {
+      this.loading = true
+      console.log(this.form, "form");
+      // const { email, state } = this.form;
+      // const { pageNo, pageSize, recordCount, pageCount } = this.page;
+      const params = {
+        // ...this.page,
+        pageNo: this.page.pageNo,
+        pageSize: this.page.pageSize,
+        map: {
+          // email,
+          // state,
+          ...this.form
+        },
+      };
+      // const p = {
+      //   pageNo: 1,
+      //   pageSize: 30,
+      //   recordCount: 0,
+      //   pageCount: 0,
+      //   map: {
+      //     email: "fang_xu@moviebook.com",
+      //     state: 1,
+      //   },
+      // };
+      console.log("params", params);
+      let res = await getTableData(params);
+      this.loading = false
+      const {datas, fsp} = res
+      const {pageNo,
+        pageSize,
+        recordCount,
+        pageCount} = fsp
+      this.page = {pageNo,
+        pageSize,
+        recordCount,
+        pageCount,}
+      this.tableData = datas
+
+      console.log("res", res);
+    },
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`);
+      this.page = {...this.page, pageSize: val}
+      this._getTableData()
     },
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
+      this.page = {...this.page, pageNo: val}
+      this._getTableData()
     },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          console.log(this.form, "form");
+          // console.log(this.form, "form");
+          this._getTableData()
         } else {
           console.log("error submit!!");
           return false;
         }
       });
     },
-    disabledRow(row) {
+    async disabledRow(row) {
+      const params = {
+        id: row.id,
+        state: row.state == 1 ? 2:1
+      }
+      let {status, msg} = await setUserState(params)
+      this.$message({
+        message: msg,
+      })
+      if(status == 1) {
+        
+        this._getTableData()
+      }
+
       console.log(row);
     },
-    resetPassword(row) {
-      console.log(row);
+    async resetPassword(row) {
+      const {status, msg} = await resetUserPassword({id:row.id})
+      this.$message(msg)
+      if(status == 1) {
+        this._getTableData()
+      }
     },
   },
 };
