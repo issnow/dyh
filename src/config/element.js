@@ -38,7 +38,8 @@ import {
   DropdownMenu,
   DropdownItem,
   Message,
-  Upload
+  Upload,
+  cascader
 } from 'element-ui';
 Vue.use(Button)
 Vue.use(Container)
@@ -78,6 +79,9 @@ Vue.use(Dropdown);
 Vue.use(DropdownMenu);
 Vue.use(DropdownItem);
 Vue.use(Upload);
+Vue.use(cascader);
+
+
 
 Vue.prototype.$loading = Loading.service;
 Vue.prototype.$message = Message;
