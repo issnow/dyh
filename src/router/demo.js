@@ -40,4 +40,17 @@ let a = [
       }
     ]
   },
+  {
+    path: '/view',
+    meta: {
+      title: '审核管理'
+    },
+    children: [
+      {
+        path: 'viewList',
+        name: 'viewList',
+        meta: { title: '审核列表', icon: 'dashboard', affix: true }
+      }
+    ]
+  },
 ]

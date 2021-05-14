@@ -45,16 +45,13 @@
         <el-table-column prop="person" label="创作人" width="200"></el-table-column>
         <el-table-column prop="type" label="类型" width="100"></el-table-column>
         <el-table-column prop="picture" label="画幅" width="100"></el-table-column>
-        <el-table-column prop="view" label="预览" width="120"></el-table-column>
+        <!-- <el-table-column prop="view" label="预览" width="120"></el-table-column> -->
         <el-table-column prop="size" label="大小（M）" width="200"></el-table-column>
         <el-table-column prop="duration" label="时长（S）" width="200"></el-table-column>
         <el-table-column prop="status" label="状态" width="200"></el-table-column>
         <el-table-column prop="time" label="创作时间" width="200" sortable></el-table-column>
         <el-table-column fixed="right" label="操作">
           <template slot-scope="scope">
-            <el-button type="text" @click="onReview">提交审核</el-button>
-            <el-button type="text" @click="onGenerate">重新合成</el-button>
-            <el-button type="text" @click="omDelete">删除</el-button>
             <el-button type="text" @click="onWatch">查看</el-button>
           </template>
         </el-table-column>
@@ -180,9 +177,6 @@
     components: {
     },
     methods: {
-      onReview(){},
-      onGenerate(){},
-      omDelete(){},
       onWatch(){},
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
