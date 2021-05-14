@@ -1,5 +1,6 @@
 import Layout from '../../layout'
 import router from '@/router'
+import { getUserInfo } from '@api/user'
 export default {
   namespaced: true,
   state: {
@@ -20,9 +21,12 @@ export default {
     }
   },
   actions: {
-    reRetRouter({state}) {
-      console.log(router, 'router2');
-      router.addRoutes(state.routes)
+    async asyncGetUserInfo({state, commit}) {
+      let {status, element} = await getUserInfo({id: state.userInfo.id})
+      if (status == 1) {
+        console.log(element, 'element');
+        commit('SET_USER_INFO', element);
+      }
     }
   }
 }
@@ -36,7 +40,8 @@ export function formatRouter(list) {
         path: '',
         component: ()=>import(`@/views${url}`),
         name: /\/.*\/(.*)/.exec(url)[1],
-        meta: {title, icon:icon_class}
+        // meta: {title, icon:icon_class}
+        meta: {title, icon:'setting'}
       }
     ]
   }))

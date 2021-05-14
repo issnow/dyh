@@ -30,3 +30,23 @@ export const resetUserPassword = (params) => {
 export const checkLogin = (params) => {
   return axios.post('/user/checkLogin')
 }
+
+// 上传用户头像
+export const uploadPhoto = (params) => {
+  return axios.post('/user/upload', params)
+}
+
+// 获取用户信息
+export const getUserInfo = (params) => {
+  return axios.post('/user/getUserInfo', params)
+}
+
+// 账号设置
+export const saveUser = (params) => {
+  return axios.post('/user/saveUser', params)
+}
+
+// 修改本人密码
+export const saveOwnPassword = (params) => {
+  return axios.post('/user/saveOwnPassword', params)
+}
