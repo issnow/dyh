@@ -24,7 +24,7 @@
       class="user-center-form"
     >
       <div class="user-id">
-        <i class="el-icon-user"></i>
+        <!-- <i class="el-icon-user"></i> -->
         <el-form-item label="用户ID:">
           <el-input
             placeholder="请输入"
@@ -34,19 +34,19 @@
         </el-form-item>
       </div>
       <div class="name">
-        <i class="el-icon-user"></i>
+        <!-- <i class="el-icon-user"></i> -->
         <el-form-item label="昵称:" prop="nickname">
           <el-input placeholder="请输入" v-model="form.nickname"></el-input>
         </el-form-item>
       </div>
       <div class="email">
-        <i class="el-icon-user"></i>
+        <!-- <i class="el-icon-user"></i> -->
         <el-form-item label="邮箱:" prop="email">
           <el-input placeholder="请输入" v-model="form.email"></el-input>
         </el-form-item>
       </div>
       <div class="user-id">
-        <i class="el-icon-user"></i>
+        <!-- <i class="el-icon-user"></i> -->
         <el-form-item label="角色:">
           <el-input
             placeholder="请输入"
@@ -56,13 +56,13 @@
         </el-form-item>
       </div>
       <div class="phone">
-        <i class="el-icon-user"></i>
+        <!-- <i class="el-icon-user"></i> -->
         <el-form-item label="联系方式:" prop="phone">
           <el-input placeholder="请输入" v-model.number="form.phone"></el-input>
         </el-form-item>
       </div>
       <div class="org">
-        <i class="el-icon-user"></i>
+        <!-- <i class="el-icon-user"></i> -->
         <el-form-item label="所属机构:">
           <el-input
             :disabled="true"

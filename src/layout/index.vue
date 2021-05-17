@@ -33,7 +33,7 @@ export default {
   .sidebar-container {
     transition: width 0.28s;
     width: 210px !important;
-    background-color: #304156;
+    background-color: #001529;
     height: 100%;
     position: fixed;
     font-size: 0px;

@@ -38,6 +38,7 @@ import {
   DropdownMenu,
   DropdownItem,
   Message,
+  MessageBox,
   Upload,
   cascader
 } from 'element-ui';
@@ -85,3 +86,4 @@ Vue.use(cascader);
 
 Vue.prototype.$loading = Loading.service;
 Vue.prototype.$message = Message;
+Vue.prototype.$confirm = MessageBox.confirm;

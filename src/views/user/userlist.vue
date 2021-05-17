@@ -252,19 +252,6 @@ export default {
       color: $supRed;
       &.isEnable {
         color: $green;
-        &:before {
-          background-color: $green;
-        }
-      }
-      &:before {
-        content: "";
-        display: inline-block;
-        width: 5px;
-        height: 5px;
-        border-radius: 50%;
-        background-color: $supRed;
-        transform: translateY(-3px);
-        margin-right: 10px;
       }
     }
   }

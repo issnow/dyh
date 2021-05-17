@@ -20,9 +20,9 @@
       class="el-menu-demo"
       @select="handleSelect"
       router
-      background-color="#304156"
-      text-color="#bfcbd9"
-      active-text-color="#409EFF"
+      background-color="#001529"
+      text-color="#8e8f93"
+      active-text-color="#f0f0f0"
       :collapse="isCollapse"
     >
 
@@ -107,6 +107,12 @@ export default {
   },
   methods: {
     setCurrentRoute() {
+      switch (this.$route.path) {
+        case '/workDetail':
+          this.activeIndex = '/workManager'
+          return;
+      }
+      
       this.activeIndex = this.$route.path;
     },
     handleSelect(key, keyPath) {
@@ -122,7 +128,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '@css/var.scss';
 .el-menu {
   border-right-width: 0;
+  .el-menu-item {
+    ::v-deep &.is-active {
+      background-color: #1890FF !important;
+      color: $white !important;
+    }
+  }
 }
 </style>
