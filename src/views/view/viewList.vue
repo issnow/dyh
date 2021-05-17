@@ -177,7 +177,11 @@
     components: {
     },
     methods: {
-      onWatch(){},
+      onWatch(){
+        this.$router.push({
+          name: 'viewDetail'
+          });
+      },
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (!valid) {
