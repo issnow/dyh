@@ -128,7 +128,6 @@
 // } from '@api/main'
 import videoPreview from '@component/videoPreview'
 import submitDialog from './submitDialog'
-import { setActiveMenu } from './activeMenu'
 export default {
   components: {
     submitDialog,
@@ -278,7 +277,6 @@ export default {
         });
     },
     onWatch() {
-      // setActiveMenu('/workManager')
       this.$router.push({path:'/workDetail', query:{id:123}})
     },
     onEdit() {
