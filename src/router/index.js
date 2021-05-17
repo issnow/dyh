@@ -10,6 +10,17 @@ export const routes = [
     component: ()=>import('@view/login/index'),
     // hidden: true
   },
+  {
+    path:'/workDetail',
+    component: Layout,
+    children: [
+      {
+        path: '',
+        component: ()=>import('@view/work/detail'),
+        name: 'workDetail'
+      }
+    ]
+  }
   // {
   //   path: '/',
   //   redirect: '/user',

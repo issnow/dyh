@@ -40,8 +40,7 @@ export function formatRouter(list) {
         path: '',
         component: ()=>import(`@/views${url}`),
         name: /\/.*\/(.*)/.exec(url)[1],
-        // meta: {title, icon:icon_class}
-        meta: {title, icon:'setting'}
+        meta: {title, icon:icon_class}
       }
     ]
   }))
