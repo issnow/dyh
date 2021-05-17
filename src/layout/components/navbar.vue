@@ -15,12 +15,7 @@
             :src="url"
             class="user-avatar"
           />
-          <!-- <img
-            v-if="avatar"
-            src="https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif?imageView2/1/w/80/h/80"
-            class="user-avatar"
-          /> -->
-          <i v-else class="el-icon-user-solid"></i>
+          <i v-else class="iconfont icon-user" style="font-size: 30px;"></i>
         </div>
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item @click.native="handleAccountSetting">账号设置</el-dropdown-item>

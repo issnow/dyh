@@ -188,7 +188,7 @@ export default {
     max-width: 84px;
     max-height: 48px;
     background: #ccc;
-    background-image: url("./../assets/img.png");
+    // background-image: url("./../assets/img.png");
     background-position: center;
     background-repeat: no-repeat;
     opacity: 1;
@@ -247,7 +247,7 @@ export default {
 .el-icon-video-plays {
     width: 28px;
     height: 28px;
-    background-image: url("./../assets/audioPlayhover.png");
+    // background-image: url("./../assets/audioPlayhover.png");
     background-repeat: no-repeat;
     background-size: 28px 28px;
     position: absolute;

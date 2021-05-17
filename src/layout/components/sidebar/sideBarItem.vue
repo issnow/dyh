@@ -1,6 +1,7 @@
 <template>
-  <el-menu-item :index="index">
-    <i :class="'el-icon-'+icon"></i>
+  <el-menu-item :index="index" :data-path='index'>
+    <!-- <i :class="'el-icon-'+icon"></i> -->
+    <i :class='"iconfont "+icon'></i>
     <span slot="title">{{title}}</span>
   </el-menu-item>
 </template>
@@ -12,4 +13,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.iconfont {
+  font-size: 18px;
+  margin-right: 8px;
+}
 </style>
