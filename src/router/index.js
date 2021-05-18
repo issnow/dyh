@@ -20,6 +20,17 @@ export const routes = [
         name: 'workDetail'
       }
     ]
+  },
+  {
+    path:'/viewDetail',
+    component: Layout,
+    children: [
+      {
+        path: '',
+        component: ()=>import('@view/view/viewDetail'),
+        name: 'viewDetail'
+      }
+    ]
   }
   // {
   //   path: '/',
