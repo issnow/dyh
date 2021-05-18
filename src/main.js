@@ -2,6 +2,8 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store/index'
+import VueLazyload from 'vue-lazyload'
+
 
 import 'normalize.css/normalize.css' // a modern alternative to CSS resets
 
@@ -12,6 +14,8 @@ import './config/element.js'
 import './iconfont/iconfont.css'
 
 import api from './api/request'
+
+Vue.use(VueLazyload)
 
 Vue.prototype.$api = api
 
