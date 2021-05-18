@@ -179,8 +179,9 @@
     methods: {
       onWatch(){
         this.$router.push({
-          name: 'viewDetail'
-          });
+          path:'/viewDetail', 
+          query: {id: 111}
+        })
       },
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {

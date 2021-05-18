@@ -111,6 +111,9 @@ export default {
         case '/workDetail':
           this.activeIndex = '/workManager'
           return;
+        case '/viewDetail':
+          this.activeIndex = '/viewList'
+          return;
       }
       
       this.activeIndex = this.$route.path;
