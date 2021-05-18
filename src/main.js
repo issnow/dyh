@@ -20,6 +20,14 @@ Vue.config.productionTip = false
 
 console.log('env',process.env.NODE_ENV);
 
+
+router.beforeEach((to, from, next)=>{
+  if(to.path == '/login') {
+    sessionStorage.removeItem('isLogin')
+  }
+  next()
+})
+
 new Vue({
   router,
   store,

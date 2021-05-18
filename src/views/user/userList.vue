@@ -121,25 +121,7 @@ export default {
           label: "禁用",
         },
       ],
-      tableData: [
-        {
-          code: "28a9905e27887fa90f434ef1ff250fdd",
-          create_time: "2021-04-28 17:25:50",
-          create_user: 3,
-          email: null,
-          headicon: null,
-          id: 7,
-          institutions: null,
-          is_delete: 0,
-          modify_time: "2021-05-07 14:51:38",
-          modify_user: 3,
-          name: "2",
-          nickname: "1",
-          phone: "181012856,77",
-          state: 1,
-          type: 1,
-        }
-      ],
+      tableData: [],
       page: {
         pageNo: 1,
         pageSize: 10,

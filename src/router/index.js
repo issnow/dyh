@@ -107,7 +107,7 @@ export const routes = [
 //   routes
 // })
 const createRouter = ()=>new VueRouter({
-  // mode: 'history',
+  mode: 'history',
   base: process.env.BASE_URL,
   routes
 })

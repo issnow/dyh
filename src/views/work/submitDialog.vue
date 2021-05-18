@@ -3,11 +3,7 @@
     title="提交审核"
     :visible.sync="visible"
     class="work-submit"
-    :before-close="
-      () => {
-        $emit('hideDialog');
-      }
-    "
+    :before-close="beforeClose"
     width="33%"
   >
     <el-form
@@ -60,7 +56,7 @@
 
         </el-col>
         <el-col :span="10">
-          <el-form-item prop="ting2">
+          <el-form-item prop="thing2">
             <el-select v-model="form.thing2" placeholder="请选择">
               <el-option
                 v-for="item in options"
@@ -79,7 +75,7 @@
 
     <div slot="footer" class="dialog-footer">
       <el-button type="primary" @click="submitForm('form')" :loading='loading'>提 交</el-button>
-      <el-button @click="$emit('hideDialog')">取 消</el-button>
+      <el-button @click="beforeClose">取 消</el-button>
     </div>
   </el-dialog>
 </template>
@@ -139,6 +135,13 @@ export default {
     };
   },
   methods: {
+    resetFields() {
+      this.$refs.form.resetFields()
+    },
+    beforeClose() {
+      this.resetFields()
+      this.$emit('hideDialog')
+    },
     submitForm(formName) {
       this.$refs[formName].validate(async (valid) => {
         if (valid) {

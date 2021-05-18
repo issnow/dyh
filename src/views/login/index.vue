@@ -25,6 +25,11 @@
 import { loginApp } from '@api/user'
 import { mapMutations } from 'vuex'
 export default {
+  // beforeRouteEnter (to, from, next) {
+  //   console.log(to, 'to')
+  //   sessionStorage.removeItem('isLogin')
+  //   next()
+  // },
   data() {
     return {
       form: {

@@ -1,17 +1,20 @@
 <template>
-  <div class="sidebar-logo-container">
-    <!-- <transition name="sidebarLogoFade"> -->
+  <div class="sidebar-logo-container" :class="{'collapse':collapse}">
+    <transition name="sidebarLogoFade">
+      <router-link v-if="collapse" key="collapse" to='/' class="sidebar-logo-link">
+        <img :src="logo" class="sidebar-logo">
+      </router-link>
+      <router-link v-else to="/" key="expand" class="sidebar-logo-link">
         <img :src="logo" class="sidebar-logo">
         <h1 class="sidebar-title">{{ title }} </h1>
-      <!-- <router-link class="sidebar-logo-link" path='/'> -->
-        <!-- <div>2324</div> -->
-      <!-- </router-link> -->
-    <!-- </transition> -->
+      </router-link>
+    </transition>
   </div>
 </template>
 
 <script>
 export default {
+  props: ['collapse'],
   data() {
     return {
       title: '大运河',
@@ -32,7 +35,6 @@ export default {
 }
 .sidebar-logo-container{
   position: relative;
-  // display: flex;
   width: 100%;
   height: 50px;
   line-height: 50px;
@@ -40,6 +42,7 @@ export default {
   text-align: center;
   overflow: hidden;
   .sidebar-logo-link {
+    display: inline-block;
     height: 100%;
     width: 100%;
   }
@@ -57,6 +60,11 @@ export default {
     line-height: 50px;
     font-size: 14px;
     vertical-align: middle;
+  }
+  &.collapse {
+    .sidebar-logo {
+      margin-right: 0px;
+    }
   }
 }
 </style>
