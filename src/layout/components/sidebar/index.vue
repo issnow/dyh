@@ -24,6 +24,7 @@
       text-color="#8e8f93"
       active-text-color="#f0f0f0"
       :collapse="isCollapse"
+      :collapse-transition="false"
     >
 
       <!-- <el-submenu index='/work'>
@@ -79,7 +80,6 @@ export default {
   },
   data() {
     return {
-      // isCollapse: true,
       activeIndex: "/userList",
     };
   },
@@ -103,7 +103,6 @@ export default {
   },
   created() {
     this.setCurrentRoute();
-    console.log('this',this)
   },
   methods: {
     setCurrentRoute() {
@@ -116,7 +115,7 @@ export default {
       this.activeIndex = this.$route.path;
     },
     handleSelect(key, keyPath) {
-      console.log(key, keyPath);
+      // console.log(key, keyPath);
     },
   },
   watch: {

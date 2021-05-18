@@ -1,5 +1,5 @@
 <template>
-  <div class="app-wrapper">
+  <div class="app-wrapper" :class="classObj">
     <sidebar class="sidebar-container"></sidebar>
     <div class="main-container">
       <div class="fix-header">
@@ -14,7 +14,16 @@
 
 <script>
 import { Sidebar, AppMain, Navbar,breadcrumb } from "./components";
+import { mapGetters } from 'vuex'
 export default {
+  computed: {
+    ...mapGetters(['sidebar']),
+    classObj() {
+      return {
+        hideSidebar: !this.sidebar.opened,
+      }
+    }
+  },
   components: {
     Sidebar,
     AppMain,
@@ -42,6 +51,14 @@ export default {
     left: 0;
     z-index: 1001;
     overflow: hidden;
+  }
+  &.hideSidebar {
+    .sidebar-container {
+      width: 64px !important;
+    }
+    .main-container {
+      margin-left: 64px;
+    }
   }
   .main-container {
     min-height: 100%;

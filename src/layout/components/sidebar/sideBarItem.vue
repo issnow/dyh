@@ -1,6 +1,5 @@
 <template>
   <el-menu-item :index="index" :data-path='index'>
-    <!-- <i :class="'el-icon-'+icon"></i> -->
     <i :class='"iconfont "+icon'></i>
     <span slot="title">{{title}}</span>
   </el-menu-item>

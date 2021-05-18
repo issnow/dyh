@@ -46,7 +46,7 @@ import accountSetting from '@component/accountSetting'
 import passwordSetting from '@component/passwordSetting'
 import { logout } from '@api/user'
 import { baseURL } from "@api/request";
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 export default {
   components: {
     Hamburger,
@@ -54,24 +54,21 @@ export default {
     passwordSetting
   },
   computed: {
-    ...mapGetters(["userInfo"]),
+    ...mapGetters(["userInfo", 'sidebar']),
     url() {
       return baseURL + this.userInfo.headicon;
     },
   },
   data() {
     return {
-      sidebar: {
-        opened: true,
-      },
       accountVisible: false,
       passwordVisible: false,
-      // avatar: true,
     };
   },
   methods: {
+    ...mapActions(['app/toggleSideBar']),
     toggleSideBar() {
-      // this.$store.dispatch('app/toggleSideBar')
+      this['app/toggleSideBar']()
     },
     handleAccountSetting() {
       this.accountVisible = true
