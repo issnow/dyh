@@ -14,7 +14,14 @@
               <el-input
                 v-model="form.keyword"
                 placeholder="请输入关键字"
-              ></el-input>
+                @keyup.native="submitForm('form')"
+              >
+                <el-button
+                  slot="append"
+                  icon="el-icon-search"
+                  @click="submitForm('form')"
+                ></el-button>
+              </el-input>
             </el-form-item>
           </el-col>
           <el-col :span="7">
@@ -32,9 +39,11 @@
           </el-col>
           <el-col :span="2">
             <el-form-item>
-              <el-button type="primary" @click="submitForm('form')"
-                >查询</el-button
-              >
+              <el-button
+                icon="el-icon-delete"
+                type="primary"
+                @click="selectDelete"
+              ></el-button>
             </el-form-item>
           </el-col>
         </el-row>
@@ -47,14 +56,16 @@
         border
         style="width: 100%"
         :default-sort="{ prop: 'time', order: 'descending' }"
+        @selection-change="handleSelectionChange"
       >
+        <el-table-column type="selection" width="55"> </el-table-column>
         <el-table-column prop="name" label="成品名称"></el-table-column>
+        <el-table-column prop="type" label="类型" width="100"></el-table-column>
         <el-table-column
           prop="person"
-          label="创作人"
+          label="分辨率"
           width="200"
         ></el-table-column>
-        <el-table-column prop="type" label="类型" width="100"></el-table-column>
         <el-table-column
           prop="picture"
           label="画幅"
@@ -63,9 +74,9 @@
         <el-table-column prop="view" label="预览" width="120">
           <template slot-scope="scope">
             <videoPreview
-              :isVideo='true'
-              :source='getImg("movie.mp4")'
-              :bgImage='getImg("8.jpg")'
+              :isVideo="true"
+              :source="getImg('movie.mp4')"
+              :bgImage="getImg('8.jpg')"
             />
           </template>
         </el-table-column>
@@ -105,39 +116,40 @@
         background
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
-        :current-page="page.pageNo"
+        :current-page="page.page"
         :page-sizes="[5, 10, 15, 20]"
         :page-size="10"
         layout="total, slot, prev, pager, next, sizes, jumper"
         :total="page.recordCount"
       >
-        <span>第{{ page.pageNo }}/{{ page.pageCount }}页</span>
+        <span>第{{ page.page }}/{{ page.pageCount }}页</span>
       </el-pagination>
 
       <submitDialog
-        :visible='submitDialogVisible'
-        @hideDialog='submitDialogVisible=false'
+        :visible="submitDialogVisible"
+        @hideDialog="submitDialogVisible = false"
       />
     </div>
   </div>
 </template>
 
 <script>
-// import {
-//   getData
-// } from '@api/main'
-import videoPreview from '@component/videoPreview'
-import submitDialog from './submitDialog'
+import {
+  productGetList,
+  productChoicesList
+} from '@api/workManager'
+import videoPreview from "@component/videoPreview";
+import submitDialog from "./submitDialog";
 export default {
   components: {
     submitDialog,
-    videoPreview
+    videoPreview,
   },
   data() {
     return {
       submitDialogVisible: false,
       page: {
-        pageNo: 1,
+        page: 1,
         pageSize: 10,
         // 共几条
         recordCount: 0,
@@ -245,43 +257,97 @@ export default {
           time: "5",
         },
       ],
+      multipleSelection: [],
     };
   },
   created() {},
-  mounted() {},
+  mounted() {
+    this._productChoicesList()
+    this._productGetList()
+  },
   methods: {
+    async _productChoicesList() {
+      const res = await productChoicesList({type: 1})
+      console.log(res, 'res')
+      if(res.status == 1) {
+
+      }
+    },
+    async _productGetList() {
+      const params = {
+        pageSize: 10,
+        page: 1,
+        title: "哈哈",
+        status: "1",
+        wh_ratio: "1",
+        resolution: "2",
+        order: "1",
+      };
+      let res = await productGetList(params);
+      console.log(res, 'res')
+    },
+    selectDelete() {
+      console.log("multipleSelection", this.multipleSelection);
+      if(this.multipleSelection.length > 0) {
+        this.$confirm("请确认是否删除该成品?", "删除确认", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
+        })
+          .then(() => {
+            this.$message({
+              type: "success",
+              message: "删除成功!",
+            });
+          })
+          .catch(() => {
+            this.$message({
+              type: "info",
+              message: "已取消删除",
+            });
+          });
+      }else {
+        this.$message({
+          type: 'info',
+          message: '请先勾选'
+        })
+      }
+    },
+    handleSelectionChange(val) {
+      this.multipleSelection = val;
+    },
     getImg(src) {
       if (src) {
         return require("@/assets/" + src);
       }
     },
     onReview() {
-      this.submitDialogVisible = true
+      this.submitDialogVisible = true;
     },
     onGenerate() {},
     onDelete() {
-      this.$confirm('请确认是否删除该成品?', '删除确认', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
+      this.$confirm("请确认是否删除该成品?", "删除确认", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(() => {
           this.$message({
-            type: 'success',
-            message: '删除成功!'
+            type: "success",
+            message: "删除成功!",
           });
-        }).catch(() => {
+        })
+        .catch(() => {
           this.$message({
-            type: 'info',
-            message: '已取消删除'
-          });          
+            type: "info",
+            message: "已取消删除",
+          });
         });
     },
     onWatch() {
-      this.$router.push({path:'/workDetail', query:{id:123}})
+      this.$router.push({ path: "/workDetail", query: { id: 123 } });
     },
-    onEdit() {
-
-    },
+    onEdit() {},
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (!valid) {

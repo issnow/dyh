@@ -7,13 +7,13 @@
     width="33%"
   >
     <div class="upload-avatar" @click="handleUpload">
-      <input type="file" id="uploadFile" ref="uploadRef" @change="fileChange" />
-      <img :src="url" alt="" class="avatar" v-if="userInfo.headicon" />
+      <input type="file" id="uploadFile" ref="uploadRef" @change="fileChange" accept="image/gif, image/jpg, image/png"/>
+      <img v-lazy="url" alt="" class="avatar" v-if="userInfo.headicon" />
       <i v-else class="el-icon-upload2 avatar-uploader-icon"></i>
     </div>
 
     <div class="username">
-      {{ form.nickname }}
+      {{ userInfo.nickname }}
     </div>
 
     <el-form
@@ -72,17 +72,7 @@
         </el-form-item>
       </div>
 
-      <!-- <div class="phone">
-        <i class="el-icon-user"></i>
-        <el-form-item label="当前密码:">123123123</el-form-item>
-        <el-button type="text" style="margin-left: 50px" @click="changePassword"
-          >修改</el-button
-        >
-      </div> -->
-      <!-- <el-form-item label-width="20px">
-        <el-button type="primary" @click="submitForm('form')">编辑</el-button>
-        <el-button>取消</el-button>
-      </el-form-item> -->
+
     </el-form>
     <div slot="footer" class="dialog-footer">
       <el-button type="primary" @click="submitForm('form')" :loading='btnLoading'>提 交</el-button>
@@ -94,19 +84,19 @@
 <script>
 import { uploadPhoto, getUserInfo,saveUser } from "@api/user";
 import { mapGetters, mapMutations,mapActions } from "vuex";
-import { baseURL } from "@api/request";
+import ee from '@/config/event'
 export default {
   props: ["visible"],
   computed: {
     ...mapGetters(["userInfo"]),
     url() {
-      return baseURL + this.userInfo.headicon;
+      return this.userInfo.headicon;
     },
   },
   watch: {
     userInfo: {
       handler(newValue, oldValue) {
-        console.log(newValue, "newValue");
+        // console.log(newValue, "newValue");
         const { id, nickname, email, type, phone, institutions } = newValue;
         this.form = {
           id,
@@ -144,9 +134,25 @@ export default {
     ...mapMutations(["user/SET_USER_INFO"]),
     ...mapActions(['user/asyncGetUserInfo']),
     async fileChange() {
-      let files = this.$refs.uploadRef.files;
+      let file = this.$refs.uploadRef.files[0];
+      let filename = file.name.slice(file.name.lastIndexOf('.')+1).toLowerCase()
+      let types = ['jpg', 'jpeg', 'gif', 'png']
+      if(file.size > 1024*1024*3) {
+        this.$message({
+          type: 'error',
+          message: '不能超过3M'
+        })
+        return
+      }
+      if(!types.includes(filename)) {
+        this.$message({
+          type: 'error',
+          message: '请上传图片文件'
+        })
+        return
+      }
       let formData = new FormData();
-      formData.append("file", files[0]);
+      formData.append("file", file);
       formData.append("id", this.userInfo.id);
       let { msg, status } = await uploadPhoto(formData);
       if (status == 1) {
@@ -174,7 +180,7 @@ export default {
       this.$refs[formName].validate(async (valid) => {
         if (valid) {
           this.btnLoading = true
-          console.log(this.form);
+          // console.log(this.form);
           const {id,nickname,email,phone} = this.form
           let params = {id,nickname,email,phone}
           let {status, msg} = await saveUser(params)
@@ -186,6 +192,7 @@ export default {
             })
             this['user/asyncGetUserInfo']()
             this.$emit("hideDialog");
+            ee.emit('getTableData')
           }else {
             this.$message({
               type: 'error',
@@ -193,7 +200,7 @@ export default {
             })
           }
         } else {
-          console.log("error submit!!");
+          // console.log("error submit!!");
           return false;
         }
       });
@@ -201,23 +208,6 @@ export default {
     handleUpload() {
       this.$refs.uploadRef.click();
     },
-    // handleAvatarSuccess(res, file) {
-    //   console.log('file',res, file)
-    //   this.imageUrl = URL.createObjectURL(file.raw);
-    // },
-    // beforeAvatarUpload(file) {
-    //   console.log(file, 'file')
-    //   const isJPG = file.type === "image/jpeg";
-    //   const isLt2M = file.size / 1024 / 1024 < 2;
-
-    //   if (!isJPG) {
-    //     this.$message.error("上传头像图片只能是 JPG 格式!");
-    //   }
-    //   if (!isLt2M) {
-    //     this.$message.error("上传头像图片大小不能超过 2MB!");
-    //   }
-    //   return isJPG && isLt2M;
-    // },
   },
 };
 </script>
@@ -240,20 +230,8 @@ export default {
       }
     }
   }
-  // ::v-deep .avatar-uploader .el-upload,
-  // .upload-avatar {
-  //   border: 1px dashed #d9d9d9;
-  //   border-radius: 50%;
-  //   cursor: pointer;
-  //   position: relative;
-  //   overflow: hidden;
-  //   &:hover {
-  //     border-color: #409eff;
-  //   }
-  // }
+
   .upload-avatar {
-    // display: flex;
-    // justify-content: center;
     input {
       display: none;
     }
@@ -276,14 +254,6 @@ export default {
     height: 110px;
     line-height: 110px;
     text-align: center;
-    // border: 1px dashed #d9d9d9;
-    // border-radius: 50%;
-    // cursor: pointer;
-    // position: relative;
-    // overflow: hidden;
-    // &:hover {
-    //   border-color: #409eff;
-    // }
   }
   .avatar {
     width: 110px;

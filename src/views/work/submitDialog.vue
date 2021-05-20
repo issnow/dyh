@@ -24,9 +24,10 @@
           placeholder="请输入内容"
           v-model="form.textarea"
           maxlength="50"
+          show-word-limit
         >
         </el-input>
-        <div>上限50个字符。</div>
+        <!-- <div>上限50个字符。</div> -->
       </el-form-item>
       <el-form-item label="标签" prop="label">
         <el-select v-model="form.label" placeholder="请选择">
