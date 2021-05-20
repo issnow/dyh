@@ -30,10 +30,13 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="2">
+        <el-col :span="4">
           <el-form-item>
             <el-button type="primary" @click="submitForm('form')"
               >查询</el-button
+            >
+            <el-button type="primary" @click="clear"
+              >重置</el-button
             >
           </el-form-item>
         </el-col>
@@ -60,7 +63,7 @@
       <el-table-column prop="phone" label="联系电话"> </el-table-column>
       <el-table-column prop="state" label="状态">
         <template slot-scope="scope">
-          <span class="color-text" :class="{ isEnable: scope.row.state }">{{
+          <span class="color-text" :class="{ isEnable: scope.row.state==1 }">{{
             scope.row.state == 1 ? "启用" : "禁用"
           }}</span>
         </template>
@@ -96,6 +99,7 @@
 
 <script>
 import { getTableData,setUserState,resetUserPassword } from "@api/user";
+import ee from '@/config/event'
 export default {
   data() {
     return {
@@ -134,33 +138,25 @@ export default {
   },
   mounted() {
     this._getTableData();
+    ee.on('getTableData', this._getTableData)
+  },
+  beforeDestroy() {
+    ee.removeListener('getTableData', this._getTableData)
   },
   methods: {
+    clear() {
+      this.$refs.form.resetFields()
+      this._getTableData()
+    },
     async _getTableData() {
       this.loading = true
-      console.log(this.form, "form");
-      // const { email, state } = this.form;
-      // const { pageNo, pageSize, recordCount, pageCount } = this.page;
       const params = {
-        // ...this.page,
         pageNo: this.page.pageNo,
         pageSize: this.page.pageSize,
         map: {
-          // email,
-          // state,
           ...this.form
         },
       };
-      // const p = {
-      //   pageNo: 1,
-      //   pageSize: 30,
-      //   recordCount: 0,
-      //   pageCount: 0,
-      //   map: {
-      //     email: "fang_xu@moviebook.com",
-      //     state: 1,
-      //   },
-      // };
       console.log("params", params);
       let res = await getTableData(params);
       this.loading = false
@@ -190,7 +186,6 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          // console.log(this.form, "form");
           this._getTableData()
         } else {
           console.log("error submit!!");
