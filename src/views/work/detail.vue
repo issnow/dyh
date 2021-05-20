@@ -4,6 +4,10 @@
       <div class="title">审核建议:</div>
       <ul class="list">
         <li>
+          <div class="label">AI审核:</div>
+          <div class="content">黄暴政审核未通过</div>
+        </li>
+        <li>
           <div class="label">描述:</div>
           <div class="content">显示成品描述的内容</div>
         </li>
@@ -25,7 +29,7 @@
         </li>
       </ul>
       <div class="video-play-area">
-        <videoPlay :src='getImg("movie.mp4")'></videoPlay>
+        <videoPlay :src="getImg('movie.mp4')"></videoPlay>
       </div>
     </div>
     <div class="work-detail-info">
@@ -40,13 +44,14 @@
         <el-form-item label="名称:" prop="name">
           <el-input
             type="textarea"
-            :rows="1"
+            :rows="2"
             placeholder="请输入内容"
             v-model="form.name"
             maxlength="20"
+            show-word-limit
           >
           </el-input>
-          <div class="tip">上限20个字符。</div>
+          <!-- <div class="tip">上限20个字符。</div> -->
         </el-form-item>
         <el-form-item label="标签:" prop="label">
           <el-select v-model="form.label" placeholder="请选择">
@@ -90,9 +95,10 @@
             placeholder="请输入内容"
             v-model="form.description"
             maxlength="50"
+            show-word-limit
           >
           </el-input>
-          <div class="tip">上限50个字符。</div>
+          <!-- <div class="tip">上限50个字符。</div> -->
         </el-form-item>
       </el-form>
       <div class="foot-btn">
@@ -207,8 +213,8 @@ export default {
       });
     },
     onCancel() {
-      this.$router.push('/workManager')
-      this.$refs.form.resetFields()
+      this.$router.push("/workManager");
+      this.$refs.form.resetFields();
     },
   },
 };

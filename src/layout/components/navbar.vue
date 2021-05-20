@@ -12,7 +12,7 @@
         <div class="avatar-wrapper">
           <img
             v-if="userInfo.headicon"
-            :src="url"
+            v-lazy="url"
             class="user-avatar"
           />
           <i v-else class="iconfont icon-user" style="font-size: 30px;"></i>
@@ -45,7 +45,6 @@ import Hamburger from "@/components/Hamburger";
 import accountSetting from '@component/accountSetting'
 import passwordSetting from '@component/passwordSetting'
 import { logout } from '@api/user'
-import { baseURL } from "@api/request";
 import { mapGetters, mapActions } from 'vuex'
 export default {
   components: {
@@ -56,7 +55,7 @@ export default {
   computed: {
     ...mapGetters(["userInfo", 'sidebar']),
     url() {
-      return baseURL + this.userInfo.headicon;
+      return this.userInfo.headicon;
     },
   },
   data() {
