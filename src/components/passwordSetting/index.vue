@@ -18,7 +18,7 @@
       </el-form-item>
       <el-form-item label="新密码:" prop="newpassword">
         <el-input v-model="pwdform.newpassword" type="password"></el-input>
-        <span>输入提示：请输入包含数字、字母、符号8位密码</span>
+        <span>输入提示：请输入包含数字、字母8位密码</span>
       </el-form-item>
       <el-form-item label="确认新密码:" prop="confirmPassword">
         <el-input v-model="pwdform.confirmPassword" type="password"></el-input>
@@ -38,12 +38,12 @@ import { saveOwnPassword } from "@api/user";
 export default {
   props: ["visible"],
   data() {
-    const reg = /^(?:(?=.*[0-9].*)(?=.*[A-Za-z].*)(?=.*[,\.#%'\+\*\-:;^_`].*))[,\.#%'\+\*\-:;^_`0-9A-Za-z]{8}$/;
+    const reg = /^(?=.*?[0-9])(?=.*?[a-zA-Z])[0-9a-zA-Z]{8,16}$/
     var validatePass = (rule, value, callback) => {
       if (value === "") {
         callback(new Error("请输入密码"));
       } else if (!reg.test(value)) {
-        callback(new Error("请输入包含数字、字母、符号8位密码"));
+        callback(new Error("请输入包含数字、字母8位密码"));
       } else {
         if (this.pwdform.confirmPassword !== "") {
           this.$refs.pwdform.validateField("confirmPassword");
@@ -57,7 +57,7 @@ export default {
       } else if (value !== this.pwdform.newpassword) {
         callback(new Error("两次输入密码不一致!"));
       } else if (!reg.test(value)) {
-        callback(new Error("请输入包含数字、字母、符号8位密码"));
+        callback(new Error("请输入包含数字、字母8位密码"));
       } else {
         callback();
       }
