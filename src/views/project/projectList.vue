@@ -7,8 +7,10 @@
         label-width="60px">
         <el-row>
           <el-col :span="8">
-            <el-form-item label="搜索" prop="keyword">
-              <el-input v-model="form.keyword" placeholder="请输入项目名称关键字"><el-button slot="append" icon="el-icon-search"></el-button></el-input>
+            <el-form-item label="搜索" prop="title">
+              <el-input v-model="form.title" placeholder="请输入项目名称关键字">
+                <el-button slot="append" icon="el-icon-search" @click="searchProject"></el-button>
+              </el-input>
             </el-form-item>
           </el-col>
           <el-col :span="4">
@@ -17,7 +19,7 @@
 
           <el-col :span="12" class="text-right">
             <el-button type="primary" icon="el-icon-plus" @click="isShow = true">创建项目</el-button>
-            <el-button type="primary" icon="el-icon-delete" @click="deleteProject">批量删除</el-button>
+            <el-button type="primary" icon="el-icon-delete" @click="omDeletes">批量删除</el-button>
           </el-col>
         </el-row>
       </el-form>
@@ -29,21 +31,51 @@
         border
         style="width: 100%"
         :default-sort = "{prop: 'zip', order: 'descending'}"
-        @selection-change="handleSelectionChange"
+        @select="handleSelectionChange"
         >
         <el-table-column type="selection" width="55"></el-table-column>
-        <el-table-column prop="date" label="项目名称"></el-table-column>
-        <el-table-column prop="name" label="类型" width="100"></el-table-column>
-        <el-table-column prop="province" label="分辨率" width="100"></el-table-column>
-        <el-table-column prop="city" label="画幅" width="100"></el-table-column>
+        <el-table-column prop="title" label="项目名称"></el-table-column>
+        <!-- <el-table-column prop="name" label="类型" width="100"></el-table-column> -->
+        <el-table-column prop="resolution" label="分辨率" width="120">
+          <template slot="header" scope="scope">
+              <el-select
+                  v-model="form.resolution"
+                  placeholder="分辨率"
+                  @change="filterSelect($event, 'resolution')"
+              >
+                  <el-option
+                    v-for="item in sizeList"
+                    :key="item.key"
+                    :value="item.name">
+                    {{item.name}}
+                  </el-option>
+              </el-select>
+            </template>
+        </el-table-column>
+        <el-table-column prop="wh_ratio" label="画幅" width="130">
+          <template slot="header" slot-scope="scope">
+            <el-select
+                v-model="form.wh_ratio"
+                placeholder="画幅比例"
+                @change="filterSelect($event, 'wh_ratio')"
+            >
+                <el-option
+                  v-for="item in scaleList"
+                  :key="item.key"
+                  :value="item.name">
+                  {{item.name}}
+                </el-option>
+            </el-select>
+          </template>
+        </el-table-column>
         <!-- <el-table-column prop="address" label="大小（M）" width="120"></el-table-column> -->
         <!-- <el-table-column prop="zip" label="时长（S）" width="200" sortable></el-table-column> -->
-        <el-table-column prop="zip" label="创建时间" width="200" sortable></el-table-column>
-        <el-table-column prop="zip" label="更新时间" width="200" sortable></el-table-column>
+        <el-table-column prop="created_at" label="创建时间" width="200" sortable></el-table-column>
+        <el-table-column prop="updated_at" label="更新时间" width="200" sortable></el-table-column>
         <el-table-column fixed="right" label="操作">
           <template slot-scope="scope">
             <el-button type="text" @click="onEdit">编辑</el-button>
-            <el-button type="text" @click="omDelete(scope)">删除</el-button>
+            <el-button type="text" @click="omDelete(scope.row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -52,25 +84,13 @@
         background
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
-        :current-page="currentPage"
         :page-sizes="[5, 10, 15, 20]"
-        :page-size="10"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="50">
+        :current-page="page.pageNo"
+        :page-size="page.pageSize"
+        layout="total, slot, prev, pager, next, sizes, jumper"
+        :total="page.recordCount">
+        <span>第{{ page.pageNo }}/{{ page.pageCount }}页</span>
       </el-pagination>
-
-      <!-- 删除提示 -->
-      <el-dialog
-        title="删除确认"
-        :visible="isDelete"
-        width="30%"
-        :before-close="handleClose">
-        <span>请确认是否删除该项目？</span>
-        <span slot="footer" class="dialog-footer">
-          <el-button @click="isDelete = false">取 消</el-button>
-          <el-button type="primary" @click="deleteProject">确 认</el-button>
-        </span>
-      </el-dialog>
 
       <!-- 创建项目 -->
       <el-dialog 
@@ -80,9 +100,9 @@
         class="creat-dialog"
         width="30%">
         <el-form :model="creatForm" label-width="80px" :rules="creatFormRules" ref="creatForm">
-          <el-form-item label="项目名称" prop="name">
+          <el-form-item label="项目名称" prop="title">
             <el-input 
-              v-model="creatForm.name"
+              v-model="creatForm.title"
               placeholder="请输入项目名称"
               maxlength="10"
               show-word-limit
@@ -90,21 +110,29 @@
             </el-input>
           </el-form-item>
           <el-form-item label="画幅比例" prop="scale">
-            <el-select v-model="creatForm.scale" placeholder="请选择活动区域">
-              <el-option label="区域一" value="shanghai"></el-option>
-              <el-option label="区域二" value="beijing"></el-option>
+            <el-select v-model="creatForm.wh_ratio" placeholder="请选择画幅比例">
+              <el-option
+                v-for="item in scaleList"
+                :key="item.key"
+                :value="item.name">
+                {{item.name}}
+              </el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="分辨率" prop="size">
-            <el-select v-model="creatForm.size" placeholder="请选择活动区域">
-              <el-option label="区域一" value="shanghai"></el-option>
-              <el-option label="区域二" value="beijing"></el-option>
+            <el-select v-model="creatForm.resolution" placeholder="请选择分辨率">
+              <el-option
+                v-for="item in sizeList"
+                :key="item.key"
+                :value="item.name">
+                {{item.name}}
+              </el-option>
             </el-select>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="isShow = false">取 消</el-button>
-          <el-button type="primary" @click="onConfirm('creatForm')">确 认</el-button>
+          <el-button type="primary" @click="addProject('creatForm')">确 认</el-button>
         </div>
       </el-dialog>
     </div>
@@ -123,110 +151,52 @@
       return {
         loading: false,
         form: {
-          keyword: ""
+          title: '',
+          wh_ratio: '',
+          resolution: ''
         },
         rules: {
-          keyword: [
-            { required: true, message: "请输入作品名称关键字", trigger: "blur" },
-          ],
-          status: [
-            { required: true, message: "请选择状态", trigger: "change" },
-          ],
+          title: [
+            { required: true, message: "请输入项目名称关键字", trigger: "blur" },
+          ]
         },
         creatFormRules: {
-          name: [
+          title: [
             { required: true, message: "请输入项目名称", trigger: "blur" },
             { min: 1, max: 10, message: '长度在 1 到 10 个字符', trigger: 'blur' }
           ],
-          scale: [
+          wh_ratio: [
             { required: true, message: "请选择画幅比例", trigger: "change" }
           ],
-          size: [
+          resolution: [
             { required: true, message: "请选择分辨率", trigger: "change" }
           ]
         },
         isShow: false,   
         isDelete: false, //删除弹窗
         creatForm: {
-          name: '',
-          scale: '',
-          size: ''
+          title: '',
+          wh_ratio: '16:9',
+          resolution: '540'
         },
         scaleList: [], //画幅比例列表
         sizeList: [],  //分辨率列表
-        statusList: [], //状态列表
-        selectData: [{
-          value: '1',
-          label: '合成中'
-        }, {
-          value: '2',
-          label: '合成失败'
-        }, {
-          value: '3',
-          label: '待审核'
-        }, {
-          value: '4',
-          label: '审核中'
-        }, {
-          value: '5',
-          label: '审核失败'
-        }, {
-          value: '6',
-          label: '待发布'
-        }, {
-          value: '7',
-          label: '已发布'
-        }],
-        currentPage: 5,
+        
         page: {
           pageNo: 1,
-          pageSize: 30,
-          // map: {
-          //   resolution: 540,
-          //   wh_ratio: 16:9
-          // }
+          pageSize: 10,
+          recordCount: 0,
+          pageCount: 0
         },
-        tableData: [{
-          date: 'Name1Name1Name1',
-          name: 'abc@moviebook.cn',
-          province: '上海',
-          city: '普陀区',
-          address: '审核',
-          zip: 1
-        }, {
-          date: 'Name1Name1Name1Name1Name1',
-          name: 'abc@moviebook.cn',
-          province: '上海',
-          city: '普陀区',
-          address: '审核',
-          zip: 2
-        }, {
-          date: 'Name1Name1',
-          name: 'abc@moviebook.cn',
-          province: '上海',
-          city: '普陀区',
-          address: '审核',
-          zip: 3
-        }, {
-          date: 'Name1Name1Name1Name1Name1',
-          name: 'abc@moviebook.cn',
-          province: '上海',
-          city: '普陀区',
-          address: '审核未通过',
-          zip: 4
-        }, {
-          date: 'Name1Name1',
-          name: 'abc@moviebook.cn',
-          province: '上海',
-          city: '普陀区',
-          address: '审核未通过',
-          zip: 5
-        }]
+        projectId: '',
+        tableData: []
       }
     },
     created() {
     },
     mounted() {
+      this.getChoicesList();
+      this.getProjectList();
     },
     components: {
     },
@@ -234,56 +204,6 @@
       handleClose() {
         this.isShow = false;
         this.isDelete = false;
-      },
-      
-      // 删除项目
-      deleteProject(){
-        this.isDelete = true;
-
-        delProject().then(res => {
-          if (res.status == 1) {
-             this.$message({
-              type: "success",
-              message: res.msg
-            })
-            this.getChoicesList();
-          } else {
-            this.$message({
-              type: "error",
-              message: res.msg
-            })
-          }
-        }).catch(error => {
-          console.log(error);
-        })
-      },
-      
-      // 获取画幅，分辨率列表
-      getChoicesList(){
-        getChoicesList().then(res => {
-          if (res.status == 1) {
-            this.scaleList = res.resolution;
-            this.sizeList = res.wh_ratio;
-            this.statusList = res.status;
-          } else {
-            this.$message({
-              type: "error",
-              message: res.msg
-            });
-          }
-        }).catch(error => {
-          console.log(error);
-        })
-      },
-      // 选中项目
-      handleSelectionChange(val) {
-        this.multipleSelection = val;
-        console.log(val, 'valvalval');
-        this.getChoicesList();
-      },
-      // 清空搜索条件
-      resetSearch(){
-        this.getChoicesList();
       },
 
       // 创建项目
@@ -293,9 +213,9 @@
             return false;
           }
           let params = {
-            title: this.creatForm.name,
-            resolution: this.creatForm.scale,
-            wh_ratio: this.creatForm.size
+            title: this.creatForm.title,
+            resolution: this.creatForm.resolution,
+            wh_ratio: this.creatForm.wh_ratio
           }
           createProject(params).then(res => {
             if(res.status == 1){
@@ -303,7 +223,9 @@
                 type: "success",
                 message: res.msg
               });
-              this.tableData = res.data.xx;
+              this.isShow = false;
+              this.getProjectList();
+              this.$refs.creatForm.resetFields();
             }else{
               this.$message({
                 type: "error",
@@ -316,22 +238,131 @@
         });
       },
 
-      onReview(){
-        this.isShow = true;
+      // 获取画幅，分辨率列表
+      getChoicesList(){
+        getChoicesList({type: 2}).then(res => {
+          if (res.status == 1) {
+            this.scaleList = res.element.wh_ratio;
+            this.sizeList = res.element.resolution;
+          } else {
+            this.$message({
+              type: "error",
+              message: res.msg
+            });
+          }
+        }).catch(error => {
+          console.log(error);
+        })
+      },
+      
+      // 搜索列表
+      searchProject(){
+        this.getProjectList();
+      },
+
+      // 清空搜索条件
+      resetSearch(){
+        this.form.title = '';
+        this.getProjectList();
+      },
+      onEdit(){
+      },
+
+      // 选中项目
+      handleSelectionChange(val) {
+        const projectIds = val.map(e => e.id);
+        this.projectId = projectIds.toString();
+      },
+      // 批量删除
+      omDeletes(){
+        const params = {
+          projectId: this.projectId
+        };
+        
+        this.$confirm('请确认是否删除该项目?', '删除确认', {
+          confirmButtonText: '确认',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.delProject(params);
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });          
+        });
+
+      },
+
+      // 单个删除
+      omDelete(row){
+        const params = {
+          projectId: row.id
+        };
+        
+        this.$confirm('请确认是否删除该项目?', '删除确认', {
+          confirmButtonText: '确认',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.delProject(params);
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });          
+        });
+
+      },
+      delProject(data){
+        delProject(data).then(res => {
+          if(res.status == 1){
+            this.getProjectList();
+            this.$message({
+              type: "success",
+              message: res.msg
+            });
+          }else{
+            this.$message({
+              type: "error",
+              message: res.msg
+            })
+          }
+        });
+      },
+      
+      // 筛选列表
+      filterSelect(value, type) {
+          console.log(type);
+          switch (type) {
+            case "aaa":
+              this.form.wh_ratio = value;
+              break;
+            case "bbb":
+              this.form.resolution = value;
+              break;
+          }
+          this.page.pageNo = 1;
+          this.page.pageSize = 10;
+          
+          this.getProjectList();
       },
       
       // 获取项目列表
       getProjectList(){
+        this.loading = true;
         const params = {
           pageNo: this.page.pageNo,
           pageSize: this.page.pageSize,
           map: {
-            // search
             ...this.form
           },
         };
-        getProjectList().then(res => {
+        console.log("params", params);
+
+        getProjectList(params).then(res => {
           if(res.status == 1){
+            this.loading = false;
             const {pageNo,
               pageSize,
               recordCount,
@@ -339,8 +370,8 @@
             this.page = {
               pageNo,
               pageSize,
-              // recordCount,
-              // pageCount,
+              recordCount,
+              pageCount
             }
             this.tableData = res.datas
           }else{
@@ -354,11 +385,11 @@
         })
       },
       handleSizeChange(val) {
-        console.log(`每页 ${val} 条`);
+        this.page.pageSize = val;
         this.getProjectList();
       },
       handleCurrentChange(val) {
-        console.log(`当前页: ${val}`);
+        this.page.pageNo = val;
         this.getProjectList();
       }
     },
