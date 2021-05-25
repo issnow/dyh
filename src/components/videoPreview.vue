@@ -199,7 +199,7 @@ export default {
   height: 100%;
   max-width: 84px;
   max-height: 48px;
-  background: #ccc;
+  // background: #ccc;
   // background-image: url("./../assets/img.png");
   background-position: center;
   background-repeat: no-repeat;

@@ -10,16 +10,16 @@
       >
         <el-row>
           <el-col :span="7">
-            <el-form-item label="搜索" prop="keyword">
+            <el-form-item label="搜索" prop="title">
               <el-input
-                v-model="form.keyword"
+                v-model="form.title"
                 placeholder="请输入关键字"
-                @keyup.native="submitForm('form')"
+                @keyup.enter.native="handleSubmitForm('form')"
               >
                 <el-button
                   slot="append"
                   icon="el-icon-search"
-                  @click="submitForm('form')"
+                  @click="handleSubmitForm('form')"
                 ></el-button>
               </el-input>
             </el-form-item>
@@ -57,31 +57,40 @@
         style="width: 100%"
         :default-sort="{ prop: 'time', order: 'descending' }"
         @selection-change="handleSelectionChange"
+        @sort-change="sortChange"
       >
         <el-table-column type="selection" width="55"> </el-table-column>
-        <el-table-column prop="name" label="成品名称"></el-table-column>
-        <el-table-column prop="type" label="类型" width="100"></el-table-column>
+        <el-table-column prop="title" label="成品名称"></el-table-column>
         <el-table-column
-          prop="person"
+          prop="resolution"
           label="分辨率"
           width="200"
+          :filters="filterResolution"
+          :filter-method="filterHandler"
         ></el-table-column>
         <el-table-column
-          prop="picture"
+          prop="wh_ratio"
           label="画幅"
           width="100"
+          :filters="filterWh_ratio"
+          :filter-method="filterHandler"
         ></el-table-column>
-        <el-table-column prop="view" label="预览" width="120">
+        <el-table-column label="预览" width="120">
           <template slot-scope="scope">
             <videoPreview
               :isVideo="true"
+              :source="scope.row.url"
+              :bgImage="scope.row.cover_url"
+            />
+            <!-- <videoPreview
+              :isVideo="true"
               :source="getImg('movie.mp4')"
               :bgImage="getImg('8.jpg')"
-            />
+            /> -->
           </template>
         </el-table-column>
         <el-table-column
-          prop="size"
+          prop="video_size"
           label="大小（M）"
           width="200"
         ></el-table-column>
@@ -91,23 +100,49 @@
           width="200"
         ></el-table-column>
         <el-table-column
-          prop="status"
           label="状态"
           width="200"
+          prop="status_title"
         ></el-table-column>
         <el-table-column
-          prop="time"
+          prop="created_at"
           label="创作时间"
           width="200"
-          sortable
+          sortable="custom"
         ></el-table-column>
         <el-table-column fixed="right" label="操作" width="300">
           <template slot-scope="scope">
-            <el-button type="text" @click="onReview">提交审核</el-button>
-            <el-button type="text" @click="onGenerate">重新合成</el-button>
-            <el-button type="text" @click="onDelete">删除</el-button>
-            <el-button type="text" @click="onWatch">查看</el-button>
-            <el-button type="text" @click="onEdit">编辑</el-button>
+            <!-- scope.row.status -->
+            <el-button
+              v-if="[1, 2, 3, 6, 7].includes(scope.row.status)"
+              type="text"
+              @click="onDelete(scope.row.code)"
+              >删除</el-button
+            >
+            <el-button
+              v-if="[2].includes(scope.row.status)"
+              type="text"
+              @click="onGenerate"
+              >重新合成</el-button
+            >
+            <el-button
+              v-if="[3].includes(scope.row.status)"
+              type="text"
+              @click="onReview(scope.row)"
+              >提交审核</el-button
+            >
+            <el-button
+              v-if="[3, 6].includes(scope.row.status)"
+              type="text"
+              @click="onEdit(scope.row.code)"
+              >编辑</el-button
+            >
+            <el-button
+              v-if="[4, 7].includes(scope.row.status)"
+              type="text"
+              @click="onWatch(scope.row.code)"
+              >查看</el-button
+            >
           </template>
         </el-table-column>
       </el-table>
@@ -116,18 +151,21 @@
         background
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
-        :current-page="page.page"
+        :current-page="page.pageNo"
         :page-sizes="[5, 10, 15, 20]"
-        :page-size="10"
+        :page-size="page.pageSize"
         layout="total, slot, prev, pager, next, sizes, jumper"
         :total="page.recordCount"
       >
-        <span>第{{ page.page }}/{{ page.pageCount }}页</span>
+        <span>第{{ page.pageNo }}/{{ page.pageCount }}页</span>
       </el-pagination>
 
       <submitDialog
+        :code="code"
         :visible="submitDialogVisible"
+        :title='title'
         @hideDialog="submitDialogVisible = false"
+        @_productGetList="_productGetList"
       />
     </div>
   </div>
@@ -136,169 +174,188 @@
 <script>
 import {
   productGetList,
-  productChoicesList
-} from '@api/workManager'
+  productChoicesList,
+  productDel,
+  productEntityList,
+} from "@api/workManager";
 import videoPreview from "@component/videoPreview";
 import submitDialog from "./submitDialog";
+import _ from "lodash";
+import { mapActions, mapState } from "vuex";
 export default {
   components: {
-    submitDialog,
+    submitDialog:()=>import('./submitDialog.vue'),
+    // submitDialog: () => ({
+    //   component: import("./submitDialog"),
+    // }),
     videoPreview,
   },
   data() {
     return {
       submitDialogVisible: false,
       page: {
-        page: 1,
-        pageSize: 10,
+        pageNo: 1,
+        pageSize: 5,
         // 共几条
         recordCount: 0,
         // 共几页
         pageCount: 0,
       },
+      listParams: {
+        wh_ratio: "",
+        resolution: "",
+        order: "1",
+      },
       loading: false,
       form: {
-        keyword: "",
+        title: "",
         status: "",
       },
       rules: {
-        keyword: [
+        title: [
           { required: true, message: "请输入作品名称关键字", trigger: "blur" },
         ],
         status: [{ required: true, message: "请选择状态", trigger: "change" }],
       },
-      selectData: [
-        {
-          value: "1",
-          label: "合成中",
-        },
-        {
-          value: "2",
-          label: "合成失败",
-        },
-        {
-          value: "3",
-          label: "待审核",
-        },
-        {
-          value: "4",
-          label: "审核中",
-        },
-        {
-          value: "5",
-          label: "审核失败",
-        },
-        {
-          value: "6",
-          label: "待发布",
-        },
-        {
-          value: "7",
-          label: "已发布",
-        },
-      ],
+      // 状态
+      selectData: [],
       status: "",
       value: "",
       searchValue: "",
-      tableData: [
-        {
-          name: "Name1Name1Name1",
-          person: "abc@moviebook.cn",
-          type: "上海",
-          picture: "普陀区",
-          view: "审核",
-          size: 200333,
-          duration: 111,
-          status: "成功",
-          time: "1",
-        },
-        {
-          name: "Name1Name1Name1",
-          person: "abc@moviebook.cn",
-          type: "上海",
-          picture: "普陀区",
-          view: "审核",
-          size: 200333,
-          duration: 111,
-          status: "成功",
-          time: "2",
-        },
-        {
-          name: "Name1Name1Name1",
-          person: "abc@moviebook.cn",
-          type: "上海",
-          picture: "普陀区",
-          view: "审核",
-          size: 200333,
-          duration: 111,
-          status: "成功",
-          time: "3",
-        },
-        {
-          name: "Name1Name1Name1",
-          person: "abc@moviebook.cn",
-          type: "上海",
-          picture: "普陀区",
-          view: "审核",
-          size: 200333,
-          duration: 111,
-          status: "成功",
-          time: "4",
-        },
-        {
-          name: "Name1Name1Name1",
-          person: "abc@moviebook.cn",
-          type: "上海",
-          picture: "普陀区",
-          view: "审核",
-          size: 200333,
-          duration: 111,
-          status: "成功",
-          time: "5",
-        },
-      ],
+      tableData: [],
+      // tableData: [
+      //   {
+      //     code: "ea2037fe7e6b665380fa942024f2d1a9",
+      //     cover_url:
+      //       "https://yingpu.obs.myhuaweicloud.com/crowdCreation/prod/product/9156be90e947a6d3e8f7e3a14499cf61.jpeg",
+      //     created_at: "2021-05-19 11:02:04",
+      //     duration: 20,
+      //     resolution: "540",
+      //     resolution_id: 1,
+      //     status: 9,
+      //     status_title: "已发布",
+      //     title: "测试1",
+      //     url:
+      //       "http://test.api.videoai.moviebook.cn/files/cutProcessingVideo/20210518/2021051814083938461.mp4",
+      //     video_size: 22809.07,
+      //     wh_ratio: "16:9",
+      //     wh_ratio_id: 1,
+      //   },
+      // ],
       multipleSelection: [],
+      filterResolution: [],
+      filterWh_ratio: [],
+      // 提交审核code
+      code: "",
+      title: ''
     };
   },
-  created() {},
+  watch: {
+    listParams: {
+      handler(value) {
+        console.log(value, "value");
+        this._productGetList();
+      },
+      deep: true,
+    },
+  },
+  computed: {
+    ...mapState("workManager", {
+      // entityList: state=>state.entityList
+    }),
+  },
+  beforeDestroy() {
+    clearTimeout(this.timer)
+  },
   mounted() {
-    this._productChoicesList()
-    this._productGetList()
+    this._productChoicesList();
+    this._productGetList();
+    // this['workManager/asyncGetEntityList']()
   },
   methods: {
+    // ...mapActions(['workManager/asyncGetEntityList']),
+    sortChange({ order }) {
+      if (order == "ascending") {
+        // 升序
+        this.listParams.order = 2;
+      } else if (order == "descending") {
+        // 降序
+        this.listParams.order = 1;
+      } else {
+        this.listParams.order = 1;
+      }
+    },
+    filterHandler(value, row, column) {
+      const property = column["property"];
+      return row[property] === value;
+    },
     async _productChoicesList() {
-      const res = await productChoicesList({type: 1})
-      console.log(res, 'res')
-      if(res.status == 1) {
+      const { status, element } = await productChoicesList({ type: 1 });
+      if (status == 1) {
+        this.selectData = element.status.map((e) => ({
+          label: e.name,
+          value: e.key,
+        }));
+        this.filterResolution = element.resolution.map((e) => ({
+          text: e.name,
+          value: e.name,
+        }));
+        this.filterWh_ratio = element.wh_ratio.map((e) => ({
+          text: e.name,
+          value: e.name,
+        }));
 
+        // console.log(this.selectData, "selectData");
+        console.log(this.filterResolution, "filterResolution");
+        console.log(this.filterWh_ratio, "filterWh_ratio");
       }
     },
     async _productGetList() {
+      this.loading = true;
       const params = {
-        pageSize: 10,
-        page: 1,
-        title: "哈哈",
-        status: "1",
-        wh_ratio: "1",
-        resolution: "2",
-        order: "1",
+        ...this.form,
+        ...this.listParams,
+        pageSize: this.page.pageSize,
+        pageNo: this.page.pageNo,
       };
-      let res = await productGetList(params);
-      console.log(res, 'res')
+      let { status, datas, fsp } = await productGetList(params);
+      this.loading = false;
+      if (status == 1) {
+        this.tableData = datas;
+        this.page = {
+          pageNo: fsp.pageNo,
+          pageSize: fsp.pageSize,
+          // 共几条
+          recordCount: fsp.recordCount,
+          // 共几页
+          pageCount: fsp.pageCount,
+        };
+      }
     },
     selectDelete() {
       console.log("multipleSelection", this.multipleSelection);
-      if(this.multipleSelection.length > 0) {
+      if (this.multipleSelection.length > 0) {
         this.$confirm("请确认是否删除该成品?", "删除确认", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning",
         })
-          .then(() => {
-            this.$message({
-              type: "success",
-              message: "删除成功!",
+          .then(async () => {
+            let { status, msg } = await productDel({
+              code: this.multipleSelection.map((e) => e.code),
             });
+            if (status == 1) {
+              this.$message({
+                type: "success",
+                message: msg,
+              });
+              this._productGetList();
+            } else {
+              this.$message({
+                type: "error",
+                message: msg,
+              });
+            }
           })
           .catch(() => {
             this.$message({
@@ -306,14 +363,15 @@ export default {
               message: "已取消删除",
             });
           });
-      }else {
+      } else {
         this.$message({
-          type: 'info',
-          message: '请先勾选'
-        })
+          type: "info",
+          message: "请先勾选",
+        });
       }
     },
     handleSelectionChange(val) {
+      console.log(val, "val");
       this.multipleSelection = val;
     },
     getImg(src) {
@@ -321,21 +379,34 @@ export default {
         return require("@/assets/" + src);
       }
     },
-    onReview() {
+    onReview({code,title}) {
+      this.code = code;
       this.submitDialogVisible = true;
+      this.title = title
     },
     onGenerate() {},
-    onDelete() {
+    onDelete(code) {
       this.$confirm("请确认是否删除该成品?", "删除确认", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
       })
-        .then(() => {
-          this.$message({
-            type: "success",
-            message: "删除成功!",
+        .then(async () => {
+          let { status, msg } = await productDel({
+            code: [code],
           });
+          if (status == 1) {
+            this.$message({
+              type: "success",
+              message: msg,
+            });
+            this._productGetList();
+          } else {
+            this.$message({
+              type: "error",
+              message: msg,
+            });
+          }
         })
         .catch(() => {
           this.$message({
@@ -344,11 +415,14 @@ export default {
           });
         });
     },
-    onWatch() {
-      this.$router.push({ path: "/workDetail", query: { id: 123 } });
+    onWatch(code) {
+      // this.$router.push({ path: "/workDetail", query: { code, isEdit: false } });
+      this.$router.push({ path: `/workDetail/${code}/0` });
     },
-    onEdit() {},
-    submitForm(formName) {
+    onEdit(code) {
+      this.$router.push({ path: `/workDetail/${code}/1` });
+    },
+    handleSubmitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (!valid) {
           console.log("error submit!!");
@@ -356,14 +430,21 @@ export default {
         }
         // 请求接口
         console.log(this.form, "form");
+
+        this._productGetList();
       });
     },
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`);
+      this.page = { ...this.page, pageSize: val };
+      this._productGetList();
     },
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
+      this.page = { ...this.page, pageNo: val };
+      this._productGetList();
     },
+
   },
 };
 </script>

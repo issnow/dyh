@@ -11,7 +11,7 @@ export const routes = [
     // hidden: true
   },
   {
-    path:'/workDetail',
+    path:'/workDetail/:code/:isEdit',
     component: Layout,
     children: [
       {
