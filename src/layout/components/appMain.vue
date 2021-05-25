@@ -21,7 +21,8 @@
     name: 'appMain',
     computed: {
       key() {
-        return this.$route.path
+        // return this.$route.path
+        return this.$route.name !== undefined? this.$route.name +new Date(): this.$route +new Date()
       }
     }
   }
