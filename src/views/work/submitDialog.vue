@@ -14,15 +14,15 @@
       class="work-submit-form"
     >
       <el-form-item label="名称:">
-        大运河夫子庙视频
+        {{ title }}
         <div>视频名称不可修改。</div>
       </el-form-item>
-      <el-form-item label="描述" prop="textarea">
+      <el-form-item label="描述" prop="desc">
         <el-input
           type="textarea"
           :rows="2"
           placeholder="请输入内容"
-          v-model="form.textarea"
+          v-model="form.desc"
           maxlength="50"
           show-word-limit
         >
@@ -41,60 +41,106 @@
         </el-select>
       </el-form-item>
 
-      <el-row :gutter="20">
-        <el-col :span="10">
-          <el-form-item label="实体" prop="thing">
-            <el-select v-model="form.thing" placeholder="请选择">
-              <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              >
-              </el-option>
-            </el-select>
-          </el-form-item>
+      <!-- <el-form-item label="人物" prop="thing1">
+        <el-select
+          v-model="form.thing1"
+          placeholder="请选择"
+          filterable
+          remote
+          :remote-method="remoteMethod1"
+        >
+          <el-option
+            v-for="item in options2"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          >
+          </el-option>
+        </el-select>
+      </el-form-item> -->
 
-        </el-col>
-        <el-col :span="10">
-          <el-form-item prop="thing2">
-            <el-select v-model="form.thing2" placeholder="请选择">
-              <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              >
-              </el-option>
-            </el-select>
-          </el-form-item>
-
-        </el-col>
-      </el-row>
-
+      <el-form-item
+        v-for="(e, i) in entityList"
+        :key="e.id"
+        :label="e.name"
+        :prop="'thing' + i"
+      >
+        <el-select
+          v-model="form['thing' + i]"
+          placeholder="请选择"
+          filterable
+          multiple
+          remote
+          :remote-method="
+            (query) => {
+              remoteMethod(query, e);
+            }
+          "
+          @focus="onFocus(e)"
+          @visible-change="visibleChange"
+        >
+          <el-option
+            v-for="item in arrList"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          >
+          </el-option>
+        </el-select>
+        <!-- <el-select
+          v-model="form['thing' + i]"
+          placeholder="请选择"
+          filterable
+        >
+          <el-option
+            v-for="item in e.option"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          >
+          </el-option>
+        </el-select> -->
+      </el-form-item>
     </el-form>
 
     <div slot="footer" class="dialog-footer">
-      <el-button type="primary" @click="submitForm('form')" :loading='loading'>提 交</el-button>
+      <el-button type="primary" @click="submitForm('form')" :loading="loading"
+        >提 交</el-button
+      >
       <el-button @click="beforeClose">取 消</el-button>
     </div>
   </el-dialog>
 </template>
 
 <script>
+import {
+  productTagList,
+  productEntityList,
+  productApplyAudit,
+} from "@api/workManager";
+import { mapActions, mapState, mapMutations } from "vuex";
 export default {
-  props: ['visible'],
+  props: ["visible", "code", "title"],
   data() {
+    let tempRule = {},
+      tempForm = {};
+    for (let i = 0; i < 20; i++) {
+      tempRule["thing" + i] = {
+        required: true,
+        message: "请输入",
+        trigger: "blur",
+      };
+      tempForm["thing" + i] = "";
+    }
     return {
       form: {
-        textarea: "",
-        label: '选项1',
-        thing: '',
-        thing2: ''
+        desc: "",
+        label: "",
+        ...tempForm,
       },
       loading: false,
       rules: {
-        textarea: [
+        desc: [
           { required: true, message: "请输入", trigger: "blur" },
           // { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" },
         ],
@@ -102,56 +148,112 @@ export default {
           { required: true, message: "请输入", trigger: "blur" },
           // { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" },
         ],
-        thing: [
-          { required: true, message: "请输入", trigger: "blur" },
-          // { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" },
-        ],
-        thing2: [
-          { required: true, message: "请输入", trigger: "blur" },
-          // { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" },
-        ],
+        ...tempRule,
       },
-      options: [
-        {
-          value: "选项1",
-          label: "黄金糕",
-        },
-        {
-          value: "选项2",
-          label: "双皮奶",
-        },
-        {
-          value: "选项3",
-          label: "蚵仔煎",
-        },
-        {
-          value: "选项4",
-          label: "龙须面",
-        },
-        {
-          value: "选项5",
-          label: "北京烤鸭",
-        },
-      ],
+      // 标签
+      options: [],
+      entityList: [],
+      // 搜出来的实体列表
+      arrList: [],
     };
   },
+  mounted() {
+    this._productTagList();
+  },
+  created() {
+    this.asyncGetEntityList();
+  },
   methods: {
+    visibleChange(visi) {
+      if (!visi) {
+        this.arrList = [];
+      }
+    },
+    async onFocus(e, query = "") {
+      let res = await productEntityList({ id: e.id, name: query });
+      if (res.status == 1) {
+        this.arrList = res.element.map((c) => ({
+          value: c.id,
+          label: c.name,
+        }));
+      }
+    },
+    async asyncGetEntityList() {
+      let { status, element } = await productEntityList();
+      if (status == 1) {
+        // element.forEach(async (e) => {
+        //   let res = await productEntityList({ id: e.id, name: "" });
+        //   if (res.status == 1) {
+        //     e.data = res.element.map((c) => ({
+        //       value: c.id,
+        //       label: c.name,
+        //     }));
+        //     // e.option = res.element.map((c) => ({
+        //     //   value: c.id,
+        //     //   label: c.name,
+        //     // }));
+        //     e.option = [];
+        //     e.search = false;
+        //   }
+        // });
+        console.log(element, "element");
+        this.entityList = element;
+      }
+    },
+    async remoteMethod(query, e) {
+      if (query !== "") {
+        this.onFocus(e, query);
+      } else {
+        this.arrList = [];
+      }
+    },
+
+    async _productTagList() {
+      let { status, element } = await productTagList();
+      if (status == 1) {
+        this.options = element.map((e) => ({
+          value: e.key,
+          label: e.name,
+        }));
+      }
+    },
     resetFields() {
-      this.$refs.form.resetFields()
+      this.$refs.form.resetFields();
     },
     beforeClose() {
-      this.resetFields()
-      this.$emit('hideDialog')
+      this.resetFields();
+      this.$emit("hideDialog");
     },
     submitForm(formName) {
       this.$refs[formName].validate(async (valid) => {
         if (valid) {
-          console.log(this.form)
-          this.loading = true
-
-          setTimeout(() => {
-            this.loading = false
-          }, 2000);
+          this.loading = true;
+          console.log(this.form, "form");
+          const entity = Object.values(this.form)
+            .filter((e) => Array.isArray(e))
+            .flat();
+          const params = {
+            code: this.code,
+            desc: this.form.desc,
+            tag: [this.form.label],
+            entity,
+          };
+          console.log(params);
+          let { msg, status } = await productApplyAudit(params);
+          if (status == 1) {
+            this.$message({
+              type: "success",
+              message: msg,
+            });
+            this.beforeClose();
+            this.$emit("_productGetList");
+          } else {
+            this.$message({
+              type: "error",
+              message: msg,
+            });
+          }
+          this.loading = false;
         } else {
           console.log("error submit!!");
           return false;

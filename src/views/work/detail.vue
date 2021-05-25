@@ -25,13 +25,14 @@
         </li>
         <li>
           <div class="label">建议:</div>
-          <div class="content">显示成品描述的内容</div>
+          <div class="content">{{task.audit_note}}</div>
         </li>
       </ul>
       <div class="video-play-area">
-        <videoPlay :src="getImg('movie.mp4')"></videoPlay>
+        <videoPlay :src="url"></videoPlay>
       </div>
     </div>
+
     <div class="work-detail-info">
       <div class="title">成品信息:</div>
       <el-form
@@ -40,21 +41,22 @@
         ref="form"
         label-width="90px"
         class="info-form"
+        :disabled='!isEdit'
       >
-        <el-form-item label="名称:" prop="name">
+        <el-form-item label="名称:" prop="title">
           <el-input
             type="textarea"
             :rows="2"
             placeholder="请输入内容"
-            v-model="form.name"
+            v-model="form.title"
             maxlength="20"
             show-word-limit
           >
           </el-input>
           <!-- <div class="tip">上限20个字符。</div> -->
         </el-form-item>
-        <el-form-item label="标签:" prop="label">
-          <el-select v-model="form.label" placeholder="请选择">
+        <el-form-item label="标签:" prop="tag">
+          <el-select v-model="form.tag" placeholder="请选择">
             <el-option
               v-for="item in options"
               :key="item.value"
@@ -65,7 +67,7 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item label="一级实体:" prop="thing">
+        <!-- <el-form-item label="一级实体:" prop="thing">
           <el-select v-model="form.thing" placeholder="请选择">
             <el-option
               v-for="item in options"
@@ -87,6 +89,37 @@
             >
             </el-option>
           </el-select>
+        </el-form-item> -->
+
+        <el-form-item
+          v-for="(e) in entityList"
+          :key="e.id"
+          :label="e.name"
+          :prop="'thing' + e.id"
+        >
+          <el-select
+            v-model="form['thing' + e.id]"
+            placeholder="请选择"
+            filterable
+            multiple
+            ref="search"
+            remote
+            :remote-method="
+              (query) => {
+                remoteMethod(query, e);
+              }
+            "
+            @focus="onFocus(e)"
+            @visible-change="visibleChange"
+          >
+            <el-option
+              v-for="item in arrList"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            >
+            </el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="描述:" prop="description">
           <el-input
@@ -102,9 +135,10 @@
         </el-form-item>
       </el-form>
       <div class="foot-btn">
-        <el-button type="primary" @click="submitForm('form')" :loading="loading"
+        <el-button v-if="isEdit" type="primary" @click="submitForm('form')" :loading="loading"
           >提 交</el-button
         >
+        <el-button v-if="!isEdit" type="primary" @click="onEdit" >编 辑</el-button>
         <el-button @click="onCancel">取 消</el-button>
       </div>
     </div>
@@ -112,90 +146,202 @@
 </template>
 
 <script>
+import {
+  productDetail,
+  productEntityList,
+  productTagList,
+  productEdit
+} from "@api/workManager";
 import videoPlay from "./videoPlay";
 export default {
   components: {
     videoPlay,
   },
+  created() {
+    this.asyncGetEntityList();
+    this._productTagList();
+  },
   data() {
+    let tempRule = {},
+      tempForm = {};
+    for (let i = 1; i < 20; i++) {
+      tempRule["thing" + i] = {
+        required: true,
+        message: "请输入",
+        trigger: "blur",
+      };
+      tempForm["thing" + i] = "";
+    }
     return {
       loading: false,
-      // query: {}
       form: {
         description: "",
-        name: "",
-        label: "选项1",
-        thing: "",
-        thing2: "",
+        title: "",
+        tag: "",
+        // thing: "",
+        // thing2: "",
+        ...tempForm,
       },
       rules: {
-        name: [
+        title: [
+          { required: true, message: "请输入1", trigger: "blur" },
+          // { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" },
+        ],
+        tag: [
           { required: true, message: "请输入", trigger: "blur" },
           // { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" },
         ],
-        label: [
-          { required: true, message: "请输入", trigger: "blur" },
-          // { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" },
-        ],
-        thing: [
-          { required: true, message: "请输入", trigger: "blur" },
-          // { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" },
-        ],
-        thing2: [
-          { required: true, message: "请输入", trigger: "blur" },
-          // { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" },
-        ],
+        // thing: [
+        //   { required: true, message: "请输入", trigger: "blur" },
+        //   // { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" },
+        // ],
+        // thing2: [
+        //   { required: true, message: "请输入", trigger: "blur" },
+        //   // { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" },
+        // ],
         description: [
           { required: true, message: "请输入", trigger: "blur" },
           // { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" },
         ],
+        ...tempRule,
       },
-      options: [
-        {
-          value: "选项1",
-          label: "黄金糕",
-        },
-        {
-          value: "选项2",
-          label: "双皮奶",
-        },
-        {
-          value: "选项3",
-          label: "蚵仔煎",
-        },
-        {
-          value: "选项4",
-          label: "龙须面",
-        },
-        {
-          value: "选项5",
-          label: "北京烤鸭",
-        },
-      ],
+      // 标签
+      options: [],
+      data: {},
+      isEdit: this.$route.params.isEdit === "1",
+      entityList: [],
+      // 搜出来的实体列表
+      arrList: [],
+      url: '',
+      // task审核
+      task: {}
     };
   },
+  mounted() {
+    this.init();
+    console.log(this.$route.params);
+  },
   methods: {
-    getImg(src) {
-      if (src) {
-        return require("@/assets/" + src);
+    onEdit() {
+      this.isEdit = true
+    },
+    visibleChange(visi) {
+      if (!visi) {
+        this.arrList = [];
       }
     },
+    async remoteMethod(query, e) {
+      if (query !== "") {
+        this.onFocus(e, query);
+      } else {
+        this.arrList = [];
+      }
+    },
+    async onFocus(e, query = "") {
+      let res = await productEntityList({ id: e.id, name: query });
+      if (res.status == 1) {
+        this.arrList = res.element.map((c) => ({
+          value: c.id,
+          label: c.name,
+        }));
+      }
+    },
+    async asyncGetEntityList() {
+      let { status, element } = await productEntityList();
+      if (status == 1) {
+        // element.forEach(async (e) => {
+        //   let res = await productEntityList({ id: e.id, name: "" });
+        //   if (res.status == 1) {
+        //     e.data = res.element.map((c) => ({
+        //       value: c.id,
+        //       label: c.name,
+        //     }));
+        //     // e.option = res.element.map((c) => ({
+        //     //   value: c.id,
+        //     //   label: c.name,
+        //     // }));
+        //     e.option = [];
+        //     e.search = false;
+        //   }
+        // });
+        this.entityList = element;
+      }
+    },
+    async _productTagList() {
+      let { status, element } = await productTagList();
+      if (status == 1) {
+        this.options = element.map((e) => ({
+          value: e.key,
+          label: e.name,
+        }));
+      }
+    },
+    async init() {
+      const p = {
+        code: this.$route.params.code,
+      };
+      let { status, element } = await productDetail(p);
+      console.log(element, "444");
+      if (status == 1) {
+        const { description, entities, tag_ids,url } = element.product;
+        const {
+          audit_note,
+          audit_status,
+          audit_status_title
+        } = element.task
+        this.form = {
+          ...this.form,
+          tag: tag_ids[0] / 1,
+          description,
+          // title: ''
+        };
+        entities.forEach(c=>{
+          this.form['thing'+c.fid] = c.sid
+        })
+        this.url = url
+        this.task = {
+          audit_note
+        }
+      }
+    },
+    // getImg(src) {
+    //   if (src) {
+    //     return require("@/assets/" + src);
+    //   }
+    // },
     submitForm(formName) {
       this.$refs[formName].validate(async (valid) => {
         if (valid) {
           console.log(this.form);
-          this.loading = true;
 
           this.$confirm("确认提交更新该作品的基本信息?", "提交确认", {
             confirmButtonText: "提交",
             cancelButtonText: "取消",
             type: "warning",
           })
-            .then(() => {
-              this.$message({
-                type: "success",
-                message: "提交成功!",
-              });
+            .then(async () => {
+              const entity = Object.values(this.form)
+                .filter((e) => Array.isArray(e))
+                .flat();
+              let params = {
+                code: this.$route.params.code,
+                desc: this.form.description,
+                tag: [this.form.tag],
+                entity,
+              }
+              console.log(params, 'params')
+              let { msg, status } = await productEdit(params);
+              if (status == 1) {
+                this.$message({
+                  type: "success",
+                  message: msg,
+                });
+              } else {
+                this.$message({
+                  type: "error",
+                  message: msg,
+                });
+              }
             })
             .catch(() => {
               this.$message({
