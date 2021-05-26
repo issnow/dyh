@@ -20,6 +20,7 @@
                   slot="append"
                   icon="el-icon-search"
                   @click="handleSubmitForm('form')"
+                  :loading='loading'
                 ></el-button>
               </el-input>
             </el-form-item>
@@ -181,7 +182,6 @@ import {
 import videoPreview from "@component/videoPreview";
 import submitDialog from "./submitDialog";
 import _ from "lodash";
-import { mapActions, mapState } from "vuex";
 export default {
   components: {
     submitDialog:()=>import('./submitDialog.vue'),
@@ -259,21 +259,14 @@ export default {
       deep: true,
     },
   },
-  computed: {
-    ...mapState("workManager", {
-      // entityList: state=>state.entityList
-    }),
-  },
   beforeDestroy() {
     clearTimeout(this.timer)
   },
   mounted() {
     this._productChoicesList();
     this._productGetList();
-    // this['workManager/asyncGetEntityList']()
   },
   methods: {
-    // ...mapActions(['workManager/asyncGetEntityList']),
     sortChange({ order }) {
       if (order == "ascending") {
         // 升序
@@ -416,7 +409,6 @@ export default {
         });
     },
     onWatch(code) {
-      // this.$router.push({ path: "/workDetail", query: { code, isEdit: false } });
       this.$router.push({ path: `/workDetail/${code}/0` });
     },
     onEdit(code) {

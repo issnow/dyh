@@ -77,7 +77,12 @@
             }
           "
           @focus="onFocus(e)"
-          @visible-change="visibleChange"
+          @visible-change="
+            (visi) => {
+              visibleChange(visi, e);
+            }
+          "
+          :loading="selectLoading"
         >
           <el-option
             v-for="item in arrList"
@@ -113,12 +118,12 @@
 </template>
 
 <script>
+import _ from "lodash";
 import {
   productTagList,
   productEntityList,
   productApplyAudit,
 } from "@api/workManager";
-import { mapActions, mapState, mapMutations } from "vuex";
 export default {
   props: ["visible", "code", "title"],
   data() {
@@ -155,6 +160,9 @@ export default {
       entityList: [],
       // 搜出来的实体列表
       arrList: [],
+      selectLoading: false,
+      // 一级实体select框的id
+      selectID: "",
     };
   },
   mounted() {
@@ -164,13 +172,28 @@ export default {
     this.asyncGetEntityList();
   },
   methods: {
-    visibleChange(visi) {
+    visibleChange(visi, e) {
+      // console.log('visibleChange', visi, e)
+      if (this.selectID == e.id) {
+        return;
+      }
       if (!visi) {
         this.arrList = [];
       }
     },
     async onFocus(e, query = "") {
+      // console.log('onFocus', e.id, query, this.selectID)
+
+      // selectid是已经选择的一级实体框id,如果当前的selectid和上一次的e.id一样
+      // 那么就直接使用缓存的arrList,解决每次点击option之后,执行visibleChange方法会置空arrList
+      if (this.selectID == e.id && query.length == 0) {
+        return;
+      }
+      this.selectID = e.id;
+
+      this.selectLoading = true;
       let res = await productEntityList({ id: e.id, name: query });
+      this.selectLoading = false;
       if (res.status == 1) {
         this.arrList = res.element.map((c) => ({
           value: c.id,
@@ -200,14 +223,14 @@ export default {
         this.entityList = element;
       }
     },
-    async remoteMethod(query, e) {
+    remoteMethod: _.debounce(function (query, e) {
       if (query !== "") {
         this.onFocus(e, query);
       } else {
+        this.selectID = "";
         this.arrList = [];
       }
-    },
-
+    }, 600),
     async _productTagList() {
       let { status, element } = await productTagList();
       if (status == 1) {
