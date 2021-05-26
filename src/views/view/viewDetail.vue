@@ -14,20 +14,17 @@
         <li>
           <div class="label">标签:</div>
           <div class="content">
-            {{tagIds}}
-            <span>
             {{tagName}}
-            </span>
           </div>
         </li>
-        <li>
-          <div class="label">一级实体:</div>
-          <div class="content">显示成品描述的内容</div>
+        <li 
+          v-for="item in entityList"
+          :key="item.index"
+        >
+          <div class="label">一级实体: {{item.ftext}}</div>
+          <div class="">二级实体: {{item.text}}</div>
         </li>
-        <li>
-          <div class="label">二级实体:</div>
-          <div class="content">显示成品描述的内容</div>
-        </li>
+       
       </ul>
       <div class="video-play-area">
         <videoPlay :src='product.url'></videoPlay>
@@ -42,50 +39,6 @@
         label-width="90px"
         class="info-form"
       >
-        <el-form-item label="标签:" prop="label">
-          <el-select v-model="form.label" placeholder="请选择">
-            <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            >
-            </el-option>
-          </el-select>
-        </el-form-item>
-
-        <el-form-item label="一级实体:" prop="thing">
-          <el-select v-model="form.thing" placeholder="请选择">
-            <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            >
-            </el-option>
-          </el-select>
-        </el-form-item>
-
-        <el-form-item label="二级实体:" prop="thing2">
-          <el-select v-model="form.thing2" placeholder="请选择">
-            <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            >
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="描述:" prop="description">
-          <el-input
-            type="text"
-            placeholder="请输入内容"
-            v-model="form.description"
-          >
-          </el-input>
-          <!-- <div class="tip">上限50个字符。</div> -->
-        </el-form-item>
         <el-form-item label="建议:" prop="audit_note">
           <el-input
             type="textarea"
@@ -128,62 +81,22 @@ export default {
       form: {
         code: this.$route.query.code,
         audit_note: "",
-        audit_status: '',
-        // name: "",
-        // label: "选项1",
-        // thing: "",
-        // thing2: "",
+        audit_status: ''
       },
       rules: {
-        name: [
-          { required: false, message: "请输入", trigger: "blur" }
-        ],
-        label: [
-          { required: false, message: "请输入", trigger: "blur" }
-        ],
-        thing: [
-          { required: false, message: "请输入", trigger: "blur" }
-        ],
-        thing2: [
-          { required: false, message: "请输入", trigger: "blur" }
-        ],
         description: [
           { required: false, message: "请输入", trigger: "blur" }
         ],
       },
-      options: [
-        {
-          value: "选项1",
-          label: "黄金糕",
-        },
-        {
-          value: "选项2",
-          label: "双皮奶",
-        },
-        {
-          value: "选项3",
-          label: "蚵仔煎",
-        },
-        {
-          value: "选项4",
-          label: "龙须面",
-        },
-        {
-          value: "选项5",
-          label: "北京烤鸭",
-        },
-      ],
+      
       product: {},
       task: {},
-      tagIds: [],
-      tagList: [],
+
       entityList: [],
-      tagName: [],
-      entityName: []
+      tagName: '',
     };
   },
   created(){
-    this.getTagList();
   },
   mounted() {
     this.getAuditDetail();
@@ -194,22 +107,7 @@ export default {
         return require("@/assets/" + src);
       }
     },
-    // 获取标签列表
-    getTagList(){
-      getTagList().then(res => {
-        if(res.status == 1){
-          this.tagList = res.element;
-          this.product.tag_ids;
-        }else{
-          this.$message({
-            type: "error",
-            message: res.msg
-          })
-        }
-      }).catch(error => {
-        console.log(error);
-      })
-    },
+ 
     // 提交审核
     submitForm(val) {
       this.form.audit_status = val;
@@ -265,18 +163,8 @@ export default {
           this.product = res.element && res.element.product;
           this.task = res.element && res.element.task;
 
-          this.tagIds = this.product.tag_ids;
-          const tagList = this.product.tag_ids;
-          for(let i = 0, len = this.tagList; i < len; i++){
-            for(let j = 0, length = tagList; j < length; j++){
-              if(this.tagList[i] == Number(tagList[j])){
-                this.tagName.push(this.tagList[i].name);
-                console.log(this.tagName, 'this.tagName')
-              }
-
-            }
-          }
-          // console.log(this.product , this.task, 'result');
+          this.tagName = this.product.tag_names_str;
+          this.entityList = this.product.entities;
         }else{
           this.$message({
             type: "error",
