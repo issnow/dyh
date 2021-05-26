@@ -25,7 +25,7 @@
         </li>
         <li>
           <div class="label">建议:</div>
-          <div class="content">{{task.audit_note}}</div>
+          <div class="content">{{ task.audit_note }}</div>
         </li>
       </ul>
       <div class="video-play-area">
@@ -41,7 +41,7 @@
         ref="form"
         label-width="90px"
         class="info-form"
-        :disabled='!isEdit'
+        :disabled="!isEdit"
       >
         <el-form-item label="名称:" prop="title">
           <el-input
@@ -92,7 +92,7 @@
         </el-form-item> -->
 
         <el-form-item
-          v-for="(e) in entityList"
+          v-for="e in entityList"
           :key="e.id"
           :label="e.name"
           :prop="'thing' + e.id"
@@ -135,10 +135,16 @@
         </el-form-item>
       </el-form>
       <div class="foot-btn">
-        <el-button v-if="isEdit" type="primary" @click="submitForm('form')" :loading="loading"
+        <el-button
+          v-if="isEdit"
+          type="primary"
+          @click="submitForm('form')"
+          :loading="loading"
           >提 交</el-button
         >
-        <el-button v-if="!isEdit" type="primary" @click="onEdit" >编 辑</el-button>
+        <el-button v-if="!isEdit" type="primary" @click="onEdit"
+          >编 辑</el-button
+        >
         <el-button @click="onCancel">取 消</el-button>
       </div>
     </div>
@@ -219,7 +225,6 @@ export default {
   },
   mounted() {
     this.init();
-    console.log(this.$route.params);
   },
   methods: {
     onEdit() {
@@ -295,8 +300,15 @@ export default {
           description,
           // title: ''
         };
-        entities.forEach(c=>{
+        entities.forEach(async c=>{
           this.form['thing'+c.fid] = c.sid
+          let res = await productEntityList({ id: c.fid, name: '' });
+          if (res.status == 1) {
+            this.arrList = res.element.map((d) => ({
+              value: d.id,
+              label: d.name,
+            }));
+          }
         })
         this.url = url
         this.task = {
@@ -312,7 +324,7 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate(async (valid) => {
         if (valid) {
-          console.log(this.form);
+          // console.log(this.form);
 
           this.$confirm("确认提交更新该作品的基本信息?", "提交确认", {
             confirmButtonText: "提交",
@@ -329,7 +341,7 @@ export default {
                 tag: [this.form.tag],
                 entity,
               }
-              console.log(params, 'params')
+              // console.log(params, 'params')
               let { msg, status } = await productEdit(params);
               if (status == 1) {
                 this.$message({

@@ -83,9 +83,9 @@ export default {
       activeIndex: "/userList",
     };
   },
-  mounted() {
-    console.log('permission_routes', this.permission_routes)
-  },
+  // mounted() {
+  //   console.log('permission_routes', this.permission_routes)
+  // },
   computed: {
     // activeMenu() {
     //   const route = this.$route;
@@ -106,15 +106,19 @@ export default {
   },
   methods: {
     setCurrentRoute() {
-      switch (this.$route.path) {
-        case '/workDetail':
-          this.activeIndex = '/workManager'
-          return;
+      let path = this.$route.path
+      switch (path) {
+        // case '/workDetail':
+        //   this.activeIndex = '/workManager'
+        //   return;
         case '/viewDetail':
           this.activeIndex = '/viewList'
           return;
       }
-      
+      if(path.includes('/workDetail')) {
+        this.activeIndex = '/workManager'
+        return
+      }
       this.activeIndex = this.$route.path;
     },
     handleSelect(key, keyPath) {
