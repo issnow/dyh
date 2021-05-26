@@ -114,7 +114,7 @@
               <el-option
                 v-for="item in scaleList"
                 :key="item.key"
-                :value="item.name">
+                :value="item.key">
                 {{item.name}}
               </el-option>
             </el-select>
@@ -198,8 +198,6 @@
       this.getChoicesList();
       this.getProjectList();
     },
-    components: {
-    },
     methods: {
       handleClose() {
         this.isShow = false;
@@ -244,6 +242,8 @@
           if (res.status == 1) {
             this.scaleList = res.element.wh_ratio;
             this.sizeList = res.element.resolution;
+            this.scaleList.unshift({key: 0, name: "全部"});
+            this.sizeList.unshift({key: 0, name: "全部"});
           } else {
             this.$message({
               type: "error",
@@ -335,11 +335,11 @@
       filterSelect(value, type) {
           console.log(type);
           switch (type) {
-            case "aaa":
-              this.form.wh_ratio = value;
+            case "wh_ratio":
+              value == '全部' ? this.form.wh_ratio = '' : this.form.wh_ratio = value;
               break;
-            case "bbb":
-              this.form.resolution = value;
+            case "resolution":
+              value == '全部' ? this.form.resolution = '' : this.form.resolution = value;
               break;
           }
           this.page.pageNo = 1;
