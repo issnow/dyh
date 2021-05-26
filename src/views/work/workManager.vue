@@ -20,6 +20,7 @@
                   slot="append"
                   icon="el-icon-search"
                   @click="handleSubmitForm('form')"
+                  :loading="loading"
                 ></el-button>
               </el-input>
             </el-form-item>
@@ -61,20 +62,41 @@
       >
         <el-table-column type="selection" width="55"> </el-table-column>
         <el-table-column prop="title" label="成品名称"></el-table-column>
-        <el-table-column
-          prop="resolution"
-          label="分辨率"
-          width="200"
-          :filters="filterResolution"
-          :filter-method="filterHandler"
-        ></el-table-column>
-        <el-table-column
-          prop="wh_ratio"
-          label="画幅"
-          width="100"
-          :filters="filterWh_ratio"
-          :filter-method="filterHandler"
-        ></el-table-column>
+        <el-table-column prop="resolution" label="分辨率" width="120">
+          <template slot="header" scope="scope">
+            <el-select
+              v-model="form.resolution"
+              placeholder="分辨率"
+              @change="filterSelect($event, 'resolution')"
+            >
+              <el-option
+                v-for="e in filterResolution"
+                :key="e.key"
+                :value="e.key"
+                :label="e.name"
+              >
+              </el-option>
+            </el-select>
+          </template>
+        </el-table-column>
+        <el-table-column prop="wh_ratio" label="画幅" width="130">
+          <template slot="header" slot-scope="scope">
+            <el-select
+              v-model="form.wh_ratio"
+              placeholder="画幅比例"
+              @change="filterSelect($event, 'wh_ratio')"
+            >
+              <el-option
+                v-for="item in filterWh_ratio"
+                :key="item.key"
+                :value="item.key"
+                :label="item.name"
+              >
+                <!-- {{item.name}} -->
+              </el-option>
+            </el-select>
+          </template>
+        </el-table-column>
         <el-table-column label="预览" width="120">
           <template slot-scope="scope">
             <videoPreview
@@ -163,7 +185,7 @@
       <submitDialog
         :code="code"
         :visible="submitDialogVisible"
-        :title='title'
+        :title="title"
         @hideDialog="submitDialogVisible = false"
         @_productGetList="_productGetList"
       />
@@ -176,15 +198,13 @@ import {
   productGetList,
   productChoicesList,
   productDel,
-  productEntityList,
 } from "@api/workManager";
 import videoPreview from "@component/videoPreview";
 import submitDialog from "./submitDialog";
 import _ from "lodash";
-import { mapActions, mapState } from "vuex";
 export default {
   components: {
-    submitDialog:()=>import('./submitDialog.vue'),
+    submitDialog: () => import("./submitDialog.vue"),
     // submitDialog: () => ({
     //   component: import("./submitDialog"),
     // }),
@@ -202,14 +222,16 @@ export default {
         pageCount: 0,
       },
       listParams: {
-        wh_ratio: "",
-        resolution: "",
+        // wh_ratio: "",
+        // resolution: "",
         order: "1",
       },
       loading: false,
       form: {
         title: "",
         status: "",
+        wh_ratio: "",
+        resolution: "",
       },
       rules: {
         title: [
@@ -247,7 +269,7 @@ export default {
       filterWh_ratio: [],
       // 提交审核code
       code: "",
-      title: ''
+      title: "",
     };
   },
   watch: {
@@ -259,21 +281,32 @@ export default {
       deep: true,
     },
   },
-  computed: {
-    ...mapState("workManager", {
-      // entityList: state=>state.entityList
-    }),
-  },
   beforeDestroy() {
-    clearTimeout(this.timer)
+    clearTimeout(this.timer);
   },
   mounted() {
     this._productChoicesList();
     this._productGetList();
-    // this['workManager/asyncGetEntityList']()
   },
   methods: {
-    // ...mapActions(['workManager/asyncGetEntityList']),
+    // 筛选列表
+    filterSelect(value, type) {
+      switch (type) {
+        case "wh_ratio":
+          value == "全部"
+            ? (this.form.wh_ratio = "")
+            : (this.form.wh_ratio = value);
+          break;
+        case "resolution":
+          value == "全部"
+            ? (this.form.resolution = "")
+            : (this.form.resolution = value);
+          break;
+      }
+      this.page.pageNo = 1;
+      this.page.pageSize = 10;
+      this._productGetList();
+    },
     sortChange({ order }) {
       if (order == "ascending") {
         // 升序
@@ -285,10 +318,6 @@ export default {
         this.listParams.order = 1;
       }
     },
-    filterHandler(value, row, column) {
-      const property = column["property"];
-      return row[property] === value;
-    },
     async _productChoicesList() {
       const { status, element } = await productChoicesList({ type: 1 });
       if (status == 1) {
@@ -296,14 +325,10 @@ export default {
           label: e.name,
           value: e.key,
         }));
-        this.filterResolution = element.resolution.map((e) => ({
-          text: e.name,
-          value: e.name,
-        }));
-        this.filterWh_ratio = element.wh_ratio.map((e) => ({
-          text: e.name,
-          value: e.name,
-        }));
+        this.filterResolution = element.resolution;
+        this.filterWh_ratio = element.wh_ratio;
+        this.filterResolution.unshift({key: 0, name: "全部"});
+        this.filterWh_ratio.unshift({key: 0, name: "全部"});
 
         // console.log(this.selectData, "selectData");
         console.log(this.filterResolution, "filterResolution");
@@ -318,6 +343,7 @@ export default {
         pageSize: this.page.pageSize,
         pageNo: this.page.pageNo,
       };
+      console.log(params, 'params')
       let { status, datas, fsp } = await productGetList(params);
       this.loading = false;
       if (status == 1) {
@@ -379,10 +405,10 @@ export default {
         return require("@/assets/" + src);
       }
     },
-    onReview({code,title}) {
+    onReview({ code, title }) {
       this.code = code;
       this.submitDialogVisible = true;
-      this.title = title
+      this.title = title;
     },
     onGenerate() {},
     onDelete(code) {
@@ -416,7 +442,6 @@ export default {
         });
     },
     onWatch(code) {
-      // this.$router.push({ path: "/workDetail", query: { code, isEdit: false } });
       this.$router.push({ path: `/workDetail/${code}/0` });
     },
     onEdit(code) {
@@ -444,7 +469,6 @@ export default {
       this.page = { ...this.page, pageNo: val };
       this._productGetList();
     },
-
   },
 };
 </script>

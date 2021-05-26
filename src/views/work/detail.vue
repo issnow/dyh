@@ -110,7 +110,12 @@
               }
             "
             @focus="onFocus(e)"
-            @visible-change="visibleChange"
+            @visible-change="
+              (visi) => {
+                visibleChange(visi, e);
+              }
+            "
+            :loading="loading"
           >
             <el-option
               v-for="item in arrList"
@@ -135,11 +140,7 @@
         </el-form-item>
       </el-form>
       <div class="foot-btn">
-        <el-button
-          v-if="isEdit"
-          type="primary"
-          @click="submitForm('form')"
-          :loading="loading"
+        <el-button v-if="isEdit" type="primary" @click="submitForm('form')"
           >提 交</el-button
         >
         <el-button v-if="!isEdit" type="primary" @click="onEdit"
@@ -156,8 +157,9 @@ import {
   productDetail,
   productEntityList,
   productTagList,
-  productEdit
+  productEdit,
 } from "@api/workManager";
+import _ from "lodash";
 import videoPlay from "./videoPlay";
 export default {
   components: {
@@ -179,7 +181,6 @@ export default {
       tempForm["thing" + i] = "";
     }
     return {
-      loading: false,
       form: {
         description: "",
         title: "",
@@ -218,9 +219,12 @@ export default {
       entityList: [],
       // 搜出来的实体列表
       arrList: [],
-      url: '',
+      url: "",
       // task审核
-      task: {}
+      task: {},
+      loading: false,
+      // 一级实体select框的id
+      selectID: "",
     };
   },
   mounted() {
@@ -228,22 +232,33 @@ export default {
   },
   methods: {
     onEdit() {
-      this.isEdit = true
+      this.isEdit = true;
     },
-    visibleChange(visi) {
+    visibleChange(visi, e) {
+      if (this.selectID == e.id) {
+        return;
+      }
       if (!visi) {
         this.arrList = [];
       }
     },
-    async remoteMethod(query, e) {
+    remoteMethod: _.debounce(function (query, e) {
       if (query !== "") {
         this.onFocus(e, query);
       } else {
+        this.selectID = "";
         this.arrList = [];
       }
-    },
+    }, 600),
     async onFocus(e, query = "") {
+      if (this.selectID == e.id && query.length == 0) {
+        return;
+      }
+      this.selectID = e.id;
+
+      this.loading = true;
       let res = await productEntityList({ id: e.id, name: query });
+      this.loading = false;
       if (res.status == 1) {
         this.arrList = res.element.map((c) => ({
           value: c.id,
@@ -288,32 +303,28 @@ export default {
       let { status, element } = await productDetail(p);
       console.log(element, "444");
       if (status == 1) {
-        const { description, entities, tag_ids,url } = element.product;
-        const {
-          audit_note,
-          audit_status,
-          audit_status_title
-        } = element.task
+        const { description, entities, tag_ids, url } = element.product;
+        const { audit_note, audit_status, audit_status_title } = element.task;
         this.form = {
           ...this.form,
           tag: tag_ids[0] / 1,
           description,
           // title: ''
         };
-        entities.forEach(async c=>{
-          this.form['thing'+c.fid] = c.sid
-          let res = await productEntityList({ id: c.fid, name: '' });
+        entities.forEach(async (c) => {
+          this.form["thing" + c.fid] = c.sid;
+          let res = await productEntityList({ id: c.fid, name: "" });
           if (res.status == 1) {
             this.arrList = res.element.map((d) => ({
               value: d.id,
               label: d.name,
             }));
           }
-        })
-        this.url = url
+        });
+        this.url = url;
         this.task = {
-          audit_note
-        }
+          audit_note,
+        };
       }
     },
     // getImg(src) {
@@ -340,7 +351,7 @@ export default {
                 desc: this.form.description,
                 tag: [this.form.tag],
                 entity,
-              }
+              };
               // console.log(params, 'params')
               let { msg, status } = await productEdit(params);
               if (status == 1) {
@@ -361,9 +372,6 @@ export default {
                 message: "已取消",
               });
             });
-          setTimeout(() => {
-            this.loading = false;
-          }, 2000);
         } else {
           console.log("error submit!!");
           return false;

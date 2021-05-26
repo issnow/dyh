@@ -180,7 +180,7 @@ export default {
         document.webkitIsFullScreen ||
         document.msFullscreenEnabled;
 
-      console.log("this is check full:>>", isFull);
+      // console.log("this is check full:>>", isFull);
       if (isFull === undefined) {
         isFull = false;
       }

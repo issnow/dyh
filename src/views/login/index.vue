@@ -20,7 +20,7 @@
           @keyup.enter.native='onChange'
         ></el-input>
       </el-form-item>
-      <el-button type="primary" @click="onChange" style="width: 100%"
+      <el-button type="primary" @click="onChange" :loading='loading' style="width: 100%"
         >登录</el-button
       >
     </el-form>
@@ -50,6 +50,7 @@ export default {
         ],
         password: [{ required: true, message: "请输入密码", trigger: "blur" }],
       },
+      loading: false
     };
   },
   methods: {
@@ -58,7 +59,9 @@ export default {
       this.$refs[formName].validate(async (valid) => {
         if (valid) {
           console.log(this.form);
+          this.loading = true
           let { status, msg, element } = await loginApp(this.form);
+          this.loading = false
           if (status == 1) {
             this.$message({ message: msg, type: "success" });
             this["user/SET_USER_INFO"](element);
