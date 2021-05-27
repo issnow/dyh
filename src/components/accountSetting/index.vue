@@ -12,7 +12,7 @@
         id="uploadFile"
         ref="uploadRef"
         @change="fileChange"
-        accept="image/gif, image/jpg, image/png"
+        accept="image/jpg, image/png"
       />
       <img v-lazy="url" alt="" class="avatar" v-if="userInfo.headicon" />
       <i v-else class="el-icon-upload2 avatar-uploader-icon"></i>
@@ -149,26 +149,55 @@ export default {
   methods: {
     ...mapMutations(["user/SET_USER_INFO"]),
     ...mapActions(["user/asyncGetUserInfo"]),
+    createReader(file) {
+      return new Promise((resolve) => {
+        var reader = new FileReader();
+        reader.onload = function (evt) {
+          var image = new Image();
+          image.onload = function () {
+            var width = this.width;
+            var height = this.height;
+            resolve({
+              width,
+              height,
+            });
+          };
+          image.src = evt.target.result;
+        };
+        reader.readAsDataURL(file);
+      });
+    },
     async fileChange() {
       let file = this.$refs.uploadRef.files[0];
       let filename = file.name
         .slice(file.name.lastIndexOf(".") + 1)
         .toLowerCase();
-      let types = ["jpg", "jpeg", "gif", "png"];
-      if (file.size > 1024 * 1024 * 3) {
+      let types = ["jpg", "jpeg", "png"];
+      if (file.size > 1024 * 1024 * 2) {
         this.$message({
           type: "error",
-          message: "不能超过3M",
+          message: "不能超过2M",
         });
         return;
       }
+
       if (!types.includes(filename)) {
         this.$message({
           type: "error",
-          message: "请上传图片文件",
+          message: "请上传jpg,jpeg,png图片文件",
         });
         return;
       }
+
+      let { width, height } = await this.createReader(file);
+      if (width >= 300 || height >= 300) {
+        this.$message({
+          type: "error",
+          message: "尺寸限制：300*300及下",
+        });
+        return
+      }
+
       let formData = new FormData();
       formData.append("file", file);
       formData.append("id", this.userInfo.id);
