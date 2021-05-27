@@ -12,7 +12,7 @@
         <el-col :span="7">
           <el-form-item label="搜索" prop="email">
             <el-input
-              v-model="form.email"
+              v-model.trim="form.email"
               placeholder="请输入关键字"
             ></el-input>
           </el-form-item>
@@ -35,9 +35,7 @@
             <el-button type="primary" @click="submitForm('form')"
               >查询</el-button
             >
-            <el-button type="primary" @click="clear"
-              >重置</el-button
-            >
+            <el-button type="primary" @click="clear">重置</el-button>
           </el-form-item>
         </el-col>
       </el-row>
@@ -63,18 +61,20 @@
       <el-table-column prop="phone" label="联系电话"> </el-table-column>
       <el-table-column prop="state" label="状态">
         <template slot-scope="scope">
-          <span class="color-text" :class="{ isEnable: scope.row.state==1 }">{{
-            scope.row.state == 1 ? "启用" : "禁用"
-          }}</span>
+          <span
+            class="color-text"
+            :class="{ isEnable: scope.row.state == 1 }"
+            >{{ scope.row.state == 1 ? "启用" : "禁用" }}</span
+          >
         </template>
       </el-table-column>
       <el-table-column prop="institutions" label="所属机构"> </el-table-column>
 
       <el-table-column label="操作" min-width="130">
         <template slot-scope="scope">
-          <el-button @click="disabledRow(scope.row)" type="text" size="small"
-            >{{scope.row.state == 1 ? "禁用" : "启用"}}</el-button
-          >
+          <el-button @click="disabledRow(scope.row)" type="text" size="small">{{
+            scope.row.state == 1 ? "禁用" : "启用"
+          }}</el-button>
           <el-button @click="resetPassword(scope.row)" type="text" size="small"
             >重置密码</el-button
           >
@@ -98,8 +98,8 @@
 </template>
 
 <script>
-import { getTableData,setUserState,resetUserPassword } from "@api/user";
-import ee from '@/config/event'
+import { getTableData, setUserState, resetUserPassword } from "@api/user";
+import ee from "@/config/event";
 export default {
   data() {
     return {
@@ -138,61 +138,55 @@ export default {
   },
   mounted() {
     this._getTableData();
-    ee.on('getTableData', this._getTableData)
+    ee.on("getTableData", this._getTableData);
   },
   beforeDestroy() {
-    ee.removeListener('getTableData', this._getTableData)
+    ee.removeListener("getTableData", this._getTableData);
   },
   methods: {
     clear() {
-      this.$refs.form.resetFields()
-      this._getTableData()
+      this.$refs.form.resetFields();
+      this._getTableData();
     },
     async _getTableData() {
-      this.loading = true
+      this.loading = true;
       const params = {
         pageNo: this.page.pageNo,
         pageSize: this.page.pageSize,
         map: {
-          ...this.form
+          ...this.form,
         },
       };
       console.log("params", params);
-      let {datas, fsp, msg, status} = await getTableData(params);
-      this.loading = false
-      if(status == 1) {
-        const {pageNo,
-          pageSize,
-          recordCount,
-          pageCount} = fsp
-        this.page = {pageNo,
-          pageSize,
-          recordCount,
-          pageCount,}
-        this.tableData = datas
-      }else {
+      let { datas, fsp, msg, status } = await getTableData(params);
+      this.loading = false;
+      if (status == 1) {
+        const { pageNo, pageSize, recordCount, pageCount } = fsp;
+        this.page = { pageNo, pageSize, recordCount, pageCount };
+        this.tableData = datas;
+      } else {
         this.$message({
-          type: 'error',
-          message: msg
-        })
+          type: "error",
+          message: msg,
+        });
       }
 
       // console.log("res", res);
     },
     handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
-      this.page = {...this.page, pageSize: val}
-      this._getTableData()
+      // console.log(`每页 ${val} 条`);
+      this.page = { ...this.page, pageSize: val };
+      this._getTableData();
     },
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
-      this.page = {...this.page, pageNo: val}
-      this._getTableData()
+      // console.log(`当前页: ${val}`);
+      this.page = { ...this.page, pageNo: val };
+      this._getTableData();
     },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          this._getTableData()
+          this._getTableData();
         } else {
           console.log("error submit!!");
           return false;
@@ -202,24 +196,21 @@ export default {
     async disabledRow(row) {
       const params = {
         id: row.id,
-        state: row.state == 1 ? 2:1
-      }
-      let {status, msg} = await setUserState(params)
+        state: row.state == 1 ? 2 : 1,
+      };
+      let { status, msg } = await setUserState(params);
       this.$message({
         message: msg,
-      })
-      if(status == 1) {
-        
-        this._getTableData()
+      });
+      if (status == 1) {
+        this._getTableData();
       }
-
-      console.log(row);
     },
     async resetPassword(row) {
-      const {status, msg} = await resetUserPassword({id:row.id})
-      this.$message(msg)
-      if(status == 1) {
-        this._getTableData()
+      const { status, msg } = await resetUserPassword({ id: row.id });
+      this.$message(msg);
+      if (status == 1) {
+        this._getTableData();
       }
     },
   },

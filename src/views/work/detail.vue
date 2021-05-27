@@ -48,7 +48,7 @@
             type="textarea"
             :rows="2"
             placeholder="请输入内容"
-            v-model="form.title"
+            v-model.trim="form.title"
             maxlength="20"
             show-word-limit
           >
@@ -131,7 +131,7 @@
             type="textarea"
             :rows="3"
             placeholder="请输入内容"
-            v-model="form.description"
+            v-model.trim="form.description"
             maxlength="50"
             show-word-limit
           >

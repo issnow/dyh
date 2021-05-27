@@ -12,7 +12,7 @@
           <el-col :span="7">
             <el-form-item label="搜索" prop="title">
               <el-input
-                v-model="form.title"
+                v-model.trim="form.title"
                 placeholder="请输入关键字"
                 @keyup.enter.native="handleSubmitForm('form')"
               >
