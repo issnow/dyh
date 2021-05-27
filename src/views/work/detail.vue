@@ -264,10 +264,15 @@ export default {
           value: c.id,
           label: c.name,
         }));
+      }else {
+        this.$message({
+          type: 'error',
+          message: res.msg
+        })
       }
     },
     async asyncGetEntityList() {
-      let { status, element } = await productEntityList();
+      let { status, element,msg } = await productEntityList();
       if (status == 1) {
         // element.forEach(async (e) => {
         //   let res = await productEntityList({ id: e.id, name: "" });
@@ -285,22 +290,32 @@ export default {
         //   }
         // });
         this.entityList = element;
+      }else {
+        this.$message({
+          type: 'error',
+          message: msg
+        })
       }
     },
     async _productTagList() {
-      let { status, element } = await productTagList();
+      let { status, element,msg } = await productTagList();
       if (status == 1) {
         this.options = element.map((e) => ({
           value: e.key,
           label: e.name,
         }));
+      }else {
+        this.$message({
+          type: 'error',
+          message: msg
+        })
       }
     },
     async init() {
       const p = {
         code: this.$route.params.code,
       };
-      let { status, element } = await productDetail(p);
+      let { status, element,msg } = await productDetail(p);
       console.log(element, "444");
       if (status == 1) {
         const { description, entities, tag_ids, url } = element.product;
@@ -325,6 +340,11 @@ export default {
         this.task = {
           audit_note,
         };
+      }else {
+        this.$message({
+          type: 'error',
+          message: msg
+        })
       }
     },
     // getImg(src) {

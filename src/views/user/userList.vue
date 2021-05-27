@@ -158,18 +158,24 @@ export default {
         },
       };
       console.log("params", params);
-      let res = await getTableData(params);
+      let {datas, fsp, msg, status} = await getTableData(params);
       this.loading = false
-      const {datas, fsp} = res
-      const {pageNo,
-        pageSize,
-        recordCount,
-        pageCount} = fsp
-      this.page = {pageNo,
-        pageSize,
-        recordCount,
-        pageCount,}
-      this.tableData = datas
+      if(status == 1) {
+        const {pageNo,
+          pageSize,
+          recordCount,
+          pageCount} = fsp
+        this.page = {pageNo,
+          pageSize,
+          recordCount,
+          pageCount,}
+        this.tableData = datas
+      }else {
+        this.$message({
+          type: 'error',
+          message: msg
+        })
+      }
 
       // console.log("res", res);
     },

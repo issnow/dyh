@@ -319,7 +319,7 @@ export default {
       }
     },
     async _productChoicesList() {
-      const { status, element } = await productChoicesList({ type: 1 });
+      const { status, element,msg } = await productChoicesList({ type: 1 });
       if (status == 1) {
         this.selectData = element.status.map((e) => ({
           label: e.name,
@@ -333,6 +333,11 @@ export default {
         // console.log(this.selectData, "selectData");
         console.log(this.filterResolution, "filterResolution");
         console.log(this.filterWh_ratio, "filterWh_ratio");
+      }else {
+        this.$message({
+          type: 'error',
+          message: msg
+        })
       }
     },
     async _productGetList() {
@@ -344,7 +349,7 @@ export default {
         pageNo: this.page.pageNo,
       };
       console.log(params, 'params')
-      let { status, datas, fsp } = await productGetList(params);
+      let { status, datas, fsp,msg } = await productGetList(params);
       this.loading = false;
       if (status == 1) {
         this.tableData = datas;
@@ -356,6 +361,11 @@ export default {
           // 共几页
           pageCount: fsp.pageCount,
         };
+      }else {
+        this.$message({
+          type: 'error',
+          message: msg
+        })
       }
     },
     selectDelete() {

@@ -20,8 +20,15 @@ export default {
     
     // console.log(this, 'this')
     if(sessionStorage.getItem('isLogin') == 1) {
-      let {status, element, } = await checkLogin()
-      this['user/SET_ROUTES'](element)
+      let {status, element,msg } = await checkLogin()
+      if(status == 1) {
+        this['user/SET_ROUTES'](element)
+      }else {
+        this.$message({
+          type: 'error',
+          message: msg
+        })
+      }
     }
     
 

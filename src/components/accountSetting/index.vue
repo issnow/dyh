@@ -167,6 +167,11 @@ export default {
         //   this["user/SET_USER_INFO"](element);
         // }
 
+      }else {
+        this.$message({
+          type: 'error',
+          message: msg
+        })
       }
     },
     resetFields() {

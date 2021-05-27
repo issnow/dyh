@@ -80,6 +80,11 @@ export default {
       let {msg, status} = await logout()
       if(status == 1) {
         this.$router.push('/login')
+      }else {
+        this.$message({
+          type: 'error',
+          message: msg
+        })
       }
     }
   },
