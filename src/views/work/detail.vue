@@ -327,8 +327,8 @@ export default {
           // title: ''
         };
         entities.forEach(async (c) => {
-          this.form["thing" + c.fid] = c.sid;
           let res = await productEntityList({ id: c.fid, name: "" });
+          this.form["thing" + c.fid] = c.sid;
           if (res.status == 1) {
             this.arrList = res.element.map((d) => ({
               value: d.id,
