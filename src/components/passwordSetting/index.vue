@@ -14,14 +14,14 @@
       class="change-pwd-form"
     >
       <el-form-item label="当前密码:" prop="oldpassword">
-        <el-input v-model="pwdform.oldpassword" type="password"></el-input>
+        <el-input v-model="pwdform.oldpassword" show-password></el-input>
       </el-form-item>
       <el-form-item label="新密码:" prop="newpassword">
-        <el-input v-model="pwdform.newpassword" type="password"></el-input>
-        <span>输入提示：请输入包含数字、字母8位密码</span>
+        <el-input v-model="pwdform.newpassword" show-password></el-input>
+        <span>输入提示：请输入包含数字、字母8-16位密码</span>
       </el-form-item>
       <el-form-item label="确认新密码:" prop="confirmPassword">
-        <el-input v-model="pwdform.confirmPassword" type="password"></el-input>
+        <el-input v-model="pwdform.confirmPassword" show-password></el-input>
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
@@ -41,9 +41,9 @@ export default {
     const reg = /^(?=.*?[0-9])(?=.*?[a-zA-Z])[0-9a-zA-Z]{8,16}$/
     var validatePass = (rule, value, callback) => {
       if (value === "") {
-        callback(new Error("请输入密码"));
+        callback(new Error("请输入新密码"));
       } else if (!reg.test(value)) {
-        callback(new Error("请输入包含数字、字母8位密码"));
+        callback(new Error("请输入必须包含数字、字母（不区分大小写）8-16位密码"));
       } else {
         if (this.pwdform.confirmPassword !== "") {
           this.$refs.pwdform.validateField("confirmPassword");
@@ -53,11 +53,11 @@ export default {
     };
     var validatePass2 = (rule, value, callback) => {
       if (value === "") {
-        callback(new Error("请再次输入密码"));
+        callback(new Error("请再次输入新密码"));
       } else if (value !== this.pwdform.newpassword) {
         callback(new Error("两次输入密码不一致!"));
       } else if (!reg.test(value)) {
-        callback(new Error("请输入包含数字、字母8位密码"));
+        callback(new Error("请输入必须包含数字、字母（不区分大小写）8-16位密码"));
       } else {
         callback();
       }
@@ -70,7 +70,7 @@ export default {
       },
       pwdRules: {
         oldpassword: [
-          { required: true, message: "请输入", trigger: "blur" },
+          { required: true, message: "请输入当前密码", trigger: "blur" },
           // { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" },
         ],
         newpassword: [
