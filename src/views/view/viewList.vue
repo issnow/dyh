@@ -9,23 +9,13 @@
         <el-row>
           <el-col :span="6">
             <el-form-item label="搜索" prop="title">
-              <el-input v-model="form.title" placeholder="请输入关键字"></el-input>
+              <el-input v-model="form.title" placeholder="请输入关键字">
+                <el-button slot="append" icon="el-icon-search" @click="searchProject"></el-button>
+              </el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="6">
-            <el-form-item label="状态" prop="status">
-              <el-select v-model="form.status" placeholder="请选择">
-                <el-option
-                  v-for="item in statusList"
-                  :key="item.key"
-                  :value="item.name">
-                  {{item.name}}
-                </el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="4">
-            <el-button type="primary" @click="searchProject">查询</el-button>
+          <el-col :span="2" class="text-center">
+            <!-- <el-button type="primary" @click="searchProject">查询</el-button> -->
             <el-button type="primary" @click="resetSearch">重置</el-button>
           </el-col>
         </el-row>
@@ -41,13 +31,60 @@
         >
         <el-table-column prop="title" label="成品名称"></el-table-column>
         <el-table-column prop="name" label="创作人" width="200"></el-table-column>
-        <el-table-column prop="type" label="类型" width="100">视频</el-table-column>
-        <el-table-column prop="resolution" label="分辨率" width="100"></el-table-column>
-        <el-table-column prop="wh_ratio" label="画幅" width="80"></el-table-column>
+        <el-table-column prop="resolution" label="分辨率" width="120">
+          <template slot="header" scope="scope">
+            <el-select
+                v-model="form.resolution"
+                placeholder="分辨率"
+                @change="filterSelect($event, 'resolution')"
+            >
+                <el-option
+                  v-for="item in sizeList"
+                  :key="item.key"
+                  :value="item.key"
+                  :label="item.name"
+                  >
+                </el-option>
+            </el-select>
+          </template>
+        </el-table-column>
+        <el-table-column prop="wh_ratio" label="画幅" width="130">
+          <template slot="header" scope="scope">
+            <el-select
+                v-model="form.wh_ratio"
+                placeholder="画幅比例"
+                @change="filterSelect($event, 'wh_ratio')"
+            >
+                <el-option
+                  v-for="item in scaleList"
+                  :key="item.key"
+                  :value="item.key"
+                  :label="item.name"
+                  >
+                </el-option>
+            </el-select>
+          </template>
+        </el-table-column>
         <!-- <el-table-column prop="view" label="预览" width="120"></el-table-column> -->
         <el-table-column prop="video_size" label="大小（M）" width="100"></el-table-column>
         <el-table-column prop="duration" label="时长（S）" width="100"></el-table-column>
-        <el-table-column prop="status_title" label="状态" width="150"></el-table-column>
+        <el-table-column prop="status_title" label="状态" width="100">
+          <template slot="header" scope="scope">
+            <el-select
+                v-model="form.status"
+                placeholder="状态"
+                @change="filterSelect($event, 'status')"
+            >
+                <el-option
+                  v-for="item in statusList"
+                  :key="item.key"
+                  :value="item.key"
+                  :label="item.name"
+                  >
+                </el-option>
+            </el-select>
+          </template>
+        </el-table-column>
         <el-table-column prop="created_at" label="合成时间" width="200" sortable></el-table-column>
         <el-table-column fixed="right" label="操作">
           <template slot-scope="scope">
@@ -84,13 +121,12 @@
         form: {
           title: '',
           status: '',
+          wh_ratio: '',
+          resolution: ''
         },
         rules: {
           title: [
-            { required: false, message: "请输入成品品名称关键字", trigger: "blur" },
-          ],
-          status: [
-            { required: false, message: "请选择状态", trigger: "change" },
+            { required: true, message: "请输入成品品名称关键字", trigger: "blur" },
           ],
         },
         // 111
@@ -123,6 +159,9 @@
             this.scaleList = res.element.wh_ratio;
             this.sizeList = res.element.resolution;
             this.statusList = res.element.status;
+            this.scaleList.unshift({key: 0, name: "全部"});
+            this.sizeList.unshift({key: 0, name: "全部"});
+            this.statusList.unshift({key: 0, name: "全部"});
           } else {
             this.$message({
               type: "error",
@@ -136,13 +175,17 @@
 
       // 搜索列表
       searchProject(){
-        this.getList();
+        this.$refs['form'].validate((valid) => {
+          if (!valid) {
+            return false;
+          }
+          this.getList();
+        });
       },
 
       // 清空搜索条件
       resetSearch(){
-        this.form.title = '';
-        this.form.status = '';
+        this.$refs.form.resetFields();
         this.getList();
       },
 
@@ -152,6 +195,27 @@
           query: {code: data.product_code}
         })
       },
+
+      // 筛选列表
+      filterSelect(value, type) {
+          console.log(value, type, '1111');
+          switch (type) {
+            case "wh_ratio":
+              value == 0 ? this.form.wh_ratio = '' : this.form.wh_ratio = value;
+              break;
+            case "resolution":
+              value == 0 ? this.form.resolution = '' : this.form.resolution = value;
+              break;
+            case "status":
+              value == 0 ? this.form.status = '' : this.form.status = value;
+              break;
+          }
+          this.page.pageNo = 1;
+          this.page.pageSize = 10;
+          
+          this.getList();
+      },
+
       // 获取审核列表
       getList(){
         this.loading = true;
@@ -159,6 +223,8 @@
           pageNo: this.page.pageNo,
           pageSize: this.page.pageSize,
           title: this.form.title,
+          wh_ratio: this.form.wh_ratio,
+          resolution: this.form.resolution,
           status: this.form.status
         };
 

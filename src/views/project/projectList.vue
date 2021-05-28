@@ -13,11 +13,11 @@
               </el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="4">
+          <el-col :span="2" class="text-center">
               <el-button type="primary" @click="resetSearch">重置</el-button>
           </el-col>
 
-          <el-col :span="12" class="text-right">
+          <el-col :span="14" class="text-right">
             <el-button type="primary" icon="el-icon-plus" @click="isShow = true">创建项目</el-button>
             <el-button type="primary" icon="el-icon-delete" @click="omDeletes">批量删除</el-button>
           </el-col>
@@ -39,6 +39,7 @@
         <el-table-column prop="resolution" label="分辨率" width="120">
           <template slot="header" scope="scope">
               <el-select
+                class="select-color"
                   v-model="form.resolution"
                   placeholder="分辨率"
                   @change="filterSelect($event, 'resolution')"
@@ -46,8 +47,9 @@
                   <el-option
                     v-for="item in sizeList"
                     :key="item.key"
-                    :value="item.name">
-                    {{item.name}}
+                    :value="item.name"
+                    :label="item.name"
+                  >
                   </el-option>
               </el-select>
             </template>
@@ -62,8 +64,9 @@
                 <el-option
                   v-for="item in scaleList"
                   :key="item.key"
-                  :value="item.name">
-                  {{item.name}}
+                  :value="item.name"
+                  :label="item.name"
+                  >
                 </el-option>
             </el-select>
           </template>
@@ -131,7 +134,8 @@
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="isShow = false">取 消</el-button>
+          <el-button @click="handleClose">取 消</el-button>
+          <!-- <el-button @click="isShow = false">取 消</el-button> -->
           <el-button type="primary" @click="addProject('creatForm')">确 认</el-button>
         </div>
       </el-dialog>
@@ -202,6 +206,7 @@
       handleClose() {
         this.isShow = false;
         this.isDelete = false;
+        this.$refs.creatForm.resetFields();
       },
 
       // 创建项目
@@ -257,12 +262,17 @@
       
       // 搜索列表
       searchProject(){
-        this.getProjectList();
+        this.$refs['form'].validate((valid) => {
+          if (!valid) {
+            return false;
+          }
+          this.getProjectList();
+        });
       },
 
       // 清空搜索条件
       resetSearch(){
-        this.form.title = '';
+        this.$refs.form.resetFields();
         this.getProjectList();
       },
       onEdit(){
@@ -409,5 +419,5 @@
         width: 100%;
       }
   }
- 
+
 </style>

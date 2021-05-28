@@ -298,12 +298,12 @@ export default {
     filterSelect(value, type) {
       switch (type) {
         case "wh_ratio":
-          value == "全部"
+          value == 0
             ? (this.form.wh_ratio = "")
             : (this.form.wh_ratio = value);
           break;
         case "resolution":
-          value == "全部"
+          value == 0
             ? (this.form.resolution = "")
             : (this.form.resolution = value);
           break;
