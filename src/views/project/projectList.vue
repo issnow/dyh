@@ -114,7 +114,7 @@
               <el-option
                 v-for="item in scaleList"
                 :key="item.key"
-                :value="item.key">
+                :value="item.name">
                 {{item.name}}
               </el-option>
             </el-select>
