@@ -1,10 +1,10 @@
+import router from '../router'
 // export const baseURL = 'http://172.18.20.78/dayunhe/backend/public'
 export const baseURL = 'http://123.60.24.237:8085'
 
 const axios = require('axios')
 let instance = axios.create({
-  // baseURL: 'http://localhost:3004/',
-  baseURL:'/',
+  baseURL: '/',
   timeout: 30000,
   withCredentials: true,
   headers: {
@@ -16,7 +16,10 @@ let instance = axios.create({
 });
 // 添加请求拦截器
 instance.interceptors.request.use(function (config) {
-  // console.log(config)
+  if (process.env.NODE_ENV == 'production') {
+    config.url = config.url.replace('/api', '')
+    config.baseURL = 'http://123.60.24.237:8085/'
+  }
   // if(config.method === 'post') {
   //   config.headers = {
   //     ...config.headers,
@@ -32,13 +35,20 @@ instance.interceptors.request.use(function (config) {
 
 // 添加响应拦截器
 instance.interceptors.response.use(function (response) {
+  const {
+    data
+  } = response
+  if (data.status == '-101') {
+    // 用户未登录
+    router.push('/login')
+  }
   // 对响应数据做点什么
   return response.data;
 }, function (error) {
   // 对响应错误做点什么
   // return Promise.reject(error);
   const res = error.response
-  if(res) {
+  if (res) {
     switch (res.status) {
       case 401:
         // 无权限处理

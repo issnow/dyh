@@ -15,9 +15,9 @@
       <el-form-item label="密码" prop="password">
         <el-input
           v-model="form.password"
-          type="password"
           placeholder="请填写密码"
           @keyup.enter.native='onChange'
+          show-password
         ></el-input>
       </el-form-item>
       <el-button type="primary" @click="onChange" :loading='loading' style="width: 100%"
@@ -66,8 +66,11 @@ export default {
             this.$message({ message: msg, type: "success" });
             this["user/SET_USER_INFO"](element);
             this["user/SET_ROUTES"](element);
-            // this.$router.push({ path: "/userList" });
-            this.$router.push({ path: "/workManager" });
+            if(element.type == 1){
+              this.$router.push({ path: "/projectList" });
+            }else if(element.type == 2) {
+              this.$router.push({ path: "/viewList" });
+            }
             window.addEventListener("beforeunload", () => {
               sessionStorage.setItem("isLogin", "1");
             });

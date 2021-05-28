@@ -17,7 +17,7 @@ export default {
   props: ['collapse'],
   data() {
     return {
-      title: '大运河',
+      title: '大运河文化',
       logo: 'https://wpimg.wallstcn.com/69a1c46c-eb1c-4b46-8bd4-e9e686ef5251.png'
     }
   }
@@ -43,6 +43,9 @@ export default {
   overflow: hidden;
   .sidebar-logo-link {
     display: inline-block;
+    // display: flex;
+    // justify-content: center;
+    // align-content: center;
     height: 100%;
     width: 100%;
   }

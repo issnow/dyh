@@ -4,38 +4,34 @@ import Layout from '../layout'
 
 Vue.use(VueRouter)
 
-export const routes = [
+export const routes = [{
+    path: '/',
+    redirect: '/login',
+  },
   {
-    path:'/login',
-    component: ()=>import('@view/login/index'),
+    path: '/login',
+    component: () => import('@view/login/index'),
     // hidden: true
   },
   {
-    path:'/workDetail/:code/:isEdit',
+    path: '/workDetail/:code/:isEdit',
     component: Layout,
-    children: [
-      {
-        path: '',
-        component: ()=>import('@view/work/detail'),
-        name: 'workDetail'
-      }
-    ]
+    children: [{
+      path: '',
+      component: () => import('@view/work/detail'),
+      name: 'workDetail'
+    }]
   },
   {
-    path:'/viewDetail',
+    path: '/viewDetail',
     component: Layout,
-    children: [
-      {
-        path: '',
-        component: ()=>import('@view/view/viewDetail'),
-        name: 'viewDetail'
-      }
-    ]
+    children: [{
+      path: '',
+      component: () => import('@view/view/viewDetail'),
+      name: 'viewDetail'
+    }]
   }
-  // {
-  //   path: '/',
-  //   redirect: '/user',
-  // },
+
   //   {
   //   path: '/userList',
   //   component: Layout,
@@ -106,7 +102,7 @@ export const routes = [
 //   base: process.env.BASE_URL,
 //   routes
 // })
-const createRouter = ()=>new VueRouter({
+const createRouter = () => new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes

@@ -22,7 +22,7 @@
           type="textarea"
           :rows="2"
           placeholder="请输入内容"
-          v-model="form.desc"
+          v-model.trim="form.desc"
           maxlength="50"
           show-word-limit
         >
