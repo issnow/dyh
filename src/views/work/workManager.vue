@@ -9,7 +9,7 @@
         :inline="true"
       >
         <el-row>
-          <el-col :span="7">
+          <el-col :span="9">
             <el-form-item label="搜索" prop="title">
               <el-input
                 v-model.trim="form.title"
@@ -25,7 +25,7 @@
               </el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="7">
+          <el-col :span="8">
             <el-form-item label="状态" prop="status">
               <el-select v-model="form.status" placeholder="请选择">
                 <el-option
@@ -38,7 +38,7 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="2">
+          <el-col :span="4">
             <el-form-item>
               <el-button
                 icon="el-icon-delete"
@@ -46,6 +46,7 @@
                 @click="selectDelete"
               ></el-button>
             </el-form-item>
+            <el-button type="primary" @click="clear">重置</el-button>
           </el-col>
         </el-row>
       </el-form>
@@ -132,7 +133,7 @@
           width="200"
           sortable="custom"
         ></el-table-column>
-        <el-table-column fixed="right" label="操作" width="300">
+        <el-table-column fixed="right" label="操作" width="200">
           <template slot-scope="scope">
             <!-- scope.row.status -->
             <el-button
@@ -289,6 +290,10 @@ export default {
     this._productGetList();
   },
   methods: {
+    clear() {
+      this.$refs.form.resetFields();
+      this._productGetList();
+    },
     // 筛选列表
     filterSelect(value, type) {
       switch (type) {

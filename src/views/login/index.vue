@@ -66,7 +66,7 @@ export default {
             this.$message({ message: msg, type: "success" });
             this["user/SET_USER_INFO"](element);
             this["user/SET_ROUTES"](element);
-            if(element.type == 1){
+            if(element.type == 1 || element.type == 0){
               this.$router.push({ path: "/projectList" });
             }else if(element.type == 2) {
               this.$router.push({ path: "/viewList" });
