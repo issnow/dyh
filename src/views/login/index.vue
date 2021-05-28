@@ -15,9 +15,9 @@
       <el-form-item label="密码" prop="password">
         <el-input
           v-model="form.password"
-          type="password"
           placeholder="请填写密码"
           @keyup.enter.native='onChange'
+          show-password
         ></el-input>
       </el-form-item>
       <el-button type="primary" @click="onChange" :loading='loading' style="width: 100%"

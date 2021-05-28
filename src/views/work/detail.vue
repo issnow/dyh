@@ -48,7 +48,7 @@
             type="textarea"
             :rows="2"
             placeholder="请输入内容"
-            v-model="form.title"
+            v-model.trim="form.title"
             maxlength="20"
             show-word-limit
           >
@@ -131,7 +131,7 @@
             type="textarea"
             :rows="3"
             placeholder="请输入内容"
-            v-model="form.description"
+            v-model.trim="form.description"
             maxlength="50"
             show-word-limit
           >
@@ -264,10 +264,15 @@ export default {
           value: c.id,
           label: c.name,
         }));
+      }else {
+        this.$message({
+          type: 'error',
+          message: res.msg
+        })
       }
     },
     async asyncGetEntityList() {
-      let { status, element } = await productEntityList();
+      let { status, element,msg } = await productEntityList();
       if (status == 1) {
         // element.forEach(async (e) => {
         //   let res = await productEntityList({ id: e.id, name: "" });
@@ -285,22 +290,32 @@ export default {
         //   }
         // });
         this.entityList = element;
+      }else {
+        this.$message({
+          type: 'error',
+          message: msg
+        })
       }
     },
     async _productTagList() {
-      let { status, element } = await productTagList();
+      let { status, element,msg } = await productTagList();
       if (status == 1) {
         this.options = element.map((e) => ({
           value: e.key,
           label: e.name,
         }));
+      }else {
+        this.$message({
+          type: 'error',
+          message: msg
+        })
       }
     },
     async init() {
       const p = {
         code: this.$route.params.code,
       };
-      let { status, element } = await productDetail(p);
+      let { status, element,msg } = await productDetail(p);
       console.log(element, "444");
       if (status == 1) {
         const { description, entities, tag_ids, url } = element.product;
@@ -312,8 +327,8 @@ export default {
           // title: ''
         };
         entities.forEach(async (c) => {
-          this.form["thing" + c.fid] = c.sid;
           let res = await productEntityList({ id: c.fid, name: "" });
+          this.form["thing" + c.fid] = c.sid;
           if (res.status == 1) {
             this.arrList = res.element.map((d) => ({
               value: d.id,
@@ -325,6 +340,11 @@ export default {
         this.task = {
           audit_note,
         };
+      }else {
+        this.$message({
+          type: 'error',
+          message: msg
+        })
       }
     },
     // getImg(src) {

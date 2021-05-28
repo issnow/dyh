@@ -24,7 +24,7 @@ export default {
     async asyncGetUserInfo({state, commit}) {
       let {status, element} = await getUserInfo({id: state.userInfo.id})
       if (status == 1) {
-        console.log(element, 'element');
+        // console.log(element, 'element');
         commit('SET_USER_INFO', element);
       }
     }
