@@ -128,7 +128,7 @@
           prop="status_title"
         >
           <template slot-scope="scope">
-             <el-tooltip v-if="scope.row.status == 6" class="item" effect="dark" :content="scope.row.status_title" placement="top">
+             <el-tooltip v-if="scope.row.status == 7" class="item" effect="dark" :content="scope.row.audit_note" placement="top">
               <span>{{scope.row.status_title}}</span>
             </el-tooltip>
             <span v-else>{{scope.row.status_title}}</span>

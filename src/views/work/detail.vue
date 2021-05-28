@@ -51,7 +51,7 @@
             >
             </el-option>
           </el-select>
-          <span v-show="!isEdit">{{ viewInfo.tag }}</span>
+          <span v-show="!isEdit">{{ viewInfo.tag_names_str }}</span>
         </el-form-item>
 
         <div class="shiti">
@@ -174,7 +174,7 @@ export default {
       // 查看
       viewInfo: {
         title: "",
-        tag: "",
+        tag_names_str: "",
         description: "",
         entities: [],
       },
@@ -354,7 +354,7 @@ export default {
       this.editLoading = false
       console.log(element, "element");
       if (status == 1) {
-        const { description, entities, tag_ids, url, title } = element.product;
+        const { description, entities, tag_ids, url, title,tag_names_str } = element.product;
         const { audit_note, audit_status, audit_status_title } = element.task;
         this.form = {
           ...this.form,
@@ -363,7 +363,7 @@ export default {
           title,
         };
         this.viewInfo.title = title;
-        this.viewInfo.tag = tag_ids[0] / 1;
+        this.viewInfo.tag_names_str = tag_names_str;
         this.viewInfo.entities = entities;
         this.viewInfo.description = description;
         if (this.isEdit) {
