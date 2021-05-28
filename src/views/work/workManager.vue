@@ -126,7 +126,14 @@
           label="状态"
           width="200"
           prop="status_title"
-        ></el-table-column>
+        >
+          <template slot-scope="scope">
+             <el-tooltip v-if="scope.row.status == 6" class="item" effect="dark" :content="scope.row.status_title" placement="top">
+              <span>{{scope.row.status_title}}</span>
+            </el-tooltip>
+            <span v-else>{{scope.row.status_title}}</span>
+          </template>
+        </el-table-column>
         <el-table-column
           prop="created_at"
           label="创作时间"
@@ -216,7 +223,7 @@ export default {
       submitDialogVisible: false,
       page: {
         pageNo: 1,
-        pageSize: 5,
+        pageSize: 10,
         // 共几条
         recordCount: 0,
         // 共几页

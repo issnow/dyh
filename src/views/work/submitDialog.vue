@@ -4,7 +4,7 @@
     :visible.sync="visible"
     class="work-submit"
     :before-close="beforeClose"
-    width="33%"
+    width="45%"
   >
     <el-form
       :model="form"
@@ -17,7 +17,7 @@
         {{ title }}
         <div>视频名称不可修改。</div>
       </el-form-item>
-      <el-form-item label="描述" prop="desc">
+      <el-form-item label="描述:" prop="desc">
         <el-input
           type="textarea"
           :rows="2"
@@ -29,7 +29,7 @@
         </el-input>
         <!-- <div>上限50个字符。</div> -->
       </el-form-item>
-      <el-form-item label="标签" prop="label">
+      <el-form-item label="标签:" prop="label">
         <el-select v-model="form.label" placeholder="请选择">
           <el-option
             v-for="item in options"
@@ -40,6 +40,46 @@
           </el-option>
         </el-select>
       </el-form-item>
+      <div class="shiti">
+        <div class="label">实体:</div>
+        <div class="right">
+          <el-form-item
+            v-for="(e, i) in entityList"
+            :key="e.id"
+            :label="e.name"
+            :prop="'thing' + i"
+            label-width="60px"
+          >
+            <el-select
+              v-model="form['thing' + i]"
+              placeholder="请选择"
+              filterable
+              multiple
+              remote
+              :remote-method="
+                (query) => {
+                  remoteMethod(query, e);
+                }
+              "
+              @focus="onFocus(e)"
+              @visible-change="
+                (visi) => {
+                  visibleChange(visi, e);
+                }
+              "
+              :loading="selectLoading"
+            >
+              <el-option
+                v-for="item in arrList"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              >
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </div>
+      </div>
 
       <!-- <el-form-item label="人物" prop="thing1">
         <el-select
@@ -58,54 +98,6 @@
           </el-option>
         </el-select>
       </el-form-item> -->
-
-      <el-form-item
-        v-for="(e, i) in entityList"
-        :key="e.id"
-        :label="e.name"
-        :prop="'thing' + i"
-      >
-        <el-select
-          v-model="form['thing' + i]"
-          placeholder="请选择"
-          filterable
-          multiple
-          remote
-          :remote-method="
-            (query) => {
-              remoteMethod(query, e);
-            }
-          "
-          @focus="onFocus(e)"
-          @visible-change="
-            (visi) => {
-              visibleChange(visi, e);
-            }
-          "
-          :loading="selectLoading"
-        >
-          <el-option
-            v-for="item in arrList"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          >
-          </el-option>
-        </el-select>
-        <!-- <el-select
-          v-model="form['thing' + i]"
-          placeholder="请选择"
-          filterable
-        >
-          <el-option
-            v-for="item in e.option"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          >
-          </el-option>
-        </el-select> -->
-      </el-form-item>
     </el-form>
 
     <div slot="footer" class="dialog-footer">
@@ -288,4 +280,18 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.work-submit {
+  .shiti {
+    display: flex;
+    >.label {
+      padding-top: 10px;
+      width: 90px;
+      padding-right: 12px;
+      text-align: right;
+    }
+    .right {
+      flex: 1;
+    }
+  }
+}
 </style>
