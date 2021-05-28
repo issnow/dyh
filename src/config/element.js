@@ -40,7 +40,8 @@ import {
   Message,
   MessageBox,
   Upload,
-  cascader
+  cascader,
+  Tooltip
 } from 'element-ui';
 Vue.use(Button)
 Vue.use(Container)
@@ -81,6 +82,7 @@ Vue.use(DropdownMenu);
 Vue.use(DropdownItem);
 Vue.use(Upload);
 Vue.use(cascader);
+Vue.use(Tooltip);
 
 
 
