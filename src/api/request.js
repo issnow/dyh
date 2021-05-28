@@ -4,8 +4,7 @@ export const baseURL = 'http://123.60.24.237:8085'
 
 const axios = require('axios')
 let instance = axios.create({
-  // baseURL: 'http://localhost:3004/',
-  baseURL:'/',
+  baseURL: '/',
   timeout: 30000,
   withCredentials: true,
   headers: {
@@ -17,9 +16,9 @@ let instance = axios.create({
 });
 // 添加请求拦截器
 instance.interceptors.request.use(function (config) {
-  if(process.env.NODE_ENV == 'production') {
+  if (process.env.NODE_ENV == 'production') {
     config.url = config.url.replace('/api', '')
-    console.log(config, 'config')
+    config.baseURL = 'http://123.60.24.237:8085/'
   }
   // if(config.method === 'post') {
   //   config.headers = {
@@ -36,8 +35,10 @@ instance.interceptors.request.use(function (config) {
 
 // 添加响应拦截器
 instance.interceptors.response.use(function (response) {
-  const {data} = response
-  if(data.status == '-101' ){
+  const {
+    data
+  } = response
+  if (data.status == '-101') {
     // 用户未登录
     router.push('/login')
   }
@@ -47,7 +48,7 @@ instance.interceptors.response.use(function (response) {
   // 对响应错误做点什么
   // return Promise.reject(error);
   const res = error.response
-  if(res) {
+  if (res) {
     switch (res.status) {
       case 401:
         // 无权限处理
