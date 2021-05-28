@@ -9,7 +9,7 @@
       :inline="true"
     >
       <el-row>
-        <el-col :span="7">
+        <el-col :span="8">
           <el-form-item label="搜索" prop="email">
             <el-input
               v-model.trim="form.email"
@@ -17,7 +17,7 @@
             ></el-input>
           </el-form-item>
         </el-col>
-        <el-col :span="7">
+        <el-col :span="8">
           <el-form-item label="状态" prop="state">
             <el-select v-model="form.state" placeholder="请选择">
               <el-option
@@ -30,7 +30,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="4">
+        <el-col :span="5">
           <el-form-item>
             <el-button type="primary" @click="submitForm('form')"
               >查询</el-button
