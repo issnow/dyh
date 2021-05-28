@@ -17,7 +17,10 @@ let instance = axios.create({
 });
 // 添加请求拦截器
 instance.interceptors.request.use(function (config) {
-  // console.log(config)
+  if(process.env.NODE_ENV == 'production') {
+    config.url = config.url.replace('/api', '')
+    console.log(config, 'config')
+  }
   // if(config.method === 'post') {
   //   config.headers = {
   //     ...config.headers,
