@@ -38,15 +38,18 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="4">
+          <el-col :span="6">
             <el-form-item>
               <el-button
                 icon="el-icon-delete"
                 type="primary"
                 @click="selectDelete"
-              ></el-button>
+                >批量删除</el-button
+              >
             </el-form-item>
-            <el-button type="primary" @click="clear">重置</el-button>
+            <el-button type="primary" @click="clear" :loading="loading"
+              >重置</el-button
+            >
           </el-col>
         </el-row>
       </el-form>
@@ -98,40 +101,37 @@
             </el-select>
           </template>
         </el-table-column>
-        <el-table-column label="预览" width="120">
+        <el-table-column label="预览" width="160">
           <template slot-scope="scope">
             <videoPreview
               :isVideo="true"
               :source="scope.row.url"
               :bgImage="scope.row.cover_url"
             />
-            <!-- <videoPreview
-              :isVideo="true"
-              :source="getImg('movie.mp4')"
-              :bgImage="getImg('8.jpg')"
-            /> -->
           </template>
         </el-table-column>
         <el-table-column
           prop="video_size"
           label="大小（M）"
-          width="200"
+          width="100"
         ></el-table-column>
         <el-table-column
           prop="duration"
           label="时长（S）"
-          width="200"
+          width="100"
         ></el-table-column>
-        <el-table-column
-          label="状态"
-          width="200"
-          prop="status_title"
-        >
+        <el-table-column label="状态" prop="status_title">
           <template slot-scope="scope">
-             <el-tooltip v-if="scope.row.status == 7" class="item" effect="dark" :content="scope.row.audit_note" placement="top">
-              <span>{{scope.row.status_title}}</span>
+            <el-tooltip
+              v-if="scope.row.status == 6"
+              class="item"
+              effect="dark"
+              :content="scope.row.audit_note"
+              placement="top"
+            >
+              <span>{{ scope.row.status_title }}</span>
             </el-tooltip>
-            <span v-else>{{scope.row.status_title}}</span>
+            <span v-else>{{ scope.row.status_title }}</span>
           </template>
         </el-table-column>
         <el-table-column
@@ -305,9 +305,7 @@ export default {
     filterSelect(value, type) {
       switch (type) {
         case "wh_ratio":
-          value == 0
-            ? (this.form.wh_ratio = "")
-            : (this.form.wh_ratio = value);
+          value == 0 ? (this.form.wh_ratio = "") : (this.form.wh_ratio = value);
           break;
         case "resolution":
           value == 0
@@ -331,7 +329,7 @@ export default {
       }
     },
     async _productChoicesList() {
-      const { status, element,msg } = await productChoicesList({ type: 1 });
+      const { status, element, msg } = await productChoicesList({ type: 1 });
       if (status == 1) {
         this.selectData = element.status.map((e) => ({
           label: e.name,
@@ -339,17 +337,17 @@ export default {
         }));
         this.filterResolution = element.resolution;
         this.filterWh_ratio = element.wh_ratio;
-        this.filterResolution.unshift({key: 0, name: "全部"});
-        this.filterWh_ratio.unshift({key: 0, name: "全部"});
+        this.filterResolution.unshift({ key: 0, name: "全部" });
+        this.filterWh_ratio.unshift({ key: 0, name: "全部" });
 
         // console.log(this.selectData, "selectData");
         console.log(this.filterResolution, "filterResolution");
         console.log(this.filterWh_ratio, "filterWh_ratio");
-      }else {
+      } else {
         this.$message({
-          type: 'error',
-          message: msg
-        })
+          type: "error",
+          message: msg,
+        });
       }
     },
     async _productGetList() {
@@ -360,8 +358,8 @@ export default {
         pageSize: this.page.pageSize,
         pageNo: this.page.pageNo,
       };
-      console.log(params, 'params')
-      let { status, datas, fsp,msg } = await productGetList(params);
+      console.log(params, "params");
+      let { status, datas, fsp, msg } = await productGetList(params);
       this.loading = false;
       if (status == 1) {
         this.tableData = datas;
@@ -373,11 +371,11 @@ export default {
           // 共几页
           pageCount: fsp.pageCount,
         };
-      }else {
+      } else {
         this.$message({
-          type: 'error',
-          message: msg
-        })
+          type: "error",
+          message: msg,
+        });
       }
     },
     selectDelete() {
@@ -389,10 +387,14 @@ export default {
           type: "warning",
         })
           .then(async () => {
+            let len = this.tableData.length;
             let { status, msg } = await productDel({
               code: this.multipleSelection.map((e) => e.code),
             });
             if (status == 1) {
+              if (len == 1 && this.page.pageNo > 1) {
+                this.page.pageNo--;
+              }
               this.$message({
                 type: "success",
                 message: msg,
@@ -422,11 +424,6 @@ export default {
       console.log(val, "val");
       this.multipleSelection = val;
     },
-    getImg(src) {
-      if (src) {
-        return require("@/assets/" + src);
-      }
-    },
     onReview({ code, title }) {
       this.code = code;
       this.submitDialogVisible = true;
@@ -440,10 +437,14 @@ export default {
         type: "warning",
       })
         .then(async () => {
+          let len = this.tableData.length;
           let { status, msg } = await productDel({
             code: [code],
           });
           if (status == 1) {
+            if (len == 1 && this.page.pageNo > 1) {
+              this.page.pageNo--;
+            }
             this.$message({
               type: "success",
               message: msg,
