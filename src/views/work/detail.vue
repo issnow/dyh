@@ -460,7 +460,7 @@ export default {
 .work-detail {
   display: flex;
   padding: 50px 30px;
-  min-height: 600px;
+  min-height: 660px;
   .title {
     font-size: 16px;
     color: $deepDark;

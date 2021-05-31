@@ -1,8 +1,8 @@
 @font-face {
   font-family: "iconfont"; /* Project id 2553287 */
-  src: url('iconfont.woff2?t=1621239882697') format('woff2'),
-       url('iconfont.woff?t=1621239882697') format('woff'),
-       url('iconfont.ttf?t=1621239882697') format('truetype');
+  src: url('iconfont.woff2?t=1622448988621') format('woff2'),
+       url('iconfont.woff?t=1622448988621') format('woff'),
+       url('iconfont.ttf?t=1622448988621') format('truetype');
 }
 
 .iconfont {
@@ -11,6 +11,30 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-indent:before {
+  content: "\e7f3";
+}
+
+.icon-outdent:before {
+  content: "\e7f4";
+}
+
+.icon-yingpuzhichi:before {
+  content: "\e606";
+}
+
+.icon-denglulogo:before {
+  content: "\e604";
+}
+
+.icon-biaotilogowenzi:before {
+  content: "\e603";
+}
+
+.icon-biaotilogotuxing:before {
+  content: "\e602";
 }
 
 .icon-name:before {
