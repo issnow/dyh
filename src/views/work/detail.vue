@@ -1,11 +1,11 @@
 <template>
   <div class="work-detail">
     <div class="work-detail-suggest">
-      <div class="title">审核结果:</div>
-      <ul class="list">
+      <div class="title" v-if="hideTask">审核结果:</div>
+      <ul class="list" v-if="hideTask">
         <li>
           <div class="label">AI审核:</div>
-          <div class="content">{{'黄暴政审核未通过'}}</div>
+          <div class="content">{{'黄暴政审核未通过111'}}</div>
         </li>
         <li>
           <div class="label">人工审核意见:</div>
@@ -51,7 +51,7 @@
             >
             </el-option>
           </el-select>
-          <span v-show="!isEdit">{{ viewInfo.tag }}</span>
+          <span v-show="!isEdit">{{ viewInfo.tag_names_str }}</span>
         </el-form-item>
 
         <div class="shiti">
@@ -174,7 +174,7 @@ export default {
       // 查看
       viewInfo: {
         title: "",
-        tag: "",
+        tag_names_str: "",
         description: "",
         entities: [],
       },
@@ -182,7 +182,7 @@ export default {
         this.$route.params.isEdit === "1"
           ? {
               title: [
-                { required: true, message: "请输入1", trigger: "blur" },
+                { required: true, message: "请输入", trigger: "blur" },
                 // { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" },
               ],
               tag: [
@@ -213,11 +213,14 @@ export default {
       arrList: [],
       url: "",
       // task审核
-      task: {},
+      task: {
+        audit_note: ''
+      },
       loading: false,
       // 一级实体select框的id
       selectID: "",
-      editLoading: false
+      editLoading: false,
+      hideTask: false
     };
   },
   mounted() {
@@ -354,8 +357,12 @@ export default {
       this.editLoading = false
       console.log(element, "element");
       if (status == 1) {
-        const { description, entities, tag_ids, url, title } = element.product;
-        const { audit_note, audit_status, audit_status_title } = element.task;
+        const { description, entities, tag_ids, url, title,tag_names_str } = element.product;
+        this.hideTask = !!element.task
+        // const { audit_note, audit_status, audit_status_title } = element.task;
+        this.task = {
+          audit_note: element?.task?.audit_note,
+        };
         this.form = {
           ...this.form,
           tag: tag_ids[0] / 1,
@@ -363,7 +370,7 @@ export default {
           title,
         };
         this.viewInfo.title = title;
-        this.viewInfo.tag = tag_ids[0] / 1;
+        this.viewInfo.tag_names_str = tag_names_str;
         this.viewInfo.entities = entities;
         this.viewInfo.description = description;
         if (this.isEdit) {
@@ -379,10 +386,9 @@ export default {
           });
         }
         this.url = url;
-        this.task = {
-          audit_note,
-        };
+        
       } else {
+        this.$router.go(-1)
         this.$message({
           type: "error",
           message: msg,
@@ -454,6 +460,7 @@ export default {
 .work-detail {
   display: flex;
   padding: 50px 30px;
+  min-height: 600px;
   .title {
     font-size: 16px;
     color: $deepDark;
