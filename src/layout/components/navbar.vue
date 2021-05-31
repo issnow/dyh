@@ -92,11 +92,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '@css/var.scss';
 .navbar {
   height: 50px;
   overflow: hidden;
   position: relative;
-  background-color: #fff;
+  // background-color: #fff;
+  background-color: #4C7378;
   line-height: 46px;
   padding-right: 24px;
   #hamburger-container {
@@ -106,6 +108,7 @@ export default {
     float: right;
     height: 100%;
     .email {
+      color: $white;
       display: inline-block;
       margin-right: 20px;
       height: 100%;
