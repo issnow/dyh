@@ -388,6 +388,7 @@ export default {
         this.url = url;
         
       } else {
+        this.$router.go(-1)
         this.$message({
           type: "error",
           message: msg,
