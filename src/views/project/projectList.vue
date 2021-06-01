@@ -101,6 +101,7 @@
         :visible="isShow"
         :before-close="handleClose"
         class="creat-dialog"
+        :close-on-click-modal='false'
         width="30%">
         <el-form :model="creatForm" label-width="80px" :rules="creatFormRules" ref="creatForm">
           <el-form-item label="项目名称" prop="title">
