@@ -29,61 +29,40 @@
       label-width="90px"
       class="user-center-form"
     >
-      <div class="user-id">
-        <!-- <i class="el-icon-user"></i> -->
-        <el-form-item label="用户ID:">
-          <el-input
-            placeholder="请输入"
-            v-model="form.id"
-            :disabled="true"
-          ></el-input>
-        </el-form-item>
-      </div>
-      <div class="name">
-        <!-- <i class="el-icon-user"></i> -->
-        <el-form-item label="昵称:" prop="nickname">
-          <el-input
-            placeholder="请输入"
-            v-model.trim="form.nickname"
-          ></el-input>
-        </el-form-item>
-      </div>
-      <div class="email">
-        <!-- <i class="el-icon-user"></i> -->
-        <el-form-item label="邮箱:" prop="email">
-          <el-input placeholder="请输入" v-model.trim="form.email"></el-input>
-        </el-form-item>
-      </div>
-      <div class="user-id">
-        <!-- <i class="el-icon-user"></i> -->
-        <el-form-item label="角色:">
-          <el-input
-            placeholder="请输入"
-            v-model="form.type"
-            :disabled="true"
-          ></el-input>
-        </el-form-item>
-      </div>
-      <div class="phone">
-        <!-- <i class="el-icon-user"></i> -->
-        <el-form-item label="联系方式:" prop="phone">
-          <el-input
-            placeholder="请输入"
-            v-model.trim="form.phone"
-            onkeyup="value=value.replace(/[^\d]/g,'')"
-          ></el-input>
-        </el-form-item>
-      </div>
-      <div class="org">
-        <!-- <i class="el-icon-user"></i> -->
-        <el-form-item label="所属机构:">
-          <el-input
-            :disabled="true"
-            placeholder="请输入"
-            v-model="form.institutions"
-          ></el-input>
-        </el-form-item>
-      </div>
+      <el-form-item label="用户ID:">
+        <el-input
+          placeholder="请输入"
+          v-model="form.id"
+          :disabled="true"
+        ></el-input>
+      </el-form-item>
+      <el-form-item label="昵称:" prop="nickname">
+        <el-input placeholder="请输入" v-model.trim="form.nickname"></el-input>
+      </el-form-item>
+      <el-form-item label="邮箱:" prop="email">
+        <el-input placeholder="请输入" v-model.trim="form.email"></el-input>
+      </el-form-item>
+      <el-form-item label="角色:">
+        <el-input
+          placeholder="请输入"
+          v-model="form.type"
+          :disabled="true"
+        ></el-input>
+      </el-form-item>
+      <el-form-item label="联系方式:" prop="phone">
+        <el-input
+          placeholder="请输入"
+          v-model.trim="form.phone"
+          onkeyup="value=value.replace(/[^\d]/g,'')"
+        ></el-input>
+      </el-form-item>
+      <el-form-item label="所属机构:">
+        <el-input
+          :disabled="true"
+          placeholder="请输入"
+          v-model="form.institutions"
+        ></el-input>
+      </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
       <el-button
@@ -195,7 +174,7 @@ export default {
           type: "error",
           message: "尺寸限制：300*300及下",
         });
-        return
+        return;
       }
 
       let formData = new FormData();
@@ -269,17 +248,21 @@ export default {
     text-align: center;
   }
   .user-center-form {
-    display: flex;
-    flex-flow: column nowrap;
-    align-items: center;
-    > div {
-      display: flex;
-      margin-bottom: 24px;
-      align-items: center;
-      .el-form-item {
-        margin-bottom: 0;
-      }
-    }
+    // display: flex;
+    // flex-flow: column nowrap;
+    // align-items: center;
+    // > div {
+    //   width: 100%;
+    //   display: flex;
+    //   margin-bottom: 24px;
+    //   align-items: center;
+    //   .el-form-item {
+    //     margin-bottom: 0;
+    //     .el-form-item__content {
+    //       width: 200px;
+    //     }
+    //   }
+    // }
   }
 
   .upload-avatar {

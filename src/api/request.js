@@ -26,10 +26,10 @@ instance.interceptors.request.use(function (config) {
   //     'Content-Type': 'application/x-www-form-urlencoded'
   //   }
   // }
-  if (sessionStorage.getItem('Authorization')) {
+  if (sessionStorage.getItem('token')) {
     config.headers = {
       ...config.headers,
-      Authorization: sessionStorage.getItem('Authorization')
+      Authorization: sessionStorage.getItem('token')
     }
   }
   // 在发送请求之前做些什么
