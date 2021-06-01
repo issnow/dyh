@@ -13,6 +13,10 @@ let instance = axios.create({
     //   "Content-Type": 'application/json'
     // }
   },
+  // transformRequest: [(data, headers)=>{
+  //   console.log(data,headers, 'data1');
+  //   return data
+  // }]
 });
 // 添加请求拦截器
 instance.interceptors.request.use(function (config) {

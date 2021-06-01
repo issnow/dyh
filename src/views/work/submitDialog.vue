@@ -5,6 +5,7 @@
     class="work-submit"
     :before-close="beforeClose"
     width="45%"
+    :close-on-click-modal='false'
   >
     <el-form
       :model="form"
@@ -46,7 +47,7 @@
           <el-form-item
             v-for="(e, i) in entityList"
             :key="e.id"
-            :label="e.name"
+            :label="e.name + ':'"
             :prop="'thing' + i"
             label-width="60px"
           >

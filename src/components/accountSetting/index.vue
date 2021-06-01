@@ -5,6 +5,7 @@
     class="account-dialog"
     :before-close="beforeClose"
     width="33%"
+    :close-on-click-modal='false'
   >
     <div class="upload-avatar" @click="handleUpload">
       <input
