@@ -14,9 +14,9 @@ export default {
     SET_ROUTES(state, payload) {
       const {permissionList} = payload
       let newRouter = formatRouter(permissionList)
-      console.log('newRouter', newRouter);
+      // console.log('newRouter', newRouter);
       state.routes = newRouter
-      console.log(router, 'router1');
+      // console.log(router, 'router1');
       router.addRoutes(newRouter)
     }
   },

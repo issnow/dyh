@@ -77,6 +77,7 @@ export default {
     },
     async handleLogout() {
       sessionStorage.removeItem('isLogin')
+      sessionStorage.removeItem('token')
       let {msg, status} = await logout()
       if(status == 1) {
         this.$router.push('/login')
