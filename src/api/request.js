@@ -6,7 +6,7 @@ const axios = require('axios')
 let instance = axios.create({
   baseURL: '/',
   timeout: 30000,
-  withCredentials: true,
+  withCredentials: false,
   headers: {
     // 'X-Custom-Header': 'foobar',
     // post: {
