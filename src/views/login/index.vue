@@ -69,6 +69,7 @@ export default {
           let { status, msg, element } = await loginApp(this.form);
           this.loading = false;
           if (status == 1) {
+            sessionStorage.setItem('Authorization', element.session_id)
             this.$message({ message: msg, type: "success" });
             this["user/SET_USER_INFO"](element);
             this["user/SET_ROUTES"](element);

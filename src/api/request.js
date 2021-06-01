@@ -26,6 +26,12 @@ instance.interceptors.request.use(function (config) {
   //     'Content-Type': 'application/x-www-form-urlencoded'
   //   }
   // }
+  if (sessionStorage.getItem('Authorization')) {
+    config.headers = {
+      ...config.headers,
+      Authorization: sessionStorage.getItem('Authorization')
+    }
+  }
   // 在发送请求之前做些什么
   return config;
 }, function (error) {
