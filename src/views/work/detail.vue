@@ -61,7 +61,7 @@
               v-show="isEdit"
               v-for="e in entityList"
               :key="e.name"
-              :label="e.name"
+              :label="e.name + ':'"
               :prop="'thing' + e.id"
               label-width="60px"
             >

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="app-main-wrap">
     <section class="app-main">
       <transition name="fade-transform" mode="out-in">
         <keep-alive>

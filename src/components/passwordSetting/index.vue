@@ -5,6 +5,7 @@
     class="password-dialog"
     :before-close="onCancel"
     width="33%"
+    :close-on-click-modal='false'
   >
     <el-form
       :model="pwdform"

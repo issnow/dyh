@@ -2,7 +2,7 @@
   <div class="app-wrapper" :class="classObj">
     <sidebar class="sidebar-container"></sidebar>
     <div class="main-container">
-      <div class="fix-header">
+      <div class="fixed-header">
         <navbar></navbar>
         <!-- 面包屑 -->
         <!-- <breadcrumb></breadcrumb> -->
@@ -13,28 +13,28 @@
 </template>
 
 <script>
-import { Sidebar, AppMain, Navbar,breadcrumb } from "./components";
-import { mapGetters } from 'vuex'
+import { Sidebar, AppMain, Navbar, breadcrumb } from "./components";
+import { mapGetters } from "vuex";
 export default {
   computed: {
-    ...mapGetters(['sidebar']),
+    ...mapGetters(["sidebar"]),
     classObj() {
       return {
         hideSidebar: !this.sidebar.opened,
-      }
-    }
+      };
+    },
   },
   components: {
     Sidebar,
     AppMain,
     Navbar,
-    breadcrumb
+    breadcrumb,
   },
 };
 </script>
 
 <style lang="scss" scoped>
-@import '@css/var.scss';
+@import "@css/var.scss";
 .app-wrapper {
   position: relative;
   height: 100%;
@@ -58,6 +58,9 @@ export default {
     }
     .main-container {
       margin-left: 64px;
+      .fixed-header {
+        width: calc(100% - 64px);
+      }
     }
   }
   .main-container {
@@ -66,6 +69,17 @@ export default {
     margin-left: 210px;
     position: relative;
     background-color: $white;
+    .fixed-header {
+      position: fixed;
+      top: 0;
+      right: 0;
+      z-index: 9;
+      width: calc(100% - #{$sideBarWidth});
+      transition: width 0.28s;
+      + .app-main-wrap {
+        padding-top: 50px;
+      }
+    }
   }
 }
 </style>
