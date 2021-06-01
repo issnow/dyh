@@ -32,10 +32,15 @@
         </el-col>
         <el-col :span="5">
           <el-form-item>
-            <el-button type="primary" @click="submitForm('form')"
+            <el-button
+              type="primary"
+              @click="submitForm('form')"
+              :loading="loading"
               >查询</el-button
             >
-            <el-button type="primary" @click="clear">重置</el-button>
+            <el-button type="primary" @click="clear" :loading="loading"
+              >重置</el-button
+            >
           </el-form-item>
         </el-col>
       </el-row>

@@ -1,7 +1,6 @@
 <template>
   <div style="padding: 0 15px" @click="toggleClick">
-    <i v-show="!isActive" class="iconfont icon-indent"></i>
-    <i v-show="isActive" class="iconfont icon-outdent"></i>
+    <i :class="`iconfont icon-${isActive?'out':'in'}dent`"></i>
   </div>
 </template>
 
