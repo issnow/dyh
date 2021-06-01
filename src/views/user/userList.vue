@@ -9,25 +9,12 @@
       :inline="true"
     >
       <el-row>
-        <el-col :span="8">
+        <el-col :span="6">
           <el-form-item label="搜索" prop="email">
             <el-input
               v-model.trim="form.email"
               placeholder="请输入关键字"
             ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="8">
-          <el-form-item label="状态" prop="state">
-            <el-select v-model="form.state" placeholder="请选择">
-              <el-option
-                v-for="item in selectData"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              >
-              </el-option>
-            </el-select>
           </el-form-item>
         </el-col>
         <el-col :span="5">
@@ -65,6 +52,20 @@
       </el-table-column>
       <el-table-column prop="phone" label="联系电话"> </el-table-column>
       <el-table-column prop="state" label="状态">
+        <template slot="header" scope="scope">
+          <el-select
+            v-model="form.state"
+            placeholder="请选择"
+            @change="filterSelect"
+          >
+            <el-option
+              v-for="item in selectData"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            ></el-option>
+          </el-select>
+        </template>
         <template slot-scope="scope">
           <span
             class="color-text"
@@ -122,6 +123,10 @@ export default {
       },
       selectData: [
         {
+          value: 0,
+          label: "全部",
+        },
+        {
           value: 1,
           label: "启用",
         },
@@ -149,6 +154,10 @@ export default {
     ee.removeListener("getTableData", this._getTableData);
   },
   methods: {
+    filterSelect(v) {
+      v == 0 ? (this.form.state = "") : (this.form.state = v);
+      this._getTableData();
+    },
     clear() {
       this.$refs.form.resetFields();
       this._getTableData();
