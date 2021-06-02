@@ -7,12 +7,13 @@ let instance = axios.create({
   baseURL: '/',
   timeout: 30000,
   withCredentials: true,
-  // headers: {
-  //   'X-Custom-Header': 'foobar',
-  //   post: {
-  //     "Content-Type": 'application/json'
-  //   }
-  // },
+  headers: {
+    // 'X-Custom-Header': 'foobar',
+    // post: {
+    //   "Content-Type": 'application/json'
+    // }
+    Authorization: sessionStorage.getItem('token')
+  },
   // transformRequest: [(data, headers)=>{
   //   console.log(data,headers, 'data1');
   //   return data
@@ -30,12 +31,12 @@ instance.interceptors.request.use(function (config) {
   //     'Content-Type': 'application/x-www-form-urlencoded'
   //   }
   // }
-  if (sessionStorage.getItem('token')) {
-    config.headers = {
-      ...config.headers,
-      Authorization: sessionStorage.getItem('token')
-    }
-  }
+  // if (sessionStorage.getItem('token')) {
+  //   config.headers = {
+  //     ...config.headers,
+  //     Authorization: sessionStorage.getItem('token')
+  //   }
+  // }
   // 在发送请求之前做些什么
   return config;
 }, function (error) {
