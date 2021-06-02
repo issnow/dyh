@@ -7,12 +7,13 @@ let instance = axios.create({
   baseURL: '/',
   timeout: 30000,
   withCredentials: true,
-  // headers: {
-  //   'X-Custom-Header': 'foobar',
-  //   post: {
-  //     "Content-Type": 'application/json'
-  //   }
-  // },
+  headers: {
+    // 'X-Custom-Header': 'foobar',
+    // post: {
+    //   "Content-Type": 'application/json'
+    // }
+    Authorization: sessionStorage.getItem('token')
+  },
   // transformRequest: [(data, headers)=>{
   //   console.log(data,headers, 'data1');
   //   return data
