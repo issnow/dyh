@@ -12,6 +12,10 @@ ul,li {list-style: none;}
 //   border-right: 0;
 // }
 
+.el-message {
+  z-index: 99999 !important;
+}
+
 
 .el-input__count {
   bottom: 1px !important;
