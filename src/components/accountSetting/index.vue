@@ -156,7 +156,7 @@ export default {
       if (file.size > 1024 * 1024 * 2) {
         this.$message({
           type: "error",
-          message: "不能超过2M",
+          message: "请上传大小不能超过2M图片",
         });
         return;
       }
@@ -164,7 +164,7 @@ export default {
       if (!types.includes(filename)) {
         this.$message({
           type: "error",
-          message: "请上传jpg,jpeg,png图片文件",
+          message: "请上传png、jpeg、jpg格式图片",
         });
         return;
       }
@@ -173,7 +173,7 @@ export default {
       if (width >= 300 || height >= 300) {
         this.$message({
           type: "error",
-          message: "尺寸限制：300*300及下",
+          message: "请上传尺寸小于等于300*300图片",
         });
         return;
       }
