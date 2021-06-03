@@ -9,8 +9,7 @@
       <img
         src="../assets/audioPlay.png"
         class="play-btn"
-        width="100%"
-        height="100%"
+        width="23"
         alt=""
       />
     </div>
@@ -204,6 +203,7 @@ export default {
   background-position: center;
   background-repeat: no-repeat;
   opacity: 1;
+  border-radius: 4px;
   .el-dialog__body {
     width: 100%;
     height: 100%;
@@ -264,7 +264,10 @@ export default {
     background-color: #000;
     opacity: 0.6;
     .play-btn {
-      object-fit: none;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%,-50%);
     }
   }
 }

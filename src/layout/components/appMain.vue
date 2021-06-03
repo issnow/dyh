@@ -44,18 +44,29 @@
   opacity: 0;
   transform: translateX(30px);
 }
-.app-main {
-  margin: 24px;
-  // height: calc(100vh - 148px);
-  background-color: #fff;
-}
-.footer {
-  padding-bottom: 20px;
-  text-align: center;
-  font-size: 12px;
-  .desc span{
-    display: inline-block;
-    padding: 0 20px;
+.app-main-wrap {
+  .app-main {
+    position: relative;
+    min-height: calc(100vh - 120px);
+    background-color: #fff;
   }
+  .footer {
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+    padding: 10px 0;
+    left: 0;
+    text-align: center;
+    font-size: 12px;
+    background-color: #fff;
+    z-index: 100;
+    color: #6B7277;
+  
+    .desc span{
+      display: inline-block;
+      padding: 0 20px;
+    }
+  }
+
 }
 </style>

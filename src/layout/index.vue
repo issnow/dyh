@@ -58,9 +58,9 @@ export default {
     // overflow: hidden;
   }
   .sidebar-container {
-    transition: width 0.28s;
     width: 150px !important;
-    background-color: #001529;
+    padding-top: 22px;
+    background-color: #E4EBF2;
     height: 100%;
     position: fixed;
     font-size: 0px;
@@ -68,7 +68,9 @@ export default {
     bottom: 0;
     left: 0;
     z-index: 1001;
+    transition: width 0.28s;
     overflow: hidden;
+    
   }
   &.hideSidebar {
     .sidebar-container,

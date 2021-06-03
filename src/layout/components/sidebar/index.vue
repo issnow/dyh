@@ -20,8 +20,8 @@
       :default-active="activeIndex"
       class="el-menu-demo"
       router
-      background-color="#001529"
-      text-color="#8e8f93"
+      background-color="#E4EBF2"
+      text-color="#6B7277"
       active-text-color="#f0f0f0"
       :collapse="isCollapse"
       :collapse-transition="false"
@@ -136,6 +136,9 @@ export default {
     ::v-deep &.is-active {
       background-color: #1890FF !important;
       color: $white !important;
+    }
+    &:not(.is-active):hover{
+      background-color: #DBE2E8 !important;
     }
   }
 }

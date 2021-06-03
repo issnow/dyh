@@ -1,9 +1,22 @@
 @import './var.scss';
 
-html{box-sizing: border-box;height: 100%;}
-body, #app{height: 100%;}
-*{box-sizing: inherit;}
-ul,li {list-style: none;}
+html {
+  box-sizing: border-box;
+  height: 100%;
+  font-family: 'Source Han Sans CN';
+}
+body,
+#app {
+  height: 100%;
+}
+* {
+  box-sizing: inherit;
+  font-family: inherit;
+}
+ul,
+li {
+  list-style: none;
+}
 
 // element-ui
 
@@ -16,25 +29,24 @@ ul,li {list-style: none;}
   z-index: 99999 !important;
 }
 
-
 .el-input__count {
   bottom: 1px !important;
   line-height: 20px;
 }
 
-.el-table th{
-  background: #fafafa!important;
+.el-table th {
+  background: #fafafa !important;
 }
-.mt20{
+.mt20 {
   margin-top: 20px;
 }
-.mb20{
+.mb20 {
   margin-bottom: 20px;
 }
-.mb30{
+.mb30 {
   margin-bottom: 30px;
 }
-.m24{
+.m24 {
   margin: 24px;
 }
 

@@ -78,13 +78,14 @@
         <el-table-column fixed="right" label="操作">
           <template slot-scope="scope">
             <el-button type="text" @click="onEdit">编辑</el-button>
-            <el-button type="text" @click="omDelete(scope.row)">删除</el-button>
+            <el-button type="text" @click="omDelete(scope.row)" class="del-red">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
 
       <el-pagination
         background
+        :hide-on-single-page='true'
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
         :page-sizes="[5, 10, 15, 20]"
@@ -410,6 +411,11 @@
 <style lang="scss" scoped>
   .main-wrap{
     padding: 30px;
+    ::v-deep .el-table {
+    .del-red span {
+      color: #F56c6c;
+    }
+  }
   }
   .work-name{
     display: inline-block;
