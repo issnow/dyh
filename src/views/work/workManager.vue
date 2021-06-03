@@ -1,203 +1,203 @@
 <template>
-  <div>
-    <div class="main-wrap">
-      <el-form
-        :model="form"
-        :rules="rules"
-        ref="form"
-        label-width="60px"
-        :inline="true"
-      >
-        <el-row>
-          <el-col :span="9">
-            <el-form-item label="搜索" prop="title">
-              <el-input
-                v-model.trim="form.title"
-                placeholder="请输入关键字"
-                @keyup.enter.native="handleSubmitForm('form')"
-              >
-                <el-button
-                  slot="append"
-                  icon="el-icon-search"
-                  @click="handleSubmitForm('form')"
-                  :loading="loading"
-                ></el-button>
-              </el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="状态" prop="status">
-              <el-select v-model="form.status" placeholder="请选择">
-                <el-option
-                  v-for="item in selectData"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                >
-                </el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item>
+  <div class="main-wrap">
+    <el-form
+      :model="form"
+      :rules="rules"
+      ref="form"
+      label-width="60px"
+      :inline="true"
+    >
+      <el-row>
+        <el-col :span="9">
+          <el-form-item label="搜索" prop="title">
+            <el-input
+              v-model.trim="form.title"
+              placeholder="请输入关键字"
+              @keyup.enter.native="handleSubmitForm('form')"
+            >
               <el-button
-                icon="el-icon-delete"
-                type="primary"
-                @click="selectDelete"
-                >批量删除</el-button
-              >
-            </el-form-item>
-            <el-button type="primary" @click="clear" :loading="loading"
-              >重置</el-button
-            >
-          </el-col>
-        </el-row>
-      </el-form>
-
-      <el-table
-        v-loading="loading"
-        class="mb20"
-        :data="tableData"
-        border
-        style="width: 100%"
-        :default-sort="{ prop: 'time', order: 'descending' }"
-        @selection-change="handleSelectionChange"
-        @sort-change="sortChange"
-      >
-        <el-table-column type="selection" width="55"> </el-table-column>
-        <el-table-column prop="title" label="成品名称"></el-table-column>
-        <el-table-column prop="resolution" label="分辨率" width="120">
-          <template slot="header" scope="scope">
-            <el-select
-              v-model="form.resolution"
-              placeholder="分辨率"
-              @change="filterSelect($event, 'resolution')"
-            >
+                slot="append"
+                icon="el-icon-search"
+                @click="handleSubmitForm('form')"
+                :loading="loading"
+              ></el-button>
+            </el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
+          <el-form-item label="状态" prop="status">
+            <el-select v-model="form.status" placeholder="请选择">
               <el-option
-                v-for="e in filterResolution"
-                :key="e.key"
-                :value="e.key"
-                :label="e.name"
+                v-for="item in selectData"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
               >
               </el-option>
             </el-select>
-          </template>
-        </el-table-column>
-        <el-table-column prop="wh_ratio" label="画幅" width="130">
-          <template slot="header" slot-scope="scope">
-            <el-select
-              v-model="form.wh_ratio"
-              placeholder="画幅比例"
-              @change="filterSelect($event, 'wh_ratio')"
-            >
-              <el-option
-                v-for="item in filterWh_ratio"
-                :key="item.key"
-                :value="item.key"
-                :label="item.name"
-              >
-                <!-- {{item.name}} -->
-              </el-option>
-            </el-select>
-          </template>
-        </el-table-column>
-        <el-table-column label="预览" width="160">
-          <template slot-scope="scope">
-            <videoPreview
-              :isVideo="true"
-              :source="scope.row.url"
-              :bgImage="scope.row.cover_url"
-            />
-          </template>
-        </el-table-column>
-        <el-table-column
-          prop="video_size"
-          label="大小（M）"
-          width="100"
-        ></el-table-column>
-        <el-table-column
-          prop="duration"
-          label="时长（S）"
-          width="100"
-        ></el-table-column>
-        <el-table-column label="状态" prop="status_title">
-          <template slot-scope="scope">
-            <el-tooltip
-              v-if="scope.row.status == 6"
-              class="item"
-              effect="dark"
-              :content="scope.row.audit_note"
-              placement="top"
-            >
-              <span>{{ scope.row.status_title }}</span>
-            </el-tooltip>
-            <span v-else>{{ scope.row.status_title }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column
-          prop="created_at"
-          label="创作时间"
-          width="200"
-          sortable="custom"
-        ></el-table-column>
-        <el-table-column fixed="right" label="操作" width="200">
-          <template slot-scope="scope">
-            <!-- scope.row.status -->
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item>
             <el-button
-              v-if="[1, 2, 3, 6, 7].includes(scope.row.status)"
-              type="text"
-              @click="onDelete(scope.row.code)"
-              >删除</el-button
+              icon="el-icon-delete"
+              type="primary"
+              @click="selectDelete"
+              >批量删除</el-button
             >
-            <el-button
-              v-if="[2].includes(scope.row.status)"
-              type="text"
-              @click="onGenerate"
-              >重新合成</el-button
-            >
-            <el-button
-              v-if="[3].includes(scope.row.status)"
-              type="text"
-              @click="onReview(scope.row)"
-              >提交审核</el-button
-            >
-            <el-button
-              v-if="[3, 6].includes(scope.row.status)"
-              type="text"
-              @click="onEdit(scope.row.code)"
-              >编辑</el-button
-            >
-            <el-button
-              v-if="[4, 7].includes(scope.row.status)"
-              type="text"
-              @click="onWatch(scope.row.code)"
-              >查看</el-button
-            >
-          </template>
-        </el-table-column>
-      </el-table>
+          </el-form-item>
+          <el-button type="primary" @click="clear" :loading="loading"
+            >重置</el-button
+          >
+        </el-col>
+      </el-row>
+    </el-form>
 
-      <el-pagination
-        background
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page="page.pageNo"
-        :page-sizes="[5, 10, 15, 20]"
-        :page-size="page.pageSize"
-        layout="total, slot, prev, pager, next, sizes, jumper"
-        :total="page.recordCount"
-      >
-        <span>第{{ page.pageNo }}/{{ page.pageCount }}页</span>
-      </el-pagination>
+    <el-table
+      v-loading="loading"
+      class="mb20"
+      :data="tableData"
+      border
+      style="width: 100%"
+      :default-sort="{ prop: 'time', order: 'descending' }"
+      @selection-change="handleSelectionChange"
+      @sort-change="sortChange"
+    >
+      <el-table-column type="selection" width="55"> </el-table-column>
+      <el-table-column prop="title" label="成品名称"></el-table-column>
+      <el-table-column prop="resolution" label="分辨率" width="120">
+        <template slot="header" scope="scope">
+          <el-select
+            v-model="form.resolution"
+            placeholder="分辨率"
+            @change="filterSelect($event, 'resolution')"
+          >
+            <el-option
+              v-for="e in filterResolution"
+              :key="e.key"
+              :value="e.key"
+              :label="e.name"
+            >
+            </el-option>
+          </el-select>
+        </template>
+      </el-table-column>
+      <el-table-column prop="wh_ratio" label="画幅" width="130">
+        <template slot="header" slot-scope="scope">
+          <el-select
+            v-model="form.wh_ratio"
+            placeholder="画幅比例"
+            @change="filterSelect($event, 'wh_ratio')"
+          >
+            <el-option
+              v-for="item in filterWh_ratio"
+              :key="item.key"
+              :value="item.key"
+              :label="item.name"
+            >
+              <!-- {{item.name}} -->
+            </el-option>
+          </el-select>
+        </template>
+      </el-table-column>
+      <el-table-column label="预览" width="160">
+        <template slot-scope="scope">
+          <videoPreview
+            :isVideo="true"
+            :source="scope.row.url"
+            :bgImage="scope.row.cover_url"
+          />
+        </template>
+      </el-table-column>
+      <el-table-column
+        prop="video_size"
+        label="大小（M）"
+        width="100"
+      ></el-table-column>
+      <el-table-column
+        prop="duration"
+        label="时长（S）"
+        width="100"
+      ></el-table-column>
+      <el-table-column label="状态" prop="status_title">
+        <template slot-scope="scope">
+          <el-tooltip
+            v-if="scope.row.status == 6"
+            class="item"
+            effect="dark"
+            :content="scope.row.audit_note"
+            placement="top"
+          >
+            <span>{{ scope.row.status_title }}</span>
+          </el-tooltip>
+          <span v-else>{{ scope.row.status_title }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        prop="created_at"
+        label="创作时间"
+        width="200"
+        sortable="custom"
+      ></el-table-column>
+      <el-table-column fixed="right" label="操作" width="200">
+        <template slot-scope="scope">
+          <!-- scope.row.status -->
+          <el-button
+            v-if="[1, 2, 3, 6, 7].includes(scope.row.status)"
+            type="text"
+            @click="onDelete(scope.row.code)"
+            class="del-red"
+            >删除</el-button
+          >
+          <el-button
+            v-if="[2].includes(scope.row.status)"
+            type="text"
+            @click="onGenerate"
+            >重新合成</el-button
+          >
+          <el-button
+            v-if="[3].includes(scope.row.status)"
+            type="text"
+            @click="onReview(scope.row)"
+            >提交审核</el-button
+          >
+          <el-button
+            v-if="[3, 6].includes(scope.row.status)"
+            type="text"
+            @click="onEdit(scope.row.code)"
+            >编辑</el-button
+          >
+          <el-button
+            v-if="[4, 7].includes(scope.row.status)"
+            type="text"
+            @click="onWatch(scope.row.code)"
+            >查看</el-button
+          >
+        </template>
+      </el-table-column>
+    </el-table>
 
-      <submitDialog
-        :code="code"
-        :visible="submitDialogVisible"
-        :title="title"
-        @hideDialog="submitDialogVisible = false"
-        @_productGetList="_productGetList"
-      />
-    </div>
+    <el-pagination
+      background
+      :hide-on-single-page='true'
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+      :current-page="page.pageNo"
+      :page-sizes="[5, 10, 15, 20]"
+      :page-size="page.pageSize"
+      layout="total, slot, prev, pager, next, sizes, jumper"
+      :total="page.recordCount"
+    >
+      <span>第{{ page.pageNo }}/{{ page.pageCount }}页</span>
+    </el-pagination>
+
+    <submitDialog
+      :code="code"
+      :visible="submitDialogVisible"
+      :title="title"
+      @hideDialog="submitDialogVisible = false"
+      @_productGetList="_productGetList"
+    />
   </div>
 </template>
 
@@ -499,6 +499,11 @@ export default {
 <style lang="scss" scoped>
 .main-wrap {
   padding: 30px;
+  ::v-deep .el-table {
+    .del-red span {
+      color: #F56c6c;
+    }
+  }
 }
 .work-name {
   display: inline-block;

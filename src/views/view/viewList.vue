@@ -95,6 +95,7 @@
 
       <el-pagination
         background
+        :hide-on-single-page='true'
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
         :page-sizes="[5, 10, 15, 20]"

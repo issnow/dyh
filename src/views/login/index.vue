@@ -1,7 +1,7 @@
 <template>
   <div class="login-container">
     <div class="logo">
-      <img :src="getImg('logo/登录页/big-logo.svg')" alt="">
+      <img :src="getImg('logo/登录页/big-logo.svg')" alt="" width="200">
       <!-- <svg class="icon" aria-hidden="true" style="font-size: 92px;">
         <use xlink:href="#icon-denglulogo"></use>
       </svg> -->

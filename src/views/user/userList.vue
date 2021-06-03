@@ -9,7 +9,7 @@
       :inline="true"
     >
       <el-row>
-        <el-col :span="6">
+        <el-col :span="7">
           <el-form-item label="搜索" prop="email">
             <el-input
               v-model.trim="form.email"
@@ -97,6 +97,8 @@
       :page-size="page.pageSize"
       layout="total, slot, prev, pager, next, sizes, jumper"
       :total="page.recordCount"
+      class="common-pagination"
+      :hide-on-single-page='true'
     >
       <span>第{{ page.pageNo }}/{{ page.pageCount }}页</span>
     </el-pagination>
