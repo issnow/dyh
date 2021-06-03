@@ -1,7 +1,7 @@
 <template>
   <div class="login-container">
     <div class="logo">
-      <img :src="getImg('logo/登录页/登录logo.svg')" alt="">
+      <img :src="getImg('logo/登录页/big-logo.svg')" alt="">
       <!-- <svg class="icon" aria-hidden="true" style="font-size: 92px;">
         <use xlink:href="#icon-denglulogo"></use>
       </svg> -->
@@ -28,7 +28,7 @@
       >
     </el-form>
     <div class="footer-img">
-      <img :src="getImg('logo/登录页/影谱支持.svg')" alt="" />
+      <img :src="getImg('logo/登录页/影谱支持.svg')" alt="" width="300"/>
     </div>
     <div class="mask"></div>
   </div>
@@ -149,7 +149,7 @@ export default {
     z-index: 9;
     color: #fff;
     position: absolute;
-    top: 40%;
+    top: 50%;
     left: 10%;
     transform: translateY(-50%);
     i {

@@ -50,7 +50,9 @@ instance.interceptors.response.use(function (response) {
   } = response
   if (data.status == '-101') {
     // 用户未登录
-    router.push('/login')
+    if(router.app._route.path !== '/login') {
+      router.push('/login')
+    }
   }
   // 对响应数据做点什么
   return response.data;

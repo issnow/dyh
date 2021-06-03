@@ -43,15 +43,14 @@ export default {
 }
 .sidebar-logo-container {
   position: relative;
-  width: 100%;
-  height: 50px;
+  width: 248px;
+  height: 100%;
   line-height: 50px;
-  // background: #2b2f3a;
   background: #4c7378;
   text-align: center;
   overflow: hidden;
   img {
-    // object-fit: none;
+    object-fit: none;
   }
   .sidebar-logo-link {
     display: flex;
@@ -61,11 +60,13 @@ export default {
     width: 100%;
   }
   .sidebar-logo {
+    margin-left: 8px;
     width: 28px;
     margin-right: 8px;
+    transition: all .28s;
   }
   .sidebar-title {
-    width: 174px;
+    width: 204px;
     display: inline-block;
     margin: 0;
     color: #fff;
@@ -76,6 +77,7 @@ export default {
   &.collapse {
     .sidebar-logo {
       margin-right: 0px;
+      margin-left: 0px;
     }
   }
 }

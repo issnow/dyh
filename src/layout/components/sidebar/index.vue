@@ -12,13 +12,13 @@
     >
       <sidebar-item v-for="route in permission_routes" :key="route.path" :item="route" :base-path="route.path" />
     </el-menu> -->
-    <logo
+
+    <!-- <logo
       :collapse="isCollapse"
-    />
+    /> -->
     <el-menu
       :default-active="activeIndex"
       class="el-menu-demo"
-      @select="handleSelect"
       router
       background-color="#001529"
       text-color="#8e8f93"
@@ -70,12 +70,10 @@
 </template>
 
 <script>
-import logo from './logo'
 import { mapGetters } from 'vuex'
 import sideBarItem from './sideBarItem'
 export default {
   components: {
-    logo,
     sideBarItem
   },
   data() {
@@ -120,9 +118,6 @@ export default {
         return
       }
       this.activeIndex = this.$route.path;
-    },
-    handleSelect(key, keyPath) {
-      // console.log(key, keyPath);
     },
   },
   watch: {
