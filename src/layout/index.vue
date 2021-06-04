@@ -88,8 +88,10 @@ export default {
     }
   }
   .main-container {
-    padding-top: 50px;
-    min-height: 100%;
+    position: fixed;
+    left: 0;
+    top: 50px;
+    height: calc(100% - 50px);
     transition: margin-left 0.28s;
     margin-left: 150px;
     position: relative;
