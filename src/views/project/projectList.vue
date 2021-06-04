@@ -40,14 +40,14 @@
           <template slot="header" scope="scope">
               <el-select
                 class="select-color"
-                  v-model="form.resolution"
+                  v-model="form.resolution_id"
                   placeholder="分辨率"
                   @change="filterSelect($event, 'resolution')"
               >
                   <el-option
                     v-for="item in sizeList"
                     :key="item.key"
-                    :value="item.name"
+                    :value="item.key"
                     :label="item.name"
                   >
                   </el-option>
@@ -57,14 +57,14 @@
         <el-table-column prop="wh_ratio" label="画幅" width="130">
           <template slot="header" slot-scope="scope">
             <el-select
-                v-model="form.wh_ratio"
+                v-model="form.wh_ratio_id"
                 placeholder="画幅比例"
                 @change="filterSelect($event, 'wh_ratio')"
             >
                 <el-option
                   v-for="item in scaleList"
                   :key="item.key"
-                  :value="item.name"
+                  :value="item.key"
                   :label="item.name"
                   >
                 </el-option>
@@ -115,22 +115,24 @@
             </el-input>
           </el-form-item>
           <el-form-item label="画幅比例" prop="scale">
-            <el-select v-model="creatForm.wh_ratio" placeholder="请选择画幅比例">
+            <el-select v-model="creatForm.wh_ratio_id" placeholder="请选择画幅比例">
               <el-option
                 v-for="item in scaleList"
                 :key="item.key"
-                :value="item.name">
-                {{item.name}}
+                :value="item.key"
+                :label="item.name"
+                >
               </el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="分辨率" prop="size">
-            <el-select v-model="creatForm.resolution" placeholder="请选择分辨率">
+            <el-select v-model="creatForm.resolution_id" placeholder="请选择分辨率">
               <el-option
                 v-for="item in sizeList"
                 :key="item.key"
-                :value="item.name">
-                {{item.name}}
+                :value="item.key"
+                :label="item.name"
+                >
               </el-option>
             </el-select>
           </el-form-item>
@@ -158,8 +160,8 @@
         loading: false,
         form: {
           title: '',
-          wh_ratio: '',
-          resolution: ''
+          wh_ratio_id: null,
+          resolution_id: null
         },
         rules: {
           title: [
@@ -182,8 +184,8 @@
         isDelete: false, //删除弹窗
         creatForm: {
           title: '',
-          wh_ratio: '16:9',
-          resolution: '540'
+          wh_ratio_id: 1,
+          resolution_id: 1
         },
         scaleList: [], //画幅比例列表
         sizeList: [],  //分辨率列表
@@ -209,6 +211,8 @@
         this.isShow = false;
         this.isDelete = false;
         this.$refs.creatForm.resetFields();
+        this.creatForm.resolution_id = 1;
+        this.creatForm.wh_ratio_id = 1;
       },
 
       // 创建项目
@@ -219,8 +223,8 @@
           }
           let params = {
             title: this.creatForm.title,
-            resolution: this.creatForm.resolution,
-            wh_ratio: this.creatForm.wh_ratio
+            resolution_id: this.creatForm.resolution_id,
+            wh_ratio_id: this.creatForm.wh_ratio_id
           }
           createProject(params).then(res => {
             if(res.status == 1){
@@ -231,6 +235,8 @@
               this.isShow = false;
               this.getProjectList();
               this.$refs.creatForm.resetFields();
+              this.creatForm.resolution_id = 1;
+              this.creatForm.wh_ratio_id = 1;
             }else{
               this.$message({
                 type: "error",
@@ -348,10 +354,10 @@
           console.log(type);
           switch (type) {
             case "wh_ratio":
-              value == '全部' ? this.form.wh_ratio = '' : this.form.wh_ratio = value;
+              value == '全部' ? this.form.wh_ratio_id = null : this.form.wh_ratio_id = value;
               break;
             case "resolution":
-              value == '全部' ? this.form.resolution = '' : this.form.resolution = value;
+              value == '全部' ? this.form.resolution_id = null : this.form.resolution_id = value;
               break;
           }
           this.page.pageNo = 1;
