@@ -1,6 +1,6 @@
 <template>
   <div style="padding: 0 15px" @click="toggleClick">
-    <i :class="`iconfont icon-vertical${!isActive?'left':'right'}`"></i>
+    <i :class="`iconfont icon-vertical${!isActive?'left':'right'}`" style="opacity: .4;"></i>
   </div>
 </template>
 

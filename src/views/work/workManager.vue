@@ -24,19 +24,6 @@
             </el-input>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
-          <el-form-item label="状态" prop="status">
-            <el-select v-model="form.status" placeholder="请选择">
-              <el-option
-                v-for="item in selectData"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              >
-              </el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
         <el-col :span="6">
           <el-form-item>
             <el-button
@@ -119,7 +106,21 @@
         label="时长（S）"
         width="100"
       ></el-table-column>
-      <el-table-column label="状态" prop="status_title">
+      <el-table-column label="状态" prop="status_title" width="130">
+        <template slot='header' scope="scope">
+          <el-select
+            v-model="form.status"
+            placeholder="请选择"
+            @change="filterSelect($event, 'status')"
+          >
+            <el-option
+              v-for="item in selectData"
+              :key="item.key"
+              :label="item.name"
+              :value="item.key"
+            ></el-option>
+          </el-select>
+        </template>
         <template slot-scope="scope">
           <el-tooltip
             v-if="scope.row.status == 6"
@@ -311,6 +312,10 @@ export default {
           value == 0
             ? (this.form.resolution = "")
             : (this.form.resolution = value);
+        case "status":
+          value == 0
+            ? (this.form.status = "")
+            : (this.form.status = value);
           break;
       }
       this.page.pageNo = 1;
@@ -331,14 +336,12 @@ export default {
     async _productChoicesList() {
       const { status, element, msg } = await productChoicesList({ type: 1 });
       if (status == 1) {
-        this.selectData = element.status.map((e) => ({
-          label: e.name,
-          value: e.key,
-        }));
+        this.selectData = element.status
         this.filterResolution = element.resolution;
         this.filterWh_ratio = element.wh_ratio;
         this.filterResolution.unshift({ key: 0, name: "全部" });
         this.filterWh_ratio.unshift({ key: 0, name: "全部" });
+        this.selectData.unshift({ key: 0, name: "全部" });
 
         // console.log(this.selectData, "selectData");
         console.log(this.filterResolution, "filterResolution");

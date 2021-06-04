@@ -45,20 +45,22 @@
   transform: translateX(30px);
 }
 .app-main-wrap {
+  display: flex;
+  flex-flow: column nowrap;
+  height: 100%;
   .app-main {
+    flex: 1;
     position: relative;
-    min-height: calc(100vh - 120px);
+    // min-height: calc(100vh - 120px);
+    overflow: scroll;
     background-color: #fff;
   }
   .footer {
-    position: fixed;
-    width: 100%;
-    bottom: 0;
+    height: 70px;
     padding: 10px 0;
-    left: 0;
     text-align: center;
     font-size: 12px;
-    background-color: #fff;
+    background-color: rgb(184, 178, 178);
     z-index: 100;
     color: #6B7277;
   
