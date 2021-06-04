@@ -9,16 +9,19 @@
     </div>
     <div class="login-form-wrap">
       <img
-        class="form-login"
+        class="form-login-img"
         :src="getImg('logo/登录页/登录页logo.svg')"
         alt=""
-        width="100"
       />
-      <div>大运河文化短视频智能剪辑平台</div>
-      <div>大运河文化短视频智能剪辑平台</div>
+      <div class="title">大运河文化短视频智能剪辑平台</div>
+      <!-- <div class="sub-title">GRAND CANAL CULTURE INTELLIGENT VIDEO CLIP PLATFORM</div> -->
       <el-form :model="form" :rules="rules" ref="form" class="login-form">
         <el-form-item prop="email">
-          <el-input v-model="form.email" placeholder="请填写邮箱" prefix-icon="el-icon-user"></el-input>
+          <el-input
+            v-model="form.email"
+            placeholder="请填写邮箱"
+            prefix-icon="el-icon-user"
+          ></el-input>
         </el-form-item>
         <el-form-item prop="password">
           <el-input
@@ -40,10 +43,8 @@
       </el-form>
       <img
         class="footer-img"
-        :src="getImg('logo/登录页/影谱支持.svg')"
+        :src="getImg('logo/登录页/support2.svg')"
         alt=""
-        width="300"
-        style="background: #ccc;"
       />
     </div>
     <div class="mask"></div>
@@ -75,7 +76,20 @@ export default {
       loading: false,
     };
   },
+  created() {
+    window.addEventListener("resize", this.onWindowResize);
+    this.onWindowResize();
+  },
+  beforeDestroy() {
+    window.removeEventListener("resize", this.onWindowResize);
+  },
   methods: {
+    onWindowResize() {
+      var html = document.documentElement;
+      // x / 1920 = fs / 19.2
+      let res = (innerWidth * 19.2) / 1920;
+      html.style.fontSize = res + "px";
+    },
     ...mapMutations(["user/SET_USER_INFO", "user/SET_ROUTES"]),
     login(formName) {
       this.$refs[formName].validate(async (valid) => {
@@ -97,6 +111,8 @@ export default {
             window.addEventListener("beforeunload", () => {
               sessionStorage.setItem("isLogin", "1");
             });
+            document.documentElement.style.fontSize = "";
+            window.removeEventListener("resize", this.onWindowResize);
           } else {
             this.$message({ message: msg, type: "error" });
           }
@@ -132,41 +148,51 @@ export default {
     position: absolute;
     top: 20%;
     right: 13%;
-    width: 27vw;
-    height: 58.7vh;
-    padding: 6.1vh 3.4vw 2.5vh;
+    width: 27.13rem;
+    padding: 3.43rem 2.91rem 0;
     background-color: #fff;
     z-index: 99;
     overflow: hidden;
-    .form-login {
-      margin-bottom: 20px;
+    .form-login-img {
+      width: 7.91rem;
+      margin-bottom: 1.61rem;
     }
     .footer-img {
       position: absolute;
-      bottom: 3.3vh;
+      bottom: 1.875rem;
+      width: 50%;
     }
-    > div {
-      font-size: 20px;
+    .title {
+      font-size: 1.35rem;
     }
     .login-form {
-      margin-top: 55px;
+      margin-top: 5.1rem;
       width: 100%;
       .deep-blue {
         background-color: $deepBlue;
+        margin-bottom: 7.34rem;
+        height: 2.81rem;
+        font-size: 1.354rem;
+        font-weight: 500;
       }
       ::v-deep .el-form-item {
-        .el-input__inner {
-          background: #fff;
-          border: 2px solid #B2BCCF;
-          // border: none;
-          // border-bottom: 1px solid #999;
-          // border-radius: 0;
-          // padding: 0;
-          // font-size: 14px;
-          // color: #fff;
-          // &::placeholder {
-          //   color: $gray;
-          // }
+        margin-bottom: 2.4vh;
+        .el-input {
+          vertical-align: middle;
+          .el-input__prefix {
+            width: 3.333rem;
+          }
+          .el-input__icon {
+            font-size: 1.56rem;
+            line-height: 3.07rem;
+          }
+          .el-input__inner {
+            padding-left: 3.333rem;
+            background: #fff;
+            border: 0.104rem solid #b2bccf;
+            height: 2.96rem;
+            font-size: 1.09rem;
+          }
         }
       }
     }
