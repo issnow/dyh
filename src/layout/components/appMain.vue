@@ -60,9 +60,9 @@
     padding: 10px 0;
     text-align: center;
     font-size: 12px;
-    background-color: rgb(184, 178, 178);
     z-index: 100;
     color: #6B7277;
+    opacity: .5;
   
     .desc span{
       display: inline-block;
