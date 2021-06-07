@@ -47,27 +47,27 @@ export default {
   height: 100%;
   width: 100%;
   .fixed-header {
+    position: absolute;
     display: flex;
-    position: fixed;
     height: 50px;
     width: 100%;
     top: 0;
     left: 0;
     right: 0;
-    z-index: 9999;
+    // z-index: 9999;
     // overflow: hidden;
   }
   .sidebar-container {
+    position: absolute;
     width: 150px !important;
     padding-top: 22px;
     background-color: #E4EBF2;
     height: 100%;
-    position: fixed;
     font-size: 0px;
     top: 50px;
     bottom: 0;
     left: 0;
-    z-index: 1001;
+    // z-index: 1001;
     transition: width 0.28s;
     overflow: hidden;
     
@@ -88,7 +88,7 @@ export default {
     }
   }
   .main-container {
-    position: fixed;
+    position: absolute;
     left: 0;
     right: 0;
     top: 50px;
