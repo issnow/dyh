@@ -90,11 +90,11 @@ export default {
   .main-container {
     position: fixed;
     left: 0;
+    right: 0;
     top: 50px;
     height: calc(100% - 50px);
     transition: margin-left 0.28s;
     margin-left: 150px;
-    position: relative;
     background-color: $white;
   }
 }
