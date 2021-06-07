@@ -62,7 +62,7 @@ export default {
     width: 150px !important;
     padding-top: 22px;
     background-color: #E4EBF2;
-    height: 100%;
+    height: calc(100% - 50px);
     font-size: 0px;
     top: 50px;
     bottom: 0;
