@@ -1,11 +1,8 @@
 <template>
   <div class="login-container">
     <div class="logo">
-      <img :src="getImg('logo/登录页/big-logo.svg')" alt="" width="250" />
-      <!-- <svg class="icon" aria-hidden="true" style="font-size: 92px;">
-        <use xlink:href="#icon-denglulogo"></use>
-      </svg> -->
-      <h1>欢迎访问大运河文化短视频智能剪辑平台</h1>
+      <img :src="getImg('logo/登录页/big-logo.svg')" alt="" />
+      <h1>欢迎登录大运河文化短视频智能剪辑平台</h1>
     </div>
     <div class="login-form-wrap">
       <img
@@ -14,7 +11,6 @@
         alt=""
       />
       <div class="title">大运河文化短视频智能剪辑平台</div>
-      <!-- <div class="sub-title">GRAND CANAL CULTURE INTELLIGENT VIDEO CLIP PLATFORM</div> -->
       <el-form :model="form" :rules="rules" ref="form" class="login-form">
         <el-form-item prop="email">
           <el-input
@@ -47,7 +43,6 @@
         alt=""
       />
     </div>
-    <div class="mask"></div>
   </div>
 </template>
 
@@ -180,7 +175,7 @@ export default {
         .el-input {
           vertical-align: middle;
           .el-input__prefix {
-            width: 3.333rem;
+            width: 2.5rem;
           }
           .el-input__icon {
             font-size: 1.56rem;
@@ -197,37 +192,22 @@ export default {
       }
     }
   }
-  .mask {
-    width: 100%;
-    height: 100%;
-    // background: rgba(0, 0, 0, 0.3);
-    opacity: 1;
-    z-index: -99;
-    animation: fade 2s;
-  }
   .logo {
     z-index: 9;
     color: #fff;
     position: absolute;
     top: 27%;
     left: 9%;
-    i {
-      display: inline-block;
-      font-size: 100px;
+    img {
+      width: 17.55rem;
     }
     h1 {
-      font-size: 30px;
+      font-size: 2.18rem;
       font-family: Source Han Sans CN;
       font-weight: 500;
       line-height: 58px;
       color: #fff;
     }
   }
-  // .footer-img {
-  //   position: absolute;
-  //   bottom: 50px;
-  //   left: 50%;
-  //   transform: translateX(-50%);
-  // }
 }
 </style>
