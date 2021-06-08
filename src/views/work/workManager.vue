@@ -338,7 +338,7 @@ export default {
     async _productChoicesList() {
       const { status, element, msg } = await productChoicesList({ type: 1 });
       if (status == 1) {
-        this.selectData = element.status
+        this.selectData = element.status;
         this.filterResolution = element.resolution;
         this.filterWh_ratio = element.wh_ratio;
 
@@ -503,7 +503,7 @@ export default {
   padding: 30px;
   ::v-deep .el-table {
     .del-red span {
-      color: #F56c6c;
+      color: #f56c6c;
     }
   }
 }

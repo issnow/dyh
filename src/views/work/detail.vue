@@ -1,127 +1,147 @@
 <template>
-  <div class="work-detail">
-    <div class="work-detail-suggest">
-      <div class="title" v-if="hideTask">审核结果:</div>
-      <ul class="list" v-if="hideTask">
-        <li>
-          <div class="label">AI审核:</div>
-          <div class="content">{{'黄暴政审核未通过111'}}</div>
-        </li>
-        <li>
-          <div class="label">人工审核意见:</div>
-          <div class="content">{{ task.audit_note }}</div>
-        </li>
-      </ul>
-      <div class="video-play-area">
-        <videoPlay :src="url"></videoPlay>
-      </div>
-    </div>
-
-    <div class="work-detail-info">
-      <div class="title">成品信息:</div>
-      <el-form
-        :model="form"
-        :rules="rules"
-        ref="form"
-        label-width="90px"
-        class="info-form"
-        :disabled="!isEdit"
-      >
-        <el-form-item label="名称:" prop="title">
-          <el-input
-            v-show="isEdit"
-            type="textarea"
-            :rows="2"
-            placeholder="请输入内容"
-            v-model.trim="form.title"
-            maxlength="20"
-            show-word-limit
-          >
-          </el-input>
-          <span v-show="!isEdit">{{ viewInfo.title }}</span>
-          <!-- <div class="tip">上限20个字符。</div> -->
-        </el-form-item>
-        <el-form-item label="标签:" prop="tag">
-          <el-select v-show="isEdit" v-model="form.tag" placeholder="请选择">
-            <el-option
-              v-for="item in options"
-              :key="item.key"
-              :label="item.name"
-              :value="item.key"
-            >
-            </el-option>
-          </el-select>
-          <span v-show="!isEdit">{{ viewInfo.tag_names_str }}</span>
-        </el-form-item>
-
-        <div class="shiti">
-          <div class="label">实体:</div>
-          <div class="right">
-            <el-form-item
+  <div class="work-detail-wrap">
+    <div class="work-detail">
+      <div class="work-detail-info">
+        <div class="title">成品信息:</div>
+        <el-form
+          :model="form"
+          :rules="rules"
+          ref="form"
+          label-width="100px"
+          class="info-form"
+          :disabled="!isEdit"
+        >
+          <el-form-item label="名称:" prop="title">
+            <el-input
               v-show="isEdit"
-              v-for="e in entityList"
-              :key="e.name"
-              :label="e.name + ':'"
-              :prop="'thing' + e.id"
-              label-width="60px"
+              type="textarea"
+              :rows="2"
+              placeholder="请输入内容"
+              v-model.trim="form.title"
+              maxlength="20"
+              show-word-limit
             >
-              <el-select
-                v-model="form['thing' + e.id]"
-                placeholder="请选择"
-                filterable
-                multiple
-                ref="search"
-                remote
-                :remote-method="
-                  (query) => {
-                    remoteMethod(query, e);
-                  }
-                "
-                @focus="onFocus(e)"
-                @visible-change="
-                  (visi) => {
-                    visibleChange(visi, e);
-                  }
-                "
-                :loading="loading"
+            </el-input>
+            <span v-show="!isEdit">{{ viewInfo.title }}</span>
+            <!-- <div class="tip">上限20个字符。</div> -->
+          </el-form-item>
+          <el-form-item label="标签:" prop="tag">
+            <el-select v-show="isEdit" v-model="form.tag" placeholder="请选择">
+              <el-option
+                v-for="item in options"
+                :key="item.key"
+                :label="item.name"
+                :value="item.key"
               >
-                <el-option
-                  v-for="item in arrList"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
+              </el-option>
+            </el-select>
+            <span v-show="!isEdit">{{ viewInfo.tag_names_str }}</span>
+          </el-form-item>
+
+          <div class="shiti">
+            <div class="label" style="font-size: 14px; color: #606266;">实体:</div>
+            <div class="right">
+              <el-form-item
+                v-show="isEdit"
+                v-for="e in entityList"
+                :key="e.name"
+                :label="e.name + ':'"
+                :prop="'thing' + e.id"
+                label-width="60px"
+              >
+                <el-select
+                  v-model="form['thing' + e.id]"
+                  placeholder="请选择"
+                  filterable
+                  multiple
+                  ref="search"
+                  remote
+                  :remote-method="
+                    (query) => {
+                      remoteMethod(query, e);
+                    }
+                  "
+                  @focus="onFocus(e)"
+                  @visible-change="
+                    (visi) => {
+                      visibleChange(visi, e);
+                    }
+                  "
+                  :loading="loading"
                 >
-                </el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item
-              v-show="!isEdit"
-              v-for="(e, i) in viewInfo.entities"
-              :key="i"
-              :label="e.ftext"
-              label-width="60px"
-            >
-              {{ e.text.reduce((p, n) => p + "," + n) }}
-            </el-form-item>
+                  <el-option
+                    v-for="item in arrList"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  >
+                  </el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item
+                v-show="!isEdit"
+                v-for="(e, i) in viewInfo.entities"
+                :key="i"
+                :label="e.ftext"
+                label-width="60px"
+              >
+                {{ e.text.reduce((p, n) => p + "," + n) }}
+              </el-form-item>
+            </div>
           </div>
+
+          <el-form-item label="描述:" prop="description">
+            <el-input
+              v-show="isEdit"
+              type="textarea"
+              :rows="3"
+              placeholder="请输入内容"
+              v-model.trim="form.description"
+              maxlength="50"
+              show-word-limit
+            >
+            </el-input>
+            <!-- <div class="tip">上限50个字符。</div> -->
+            <span v-show="!isEdit">{{ viewInfo.description }}</span>
+          </el-form-item>
+        </el-form>
+        <div class="info-list">
+          <div><span>格式:</span>MP4</div>
+          <div><span>大小:</span>10M</div>
+          <div><span>画幅:</span>10M</div>
+          <div><span>时长:</span>20(S)</div>
+          <div><span>分辨率:</span>720P</div>
         </div>
 
-        <el-form-item label="描述:" prop="description">
-          <el-input
-            v-show="isEdit"
-            type="textarea"
-            :rows="3"
-            placeholder="请输入内容"
-            v-model.trim="form.description"
-            maxlength="50"
-            show-word-limit
-          >
-          </el-input>
-          <!-- <div class="tip">上限50个字符。</div> -->
-          <span v-show="!isEdit">{{ viewInfo.description }}</span>
-        </el-form-item>
-      </el-form>
-      <div class="foot-btn">
+        <div class="title" v-if="hideTask">审核结果:</div>
+        <ul class="list" v-if="hideTask">
+          <li>
+            <div class="label">AI审核:</div>
+            <div class="content">
+              <div class="item" v-for="(e, i) in checkList" :key="i">
+                <div class="label">{{ e.title }}:</div>
+                <bar :item="e.list"></bar>
+              </div>
+              <!-- <div class="item">
+                <div class="label">xxx</div>
+                <bar></bar>
+              </div>
+              <div class="item">
+                <div class="label">xxx</div>
+                <bar></bar>
+              </div> -->
+              <div class="item circel">
+                <div class="label">说明:</div>
+                <div style="font-size: 13px;"><i></i>涉政<i></i>涉黄<i></i>涉暴<i></i>其他</div>
+              </div>
+            </div>
+          </li>
+          <li>
+            <div class="label">人工审核意见:</div>
+            <div class="content">{{ task.audit_note }}</div>
+          </li>
+        </ul>
+        <!-- <div class="foot-btn">
         <el-button v-show="isEdit" type="primary" @click="submitForm('form')"
           >提 交</el-button
         >
@@ -129,7 +149,27 @@
           >编 辑</el-button
         >
         <el-button @click="onCancel">取 消</el-button>
+      </div> -->
       </div>
+
+      <div class="work-detail-suggest">
+        <div class="video-play-area">
+          <videoPlay :src="url"></videoPlay>
+        </div>
+      </div>
+    </div>
+    <div class="foot-btn">
+      <el-button v-show="isEdit" type="primary" @click="submitForm('form')"
+        >提 交</el-button
+      >
+      <el-button
+        v-show="!isEdit"
+        :loading="editLoading"
+        type="primary"
+        @click="onEdit"
+        >编 辑</el-button
+      >
+      <el-button @click="onCancel">取 消</el-button>
     </div>
   </div>
 </template>
@@ -143,9 +183,11 @@ import {
 } from "@api/workManager";
 import _ from "lodash";
 import videoPlay from "./videoPlay";
+import bar from "./bar";
 export default {
   components: {
     videoPlay,
+    bar,
   },
   created() {
     this.asyncGetEntityList();
@@ -214,13 +256,66 @@ export default {
       url: "",
       // task审核
       task: {
-        audit_note: ''
+        audit_note: "",
       },
       loading: false,
       // 一级实体select框的id
       selectID: "",
       editLoading: false,
-      hideTask: false
+      hideTask: false,
+      checkList: [
+        {
+          title: "语音",
+          list: [
+            {
+              left: "10%",
+              width: "5%",
+              backgroundColor: "#008000",
+              text: "提示文字",
+            },
+            {
+              left: "17%",
+              width: "10%",
+              backgroundColor: "#3c8cff",
+              text: "提示文字",
+            },
+            {
+              left: "30%",
+              width: "10%",
+              backgroundColor: "#454545",
+              text: "提示文字",
+            },
+            {
+              left: "89%",
+              width: "10%",
+              backgroundColor: "#e77",
+              text: "提示文字",
+            },
+          ],
+        },
+        {
+          title: "视频",
+          list: [
+            {
+              left: "10%",
+              width: "14%",
+              backgroundColor: "#008000",
+              text: "提示文字",
+            },
+          ],
+        },
+        {
+          title: "字幕",
+          list: [
+            {
+              left: "10%",
+              width: "14%",
+              backgroundColor: "#008000",
+              text: "提示文字",
+            },
+          ],
+        },
+      ],
     };
   },
   mounted() {
@@ -270,11 +365,11 @@ export default {
             message: res.msg,
           });
         }
-        this.$refs.form.validate()
+        this.$refs.form.validate();
       });
     },
     visibleChange(visi, e) {
-      this.$refs.form.validate()
+      if (!visi) this.$refs.form.validateField(`thing${e.id}`);
       if (this.selectID == e.id) {
         return;
       }
@@ -291,7 +386,7 @@ export default {
       }
     }, 600),
     async onFocus(e, query = "") {
-      if (this.selectID == e.id && query.length == 0) {
+      if (this.selectID == e.id && query.length == 0  && this.arrList.length!== 0) {
         return;
       }
       this.selectID = e.id;
@@ -349,16 +444,23 @@ export default {
       }
     },
     async init() {
-      this.editLoading = true
+      this.editLoading = true;
       const p = {
         code: this.$route.params.code,
       };
       let { status, element, msg } = await productDetail(p);
-      this.editLoading = false
+      this.editLoading = false;
       console.log(element, "element");
       if (status == 1) {
-        const { description, entities, tag_ids, url, title,tag_names_str } = element.product;
-        this.hideTask = !!element.task
+        const {
+          description,
+          entities,
+          tag_ids,
+          url,
+          title,
+          tag_names_str,
+        } = element.product;
+        this.hideTask = !!element.task;
         // const { audit_note, audit_status, audit_status_title } = element.task;
         this.task = {
           audit_note: element?.task?.audit_note,
@@ -386,9 +488,8 @@ export default {
           });
         }
         this.url = url;
-        
       } else {
-        this.$router.go(-1)
+        this.$router.go(-1);
         this.$message({
           type: "error",
           message: msg,
@@ -420,7 +521,7 @@ export default {
                 tag: [this.form.tag],
                 entity,
               };
-              console.log(params, 'params')
+              console.log(params, "params");
               // return
               let { msg, status } = await productEdit(params);
               if (status == 1) {
@@ -457,68 +558,139 @@ export default {
 
 <style lang="scss" scoped>
 @import "@css/var.scss";
-.work-detail {
-  display: flex;
-  padding: 50px 30px;
-  min-height: 660px;
-  .title {
-    font-size: 16px;
-    color: $deepDark;
-    font-weight: 600;
-  }
-  &-suggest {
-    width: 60%;
-    padding-right: 30px;
-    border-right: 1px dashed $dark;
-    .list {
-      li {
-        font-size: 14px;
-        display: flex;
-        margin-bottom: 20px;
-        .label {
-          width: 100px;
-          text-align: right;
-          margin-right: 10px;
-          color: $dark;
-        }
-        .content {
-          flex: 1;
-          color: $gray;
-        }
-      }
-    }
-    .video-play-area {
-      width: 44vw;
-      height: 24.75vw;
-      background-color: #000;
-    }
-  }
-  &-info {
-    position: relative;
-    padding-left: 40px;
-    width: 40%;
+.work-detail-wrap {
+  padding-bottom: 30px;
+  .work-detail {
+    display: flex;
+    padding: 50px 30px;
+    // min-height: 660px;
     .title {
-      margin-bottom: 16px;
+      font-size: 16px;
+      color: $deepDark;
+      font-weight: 600;
     }
-    .tip {
-      color: $gray;
-    }
-    .foot-btn {
-      position: absolute;
-      bottom: 0;
-    }
-    .shiti {
+    &-suggest {
       display: flex;
-      > .label {
-        padding-top: 10px;
-        width: 90px;
-        padding-right: 12px;
-        text-align: right;
-      }
-      .right {
-        flex: 1;
+      justify-content: center;
+      padding-top: 34px;
+      width: 60%;
+
+      .video-play-area {
+        width: 44vw;
+        height: 24.75vw;
+        background-color: #000;
       }
     }
+    &-info {
+      position: relative;
+      padding-right: 40px;
+      width: 50%;
+      border-right: 1px dashed $dark;
+      .info-form {
+        .el-form-item {
+          // margin-bottom: 10px;
+        }
+      }
+      .info-list {
+        margin-bottom: 10px;
+        div {
+          display: inline-block;
+          width: 26%;
+          margin-bottom: 14px;
+          font-size: 14px;
+          span {
+            display: inline-block;
+            width: 100px;
+            text-align: right;
+            padding-right: 12px;
+          }
+        }
+      }
+      .list {
+        padding-left: 0;
+        li {
+          font-size: 14px;
+          display: flex;
+          margin-bottom: 20px;
+          >div.label {
+            font-size: 14px;
+          }
+          .label {
+            width: 100px;
+            text-align: right;
+            padding-right: 12px;
+            color: $dark;
+            font-size: 13px;
+          }
+          .content {
+            padding-top: 40px;
+            flex: 1;
+            color: $gray;
+            margin-left: -30px;
+            .item {
+              display: flex;
+              align-items: center;
+              margin-bottom: 20px;
+              .label {
+                width: 60px;
+              }
+            }
+            .circel {
+              div {
+                i {
+                  display: inline-block;
+                  width: 10px;
+                  height: 10px;
+                  border-radius: 50%;
+                  border: 1px solid #ccc;
+                  margin-right: 20px;
+                  margin-left: 15px;
+                  &:nth-child(1) {
+                    background-color: #3c8cff;
+                  }
+                  &:nth-child(2) {
+                    background-color: #f00;
+                  }
+                  &:nth-child(3) {
+                    background-color: #fff000;
+                  }
+                  &:nth-child(4) {
+                    background-color: #008000;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+      .title {
+        margin-bottom: 16px;
+      }
+      .tip {
+        color: $gray;
+      }
+      .foot-btn {
+        position: absolute;
+        bottom: 0;
+      }
+      .shiti {
+        display: flex;
+        > .label {
+          padding-top: 10px;
+          width: 100px;
+          padding-right: 12px;
+          text-align: right;
+        }
+        .right {
+          flex: 1;
+        }
+      }
+    }
+  }
+  .foot-btn {
+    text-align: right;
+    padding-top: 50px;
+    padding-right: 50px;
   }
 }
 </style>
