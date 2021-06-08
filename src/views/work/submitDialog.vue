@@ -179,7 +179,7 @@ export default {
 
       // selectid是已经选择的一级实体框id,如果当前的selectid和上一次的e.id一样
       // 那么就直接使用缓存的arrList,解决每次点击option之后,执行visibleChange方法会置空arrList
-      if (this.selectID == e.id && query.length == 0) {
+      if (this.selectID == e.id && query.length == 0 && this.arrList.length!== 0) {
         return;
       }
       this.selectID = e.id;

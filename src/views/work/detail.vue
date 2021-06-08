@@ -39,7 +39,7 @@
           </el-form-item>
 
           <div class="shiti">
-            <div class="label">实体:</div>
+            <div class="label" style="font-size: 14px; color: #606266;">实体:</div>
             <div class="right">
               <el-form-item
                 v-show="isEdit"
@@ -386,7 +386,7 @@ export default {
       }
     }, 600),
     async onFocus(e, query = "") {
-      if (this.selectID == e.id && query.length == 0) {
+      if (this.selectID == e.id && query.length == 0  && this.arrList.length!== 0) {
         return;
       }
       this.selectID = e.id;
@@ -572,7 +572,7 @@ export default {
     &-suggest {
       display: flex;
       justify-content: center;
-      align-items: center;
+      padding-top: 34px;
       width: 60%;
 
       .video-play-area {
