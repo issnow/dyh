@@ -48,7 +48,7 @@
             v-for="(e, i) in entityList"
             :key="e.id"
             :label="e.name + ':'"
-            :prop="'thing' + i"
+            :prop="'thing' + e.id"
             label-width="60px"
           >
             <el-select
@@ -122,7 +122,7 @@ export default {
   data() {
     let tempRule = {},
       tempForm = {};
-    for (let i = 0; i < 20; i++) {
+    for (let i = 1; i < 20; i++) {
       tempRule["thing" + i] = {
         required: true,
         message: "请输入",
@@ -166,7 +166,7 @@ export default {
   },
   methods: {
     visibleChange(visi, e) {
-      // console.log('visibleChange', visi, e)
+      if(!visi) this.$refs.form.validateField(`thing${e.id}`)
       if (this.selectID == e.id) {
         return;
       }

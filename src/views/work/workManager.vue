@@ -7,7 +7,7 @@
       label-width="60px"
       :inline="true"
     >
-      <el-row>
+      <el-row type="flex" justify="space-between">
         <el-col :span="9">
           <el-form-item label="搜索" prop="title">
             <el-input
@@ -23,8 +23,6 @@
               ></el-button>
             </el-input>
           </el-form-item>
-        </el-col>
-        <el-col :span="6">
           <el-form-item>
             <el-button
               icon="el-icon-delete"
@@ -33,8 +31,18 @@
               >批量删除</el-button
             >
           </el-form-item>
+        </el-col>
+        <el-col :span="6" style="text-align: right;">
+          <!-- <el-form-item>
+            <el-button
+              icon="el-icon-delete"
+              type="primary"
+              @click="selectDelete"
+              >批量删除</el-button
+            >
+          </el-form-item> -->
           <el-button type="primary" @click="clear" :loading="loading"
-            >重置</el-button
+            >重置数据</el-button
           >
         </el-col>
       </el-row>
@@ -313,9 +321,7 @@ export default {
             ? (this.form.resolution = "")
             : (this.form.resolution = value);
         case "status":
-          value == 0
-            ? (this.form.status = "")
-            : (this.form.status = value);
+          value == 0 ? (this.form.status = "") : (this.form.status = value);
           break;
       }
       this.page.pageNo = 1;
@@ -336,7 +342,7 @@ export default {
     async _productChoicesList() {
       const { status, element, msg } = await productChoicesList({ type: 1 });
       if (status == 1) {
-        this.selectData = element.status
+        this.selectData = element.status;
         this.filterResolution = element.resolution;
         this.filterWh_ratio = element.wh_ratio;
         this.filterResolution.unshift({ key: 0, name: "全部" });
@@ -504,7 +510,7 @@ export default {
   padding: 30px;
   ::v-deep .el-table {
     .del-red span {
-      color: #F56c6c;
+      color: #f56c6c;
     }
   }
 }

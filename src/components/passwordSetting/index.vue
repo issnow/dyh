@@ -44,7 +44,7 @@ export default {
       if (value === "") {
         callback(new Error("必须填写新密码"));
       } else if (!reg.test(value)) {
-        callback(new Error("密码不能少于 8-16 位字符,密码必须包含数字、英文字母"));
+        callback(new Error("密码为 8-16 位字符,必须包含数字、英文字母"));
       } else {
         if (this.pwdform.confirmPassword !== "") {
           this.$refs.pwdform.validateField("confirmPassword");
@@ -58,7 +58,7 @@ export default {
       } else if (value !== this.pwdform.newpassword) {
         callback(new Error("两次输入的确认新密码不一致"));
       } else if (!reg.test(value)) {
-        callback(new Error("密码不能少于 8-16 位字符,密码必须包含数字、英文字母"));
+        callback(new Error("密码为 8-16 位字符,必须包含数字、英文字母"));
       } else {
         callback();
       }
