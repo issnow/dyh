@@ -17,7 +17,8 @@
 .line {
   position: relative;
   flex: 1;
-  height: 8px;
+  height: 7px;
+  opacity: .6;
   border-radius: 15px;
   background-color: rgb(180, 176, 176);
   span {
