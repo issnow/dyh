@@ -5,10 +5,9 @@
       :rules="rules"
       ref="form"
       label-width="60px"
-      :inline="true"
     >
       <el-row>
-        <el-col :span="9">
+        <el-col :span="6">
           <el-form-item label="搜索" prop="title">
             <el-input
               v-model.trim="form.title"
@@ -24,7 +23,10 @@
             </el-input>
           </el-form-item>
         </el-col>
-        <el-col :span="6">
+        <el-col :span="2" class="text-center">
+            <el-button type="primary" @click="clear" :loading="loading">重置</el-button>
+        </el-col>
+        <el-col :span="14" class="text-right">
           <el-form-item>
             <el-button
               icon="el-icon-delete"
@@ -33,9 +35,7 @@
               >批量删除</el-button
             >
           </el-form-item>
-          <el-button type="primary" @click="clear" :loading="loading"
-            >重置</el-button
-          >
+          
         </el-col>
       </el-row>
     </el-form>
@@ -55,8 +55,10 @@
       <el-table-column prop="resolution" label="分辨率" width="120">
         <template slot="header" scope="scope">
           <el-select
+            class="select-color"
             v-model="form.resolution"
             placeholder="分辨率"
+            clearable
             @change="filterSelect($event, 'resolution')"
           >
             <el-option
@@ -72,8 +74,10 @@
       <el-table-column prop="wh_ratio" label="画幅" width="130">
         <template slot="header" slot-scope="scope">
           <el-select
+            class="select-color"
             v-model="form.wh_ratio"
             placeholder="画幅比例"
+            clearable
             @change="filterSelect($event, 'wh_ratio')"
           >
             <el-option
@@ -109,8 +113,10 @@
       <el-table-column label="状态" prop="status_title" width="130">
         <template slot='header' scope="scope">
           <el-select
+            class="select-color"
             v-model="form.status"
             placeholder="请选择"
+            clearable
             @change="filterSelect($event, 'status')"
           >
             <el-option
@@ -306,16 +312,12 @@ export default {
     filterSelect(value, type) {
       switch (type) {
         case "wh_ratio":
-          value == 0 ? (this.form.wh_ratio = "") : (this.form.wh_ratio = value);
+          this.form.wh_ratio = value;
           break;
         case "resolution":
-          value == 0
-            ? (this.form.resolution = "")
-            : (this.form.resolution = value);
+          this.form.resolution = value;
         case "status":
-          value == 0
-            ? (this.form.status = "")
-            : (this.form.status = value);
+          this.form.status = value;
           break;
       }
       this.page.pageNo = 1;
@@ -339,9 +341,6 @@ export default {
         this.selectData = element.status
         this.filterResolution = element.resolution;
         this.filterWh_ratio = element.wh_ratio;
-        this.filterResolution.unshift({ key: 0, name: "全部" });
-        this.filterWh_ratio.unshift({ key: 0, name: "全部" });
-        this.selectData.unshift({ key: 0, name: "全部" });
 
         // console.log(this.selectData, "selectData");
         console.log(this.filterResolution, "filterResolution");

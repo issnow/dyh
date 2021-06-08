@@ -6,9 +6,9 @@
         ref="form"
         label-width="60px">
         <el-row>
-          <el-col :span="8">
+          <el-col :span="6">
             <el-form-item label="搜索" prop="title">
-              <el-input v-model="form.title" placeholder="请输入项目名称关键字">
+              <el-input v-model="form.title" placeholder="请输入项目名称或简称">
                 <el-button slot="append" icon="el-icon-search" @click="searchProject"></el-button>
               </el-input>
             </el-form-item>
@@ -33,15 +33,16 @@
         :default-sort = "{prop: 'zip', order: 'descending'}"
         @select="handleSelectionChange"
         >
-        <el-table-column type="selection" width="55"></el-table-column>
+        <el-table-column type="selection" width="50"></el-table-column>
         <el-table-column prop="title" label="项目名称"></el-table-column>
         <!-- <el-table-column prop="name" label="类型" width="100"></el-table-column> -->
-        <el-table-column prop="resolution" label="分辨率" width="120">
+        <el-table-column prop="resolution" label="分辨率" width="150">
           <template slot="header" scope="scope">
               <el-select
-                class="select-color"
+                  class="select-color"
                   v-model="form.resolution_id"
                   placeholder="分辨率"
+                  clearable
                   @change="filterSelect($event, 'resolution')"
               >
                   <el-option
@@ -54,11 +55,13 @@
               </el-select>
             </template>
         </el-table-column>
-        <el-table-column prop="wh_ratio" label="画幅" width="130">
+        <el-table-column prop="wh_ratio" label="画幅" width="150">
           <template slot="header" slot-scope="scope">
             <el-select
+                class="select-color"
                 v-model="form.wh_ratio_id"
                 placeholder="画幅比例"
+                clearable
                 @change="filterSelect($event, 'wh_ratio')"
             >
                 <el-option
@@ -77,7 +80,7 @@
         <el-table-column prop="updated_at" label="更新时间" width="200" sortable></el-table-column>
         <el-table-column fixed="right" label="操作">
           <template slot-scope="scope">
-            <el-button type="text" @click="onEdit">编辑</el-button>
+            <el-button type="text" @click="onEdit">去创作</el-button>
             <el-button type="text" @click="omDelete(scope.row)" class="del-red">删除</el-button>
           </template>
         </el-table-column>
@@ -109,12 +112,12 @@
             <el-input 
               v-model="creatForm.title"
               placeholder="请输入项目名称"
-              maxlength="10"
+              maxlength="20"
               show-word-limit
             >
             </el-input>
           </el-form-item>
-          <el-form-item label="画幅比例" prop="scale">
+          <el-form-item label="画幅比例" prop="wh_ratio_id">
             <el-select v-model="creatForm.wh_ratio_id" placeholder="请选择画幅比例">
               <el-option
                 v-for="item in scaleList"
@@ -125,7 +128,7 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="分辨率" prop="size">
+          <el-form-item label="分辨率" prop="resolution_id">
             <el-select v-model="creatForm.resolution_id" placeholder="请选择分辨率">
               <el-option
                 v-for="item in sizeList"
@@ -159,34 +162,32 @@
       return {
         loading: false,
         form: {
-          title: '',
-          wh_ratio_id: null,
-          resolution_id: null
+          title: ''
         },
         rules: {
           title: [
-            { required: true, message: "请输入项目名称关键字", trigger: "blur" },
+            { required: true, message: "请输入项目名称或简称", trigger: "blur" },
           ]
         },
-        creatFormRules: {
-          title: [
-            { required: true, message: "请输入项目名称", trigger: "blur" },
-            { min: 1, max: 10, message: '长度在 1 到 10 个字符', trigger: 'blur' }
-          ],
-          wh_ratio: [
-            { required: true, message: "请选择画幅比例", trigger: "change" }
-          ],
-          resolution: [
-            { required: true, message: "请选择分辨率", trigger: "change" }
-          ]
-        },
-        isShow: false,   
-        isDelete: false, //删除弹窗
         creatForm: {
           title: '',
           wh_ratio_id: 1,
           resolution_id: 1
         },
+        creatFormRules: {
+          title: [
+            { required: true, message: "请输入项目名称", trigger: "blur" },
+            { min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' }
+          ],
+          wh_ratio_id: [
+            { required: true, message: "请选择画幅比例", trigger: "change" }
+          ],
+          resolution_id: [
+            { required: true, message: "请选择分辨率", trigger: "change" }
+          ]
+        },
+        isShow: false,   
+        isDelete: false, //删除弹窗
         scaleList: [], //画幅比例列表
         sizeList: [],  //分辨率列表
         
@@ -255,8 +256,6 @@
           if (res.status == 1) {
             this.scaleList = res.element.wh_ratio;
             this.sizeList = res.element.resolution;
-            this.scaleList.unshift({key: 0, name: "全部"});
-            this.sizeList.unshift({key: 0, name: "全部"});
           } else {
             this.$message({
               type: "error",
@@ -354,10 +353,10 @@
           console.log(type);
           switch (type) {
             case "wh_ratio":
-              value == '全部' ? this.form.wh_ratio_id = null : this.form.wh_ratio_id = value;
+              this.form.wh_ratio_id = value;
               break;
             case "resolution":
-              value == '全部' ? this.form.resolution_id = null : this.form.resolution_id = value;
+              this.form.resolution_id = value;
               break;
           }
           this.page.pageNo = 1;
@@ -421,6 +420,9 @@
     .del-red span {
       color: #F56c6c;
     }
+    // .text-yellow span {
+    //   color: #faad06;
+    // }
   }
   }
   .work-name{

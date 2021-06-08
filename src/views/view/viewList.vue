@@ -34,8 +34,10 @@
         <el-table-column prop="resolution" label="分辨率" width="120">
           <template slot="header" scope="scope">
             <el-select
+                class="select-color"
                 v-model="form.resolution"
                 placeholder="分辨率"
+                clearable
                 @change="filterSelect($event, 'resolution')"
             >
                 <el-option
@@ -51,8 +53,10 @@
         <el-table-column prop="wh_ratio" label="画幅" width="130">
           <template slot="header" scope="scope">
             <el-select
+                class="select-color"
                 v-model="form.wh_ratio"
                 placeholder="画幅比例"
+                clearable
                 @change="filterSelect($event, 'wh_ratio')"
             >
                 <el-option
@@ -71,8 +75,10 @@
         <el-table-column prop="status_title" label="状态" width="100">
           <template slot="header" scope="scope">
             <el-select
+                class="select-color"
                 v-model="form.status"
                 placeholder="状态"
+                clearable
                 @change="filterSelect($event, 'status')"
             >
                 <el-option
@@ -160,9 +166,6 @@
             this.scaleList = res.element.wh_ratio;
             this.sizeList = res.element.resolution;
             this.statusList = res.element.status;
-            this.scaleList.unshift({key: 0, name: "全部"});
-            this.sizeList.unshift({key: 0, name: "全部"});
-            this.statusList.unshift({key: 0, name: "全部"});
           } else {
             this.$message({
               type: "error",
@@ -202,13 +205,13 @@
           console.log(value, type, '1111');
           switch (type) {
             case "wh_ratio":
-              value == 0 ? this.form.wh_ratio = '' : this.form.wh_ratio = value;
+              this.form.wh_ratio = value;
               break;
             case "resolution":
-              value == 0 ? this.form.resolution = '' : this.form.resolution = value;
+              this.form.resolution = value;
               break;
             case "status":
-              value == 0 ? this.form.status = '' : this.form.status = value;
+              this.form.status = value;
               break;
           }
           this.page.pageNo = 1;

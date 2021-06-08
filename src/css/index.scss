@@ -72,3 +72,10 @@ li {
 .text-blue {
   color: $blue;
 }
+
+// el-select placerhoder重写
+.select-color {
+  input::-webkit-input-placeholder {
+    color: #909399;
+  }
+}
