@@ -6,29 +6,17 @@
       ref="form"
       label-width="60px"
       class="user-list-search"
-      :inline="true"
     >
       <el-row>
-        <el-col :span="7">
+        <el-col :span="6">
           <el-form-item label="搜索" prop="email">
-            <el-input
-              v-model.trim="form.email"
-              placeholder="请输入关键字"
-            ></el-input>
+            <el-input v-model.trim="form.email" placeholder="请输入关键字">
+                <el-button slot="append" icon="el-icon-search" @click="submitForm('form')" :loading="loading"></el-button>
+            </el-input>
           </el-form-item>
         </el-col>
-        <el-col :span="5">
-          <el-form-item>
-            <el-button
-              type="primary"
-              @click="submitForm('form')"
-              :loading="loading"
-              >查询</el-button
-            >
-            <el-button type="primary" @click="clear" :loading="loading"
-              >重置</el-button
-            >
-          </el-form-item>
+        <el-col :span="2" class="text-center">
+            <el-button type="primary" @click="clear" :loading="loading">重置</el-button>
         </el-col>
       </el-row>
     </el-form>
@@ -51,11 +39,13 @@
         </template>
       </el-table-column>
       <el-table-column prop="phone" label="联系电话"> </el-table-column>
-      <el-table-column prop="state" label="状态">
+      <el-table-column prop="state" label="状态" width="120">
         <template slot="header" scope="scope">
           <el-select
+            class="select-color"
             v-model="form.state"
-            placeholder="请选择"
+            placeholder="状态"
+            clearable
             @change="filterSelect"
           >
             <el-option
@@ -125,10 +115,6 @@ export default {
       },
       selectData: [
         {
-          value: 0,
-          label: "全部",
-        },
-        {
           value: 1,
           label: "启用",
         },
@@ -157,7 +143,7 @@ export default {
   },
   methods: {
     filterSelect(v) {
-      v == 0 ? (this.form.state = "") : (this.form.state = v);
+      this.form.state = v;
       this._getTableData();
     },
     clear() {
