@@ -2,6 +2,45 @@
   <div class="work-detail-wrap">
     <div class="work-detail">
       <div class="work-detail-info">
+        <div class="title" v-if="hideTask">审核结果:</div>
+        <ul class="list" v-if="hideTask">
+          <li>
+            <div class="label">AI审核:</div>
+            <div class="content">
+              <div class="item" v-for="(e, i) in checkList" :key="i">
+                <div class="label">{{ e.title }}:</div>
+                <bar :item="e.list"></bar>
+              </div>
+              <!-- <div class="item">
+                <div class="label">xxx</div>
+                <bar></bar>
+              </div>
+              <div class="item">
+                <div class="label">xxx</div>
+                <bar></bar>
+              </div> -->
+              <div class="item circel">
+                <div class="label">说明:</div>
+                <div style="font-size: 13px" class="btn-group">
+                  <i></i>
+                  <el-button type="text" size="mini">涉政</el-button>
+                  <i></i>
+                  <el-button type="text" size="mini">涉黄</el-button>
+                  <i></i>
+                  <el-button type="text" size="mini">涉暴</el-button>
+                  <i></i>
+                  <el-button type="text" size="mini">其他</el-button>
+                  <!-- <i></i><el-button size="mini" type="primary">涉政</el-button><i></i>涉黄<i></i>涉暴<i></i>其他 -->
+                </div>
+              </div>
+            </div>
+          </li>
+          <li>
+            <div class="label">人工审核意见:</div>
+            <div class="content">{{ task.manual }}</div>
+          </li>
+        </ul>
+
         <div class="title">成品信息:</div>
         <el-form
           :model="form"
@@ -39,7 +78,9 @@
           </el-form-item>
 
           <div class="shiti">
-            <div class="label" style="font-size: 14px; color: #606266;">实体:</div>
+            <div class="label" style="font-size: 14px; color: #606266">
+              实体:
+            </div>
             <div class="right">
               <el-form-item
                 v-show="isEdit"
@@ -106,50 +147,12 @@
           </el-form-item>
         </el-form>
         <div class="info-list">
-          <div><span>格式:</span>MP4</div>
-          <div><span>大小:</span>10M</div>
-          <div><span>画幅:</span>10M</div>
-          <div><span>时长:</span>20(S)</div>
-          <div><span>分辨率:</span>720P</div>
+          <div><span>格式:</span>{{ viewInfo.video_format }}</div>
+          <div><span>大小:</span>{{ viewInfo.video_size }}</div>
+          <div><span>画幅:</span>{{ viewInfo.wh_ratio }}</div>
+          <div><span>时长:</span>{{ viewInfo.duration }}</div>
+          <div><span>分辨率:</span>{{ viewInfo.resolution }}</div>
         </div>
-
-        <div class="title" v-if="hideTask">审核结果:</div>
-        <ul class="list" v-if="hideTask">
-          <li>
-            <div class="label">AI审核:</div>
-            <div class="content">
-              <div class="item" v-for="(e, i) in checkList" :key="i">
-                <div class="label">{{ e.title }}:</div>
-                <bar :item="e.list"></bar>
-              </div>
-              <!-- <div class="item">
-                <div class="label">xxx</div>
-                <bar></bar>
-              </div>
-              <div class="item">
-                <div class="label">xxx</div>
-                <bar></bar>
-              </div> -->
-              <div class="item circel">
-                <div class="label">说明:</div>
-                <div style="font-size: 13px;"><i></i>涉政<i></i>涉黄<i></i>涉暴<i></i>其他</div>
-              </div>
-            </div>
-          </li>
-          <li>
-            <div class="label">人工审核意见:</div>
-            <div class="content">{{ task.audit_note }}</div>
-          </li>
-        </ul>
-        <!-- <div class="foot-btn">
-        <el-button v-show="isEdit" type="primary" @click="submitForm('form')"
-          >提 交</el-button
-        >
-        <el-button v-show="!isEdit" :loading='editLoading' type="primary" @click="onEdit"
-          >编 辑</el-button
-        >
-        <el-button @click="onCancel">取 消</el-button>
-      </div> -->
       </div>
 
       <div class="work-detail-suggest">
@@ -256,7 +259,7 @@ export default {
       url: "",
       // task审核
       task: {
-        audit_note: "",
+        manual: "",
       },
       loading: false,
       // 一级实体select框的id
@@ -265,7 +268,7 @@ export default {
       hideTask: false,
       checkList: [
         {
-          title: "语音",
+          title: "语音1",
           list: [
             {
               left: "10%",
@@ -279,33 +282,10 @@ export default {
               backgroundColor: "#3c8cff",
               text: "提示文字",
             },
-            {
-              left: "30%",
-              width: "10%",
-              backgroundColor: "#454545",
-              text: "提示文字",
-            },
-            {
-              left: "89%",
-              width: "10%",
-              backgroundColor: "#e77",
-              text: "提示文字",
-            },
           ],
         },
         {
-          title: "视频",
-          list: [
-            {
-              left: "10%",
-              width: "14%",
-              backgroundColor: "#008000",
-              text: "提示文字",
-            },
-          ],
-        },
-        {
-          title: "字幕",
+          title: "视频1",
           list: [
             {
               left: "10%",
@@ -386,7 +366,11 @@ export default {
       }
     }, 600),
     async onFocus(e, query = "") {
-      if (this.selectID == e.id && query.length == 0  && this.arrList.length!== 0) {
+      if (
+        this.selectID == e.id &&
+        query.length == 0 &&
+        this.arrList.length !== 0
+      ) {
         return;
       }
       this.selectID = e.id;
@@ -443,6 +427,43 @@ export default {
         });
       }
     },
+    formatList(obj, duration) {
+      let arr = [];
+      Object.entries(obj).forEach(([key, value], i) => {
+        console.log(key, value, i);
+        arr[i] = {
+          title:
+            key == "frame"
+              ? "视频"
+              : key == "ocr"
+              ? "字幕"
+              : key == "voice"
+              ? "音频"
+              : "",
+          list: (function () {
+            let arr = [];
+
+            value.forEach((e) => {
+              e.suspects.forEach((c) => {
+                arr.push({
+                  left: ((e.frame_begin / duration) * 100).toFixed(2) + "%",
+                  width:
+                    (((e.frame_end - e.frame_begin) / duration) * 100).toFixed(
+                      2
+                    ) + "%",
+                  backgroundColor: `#${c.color}`,
+                  text: c.category_name + ":" + c.suspect_content,
+                });
+              });
+            });
+            console.log(arr, "arr");
+            return arr;
+          })(),
+        };
+      });
+
+      return arr;
+    },
     async init() {
       this.editLoading = true;
       const p = {
@@ -459,22 +480,38 @@ export default {
           url,
           title,
           tag_names_str,
+          resolution,
+          duration,
+          wh_ratio,
+          video_size,
+          video_format,
         } = element.product;
         this.hideTask = !!element.task;
         // const { audit_note, audit_status, audit_status_title } = element.task;
         this.task = {
-          audit_note: element?.task?.audit_note,
+          manual: element?.task?.manual,
+          ai: element?.task?.ai,
         };
+        if (element?.task?.ai) {
+          this.checkList = this.formatList(element?.task?.ai, duration);
+        }
         this.form = {
           ...this.form,
           tag: tag_ids[0] / 1,
           description,
           title,
         };
-        this.viewInfo.title = title;
-        this.viewInfo.tag_names_str = tag_names_str;
-        this.viewInfo.entities = entities;
-        this.viewInfo.description = description;
+        this.viewInfo = {
+          title,
+          tag_names_str,
+          entities,
+          description,
+          resolution,
+          duration,
+          wh_ratio,
+          video_size,
+          video_format,
+        };
         if (this.isEdit) {
           entities.forEach(async (c) => {
             let res = await productEntityList({ id: c.fid, name: "" });
@@ -595,7 +632,7 @@ export default {
         margin-bottom: 10px;
         div {
           display: inline-block;
-          width: 26%;
+          width: 30%;
           margin-bottom: 14px;
           font-size: 14px;
           span {
@@ -612,7 +649,7 @@ export default {
           font-size: 14px;
           display: flex;
           margin-bottom: 20px;
-          >div.label {
+          > div.label {
             font-size: 14px;
           }
           .label {
@@ -636,7 +673,7 @@ export default {
               }
             }
             .circel {
-              div {
+              div.btn-group {
                 i {
                   display: inline-block;
                   width: 10px;
@@ -645,17 +682,17 @@ export default {
                   border: 1px solid #ccc;
                   margin-right: 20px;
                   margin-left: 15px;
-                  &:nth-child(1) {
-                    background-color: #3c8cff;
+                  &:nth-of-type(1) {
+                    background-color: #facd91;
                   }
-                  &:nth-child(2) {
-                    background-color: #f00;
+                  &:nth-of-type(2) {
+                    background-color: #ffff80;
                   }
-                  &:nth-child(3) {
-                    background-color: #fff000;
+                  &:nth-of-type(3) {
+                    background-color: #ec808d;
                   }
-                  &:nth-child(4) {
-                    background-color: #008000;
+                  &:nth-of-type(4) {
+                    background-color: #c280ff;
                   }
                 }
               }
