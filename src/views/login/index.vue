@@ -49,12 +49,10 @@
 <script>
 import { loginApp } from "@api/user";
 import { mapMutations } from "vuex";
+import router from "@/router";
+import Layout from '@/layout'
+
 export default {
-  // beforeRouteEnter (to, from, next) {
-  //   console.log(to, 'to')
-  //   sessionStorage.emoveItem('isLogin')
-  //   next()
-  // },
   data() {
     return {
       form: {
@@ -86,6 +84,29 @@ export default {
       html.style.fontSize = res + "px";
     },
     ...mapMutations(["user/SET_USER_INFO", "user/SET_ROUTES"]),
+
+    formatRouter(list) {
+      return list.map(({ url, title, icon_class }) => ({
+        path: /\/.*(\/.*)/.exec(url)[1],
+        component: Layout,
+        children: [
+          {
+            path: "",
+            component: () => import(`@/views${url}`),
+            name: /\/.*\/(.*)/.exec(url)[1],
+            meta: { title, icon: icon_class },
+          },
+        ],
+      }));
+    },
+
+    setRouterToLocal(payload) {
+      const { permissionList } = payload;
+      let newRouter = this.formatRouter(permissionList);
+      console.log(newRouter, 'newRouter')
+      localStorage.setItem('routes', JSON.stringify(newRouter))
+      router.addRoutes(newRouter);
+    },
     login(formName) {
       this.$refs[formName].validate(async (valid) => {
         if (valid) {
@@ -98,14 +119,16 @@ export default {
             this.$message({ message: msg, type: "success" });
             this["user/SET_USER_INFO"](element);
             this["user/SET_ROUTES"](element);
+            this.setRouterToLocal(element);
+
             if (element.type == 1 || element.type == 0) {
               this.$router.push({ path: "/projectList" });
             } else if (element.type == 2) {
               this.$router.push({ path: "/viewList" });
             }
-            // window.addEventListener("beforeunload", () => {
-            //   sessionStorage.setItem("isLogin", "1");
-            // });
+            window.addEventListener("beforeunload", () => {
+              sessionStorage.setItem("isLogin", "1");
+            });
             document.documentElement.style.fontSize = "";
             window.removeEventListener("resize", this.onWindowResize);
           } else {

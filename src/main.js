@@ -37,19 +37,14 @@ router.beforeEach(async (to, from, next) => {
       element,
       msg
     } = await checkLogin()
-    console.log(status, 'status');
     if (status == 1) {
-      console.log(1);
-      // router.push(to.path)
+      // store.commit('user/SET_ROUTES', element)
       next()
-      store.commit('user/SET_ROUTES', element)
-    } else {
-      console.log(2);
+    } else if(status == '-101') {
       Vue.prototype.$message({
         type: 'error',
         message: msg
       })
-      // router.push('/login')
       next('/login')
     }
   }else {
