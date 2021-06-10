@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import { 
   Button, 
+  ButtonGroup,
   Container,
   Header,
   Aside,
@@ -44,6 +45,7 @@ import {
   Tooltip
 } from 'element-ui';
 Vue.use(Button)
+Vue.use(ButtonGroup)
 Vue.use(Container)
 Vue.use(Header)
 Vue.use(Aside)

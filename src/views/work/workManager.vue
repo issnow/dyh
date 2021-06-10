@@ -1,11 +1,6 @@
 <template>
   <div class="main-wrap">
-    <el-form
-      :model="form"
-      :rules="rules"
-      ref="form"
-      label-width="60px"
-    >
+    <el-form :model="form" :rules="rules" ref="form" label-width="60px">
       <el-row>
         <el-col :span="6">
           <el-form-item label="搜索" prop="title">
@@ -24,7 +19,9 @@
           </el-form-item>
         </el-col>
         <el-col :span="2" class="text-center">
-            <el-button type="primary" @click="clear" :loading="loading">重置</el-button>
+          <el-button type="primary" @click="clear" :loading="loading"
+            >重置</el-button
+          >
         </el-col>
         <el-col :span="14" class="text-right">
           <el-form-item>
@@ -35,7 +32,6 @@
               >批量删除</el-button
             >
           </el-form-item>
-          
         </el-col>
       </el-row>
     </el-form>
@@ -49,6 +45,7 @@
       :default-sort="{ prop: 'time', order: 'descending' }"
       @selection-change="handleSelectionChange"
       @sort-change="sortChange"
+      empty-text="无相关数据"
     >
       <el-table-column type="selection" width="55"> </el-table-column>
       <el-table-column prop="title" label="成品名称"></el-table-column>
@@ -111,7 +108,7 @@
         width="100"
       ></el-table-column>
       <el-table-column label="状态" prop="status_title" width="130">
-        <template slot='header' scope="scope">
+        <template slot="header" scope="scope">
           <el-select
             class="select-color"
             v-model="form.status"
@@ -150,7 +147,7 @@
         <template slot-scope="scope">
           <!-- scope.row.status -->
           <el-button
-            v-if="[1, 2, 3, 6, 7].includes(scope.row.status)"
+            v-if="[1, 2, 3, 6, 7, 5].includes(scope.row.status)"
             type="text"
             @click="onDelete(scope.row.code)"
             class="del-red"
@@ -159,7 +156,7 @@
           <el-button
             v-if="[2].includes(scope.row.status)"
             type="text"
-            @click="onGenerate"
+            @click="onGenerate(scope.row.id)"
             >重新合成</el-button
           >
           <el-button
@@ -169,13 +166,7 @@
             >提交审核</el-button
           >
           <el-button
-            v-if="[3, 6].includes(scope.row.status)"
-            type="text"
-            @click="onEdit(scope.row.code)"
-            >编辑</el-button
-          >
-          <el-button
-            v-if="[4, 7].includes(scope.row.status)"
+            v-if="![1, 2].includes(scope.row.status)"
             type="text"
             @click="onWatch(scope.row.code)"
             >查看</el-button
@@ -186,7 +177,7 @@
 
     <el-pagination
       background
-      :hide-on-single-page='true'
+      :hide-on-single-page="true"
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
       :current-page="page.pageNo"
@@ -213,6 +204,7 @@ import {
   productGetList,
   productChoicesList,
   productDel,
+  againExportProduct,
 } from "@api/workManager";
 import videoPreview from "@component/videoPreview";
 import submitDialog from "./submitDialog";
@@ -346,10 +338,12 @@ export default {
         console.log(this.filterResolution, "filterResolution");
         console.log(this.filterWh_ratio, "filterWh_ratio");
       } else {
-        this.$message({
-          type: "error",
-          message: msg,
-        });
+        if (status != "-101") {
+          this.$message({
+            type: "error",
+            message: msg,
+          });
+        }
       }
     },
     async _productGetList() {
@@ -374,10 +368,12 @@ export default {
           pageCount: fsp.pageCount,
         };
       } else {
-        this.$message({
-          type: "error",
-          message: msg,
-        });
+        if (status != "-101") {
+          this.$message({
+            type: "error",
+            message: msg,
+          });
+        }
       }
     },
     selectDelete() {
@@ -403,10 +399,12 @@ export default {
               });
               this._productGetList();
             } else {
-              this.$message({
-                type: "error",
-                message: msg,
-              });
+              if (status != "-101") {
+                this.$message({
+                  type: "error",
+                  message: msg,
+                });
+              }
             }
           })
           .catch(() => {
@@ -431,7 +429,25 @@ export default {
       this.submitDialogVisible = true;
       this.title = title;
     },
-    onGenerate() {},
+    async onGenerate(id) {
+      let { status, msg } = await againExportProduct({
+        id,
+      });
+      if (status == 1) {
+        this.$message({
+          type: "success",
+          message: msg,
+        });
+        this._productGetList();
+      } else {
+        if (status != "-101") {
+          this.$message({
+            type: "error",
+            message: msg,
+          });
+        }
+      }
+    },
     onDelete(code) {
       this.$confirm("请确认是否删除该成品?", "删除确认", {
         confirmButtonText: "确定",
@@ -453,10 +469,12 @@ export default {
             });
             this._productGetList();
           } else {
-            this.$message({
-              type: "error",
-              message: msg,
-            });
+            if (status != "-101") {
+              this.$message({
+                type: "error",
+                message: msg,
+              });
+            }
           }
         })
         .catch(() => {
@@ -469,9 +487,9 @@ export default {
     onWatch(code) {
       this.$router.push({ path: `/workDetail/${code}/0` });
     },
-    onEdit(code) {
-      this.$router.push({ path: `/workDetail/${code}/1` });
-    },
+    // onEdit(code) {
+    //   this.$router.push({ path: `/workDetail/${code}/1` });
+    // },
     handleSubmitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (!valid) {

@@ -41,3 +41,9 @@ export const productEdit = (params) => {
   return axios.post('/api/product/edit', params)
 }
 
+// 重新合成
+
+export const againExportProduct = (params) => {
+  return axios.post('/api/product/againExportProduct', params)
+}
+

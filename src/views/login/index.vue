@@ -49,12 +49,8 @@
 <script>
 import { loginApp } from "@api/user";
 import { mapMutations } from "vuex";
+
 export default {
-  // beforeRouteEnter (to, from, next) {
-  //   console.log(to, 'to')
-  //   sessionStorage.emoveItem('isLogin')
-  //   next()
-  // },
   data() {
     return {
       form: {
@@ -72,6 +68,7 @@ export default {
     };
   },
   created() {
+    sessionStorage.removeItem("isLogin");
     window.addEventListener("resize", this.onWindowResize);
     this.onWindowResize();
   },
@@ -98,14 +95,15 @@ export default {
             this.$message({ message: msg, type: "success" });
             this["user/SET_USER_INFO"](element);
             this["user/SET_ROUTES"](element);
+
             if (element.type == 1 || element.type == 0) {
               this.$router.push({ path: "/projectList" });
             } else if (element.type == 2) {
               this.$router.push({ path: "/viewList" });
             }
-            window.addEventListener("beforeunload", () => {
-              sessionStorage.setItem("isLogin", "1");
-            });
+            // window.addEventListener("beforeunload", () => {
+            sessionStorage.setItem("isLogin", "1");
+            // });
             document.documentElement.style.fontSize = "";
             window.removeEventListener("resize", this.onWindowResize);
           } else {
