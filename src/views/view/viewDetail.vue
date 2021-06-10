@@ -7,22 +7,43 @@
           <div class="label">名称:</div>
           <div class="content">{{product.title}}</div>
         </li>
-        <li>
-          <div class="label">描述:</div>
-          <div class="content">{{product.description}}</div>
-        </li>
+        
         <li>
           <div class="label">标签:</div>
           <div class="content">
-            {{tagName}}
+            {{product.tag_names_str}}
           </div>
         </li>
         <li 
           v-for="item in entityList"
           :key="item.index"
         >
-          <div class="label">一级实体: {{item.ftext}}</div>
-          <div class="">二级实体: {{item.text}}</div>
+          <div class="label">实体: </div>
+          <div class="">{{item.ftext}} {{item.text}}</div>
+        </li>
+        <li>
+          <div class="label">描述:</div>
+          <div class="content">{{product.description}}</div>
+        </li>
+        <li>
+          <div class="label">格式:</div>
+          <div class="content">{{product.video_format}}</div>
+        </li>
+        <li>
+          <div class="label">大小:</div>
+          <div class="content">{{product.video_size}}</div>
+        </li>
+        <li>
+          <div class="label">画幅:</div>
+          <div class="content">{{product.wh_ratio}}</div>
+        </li>
+        <li>
+          <div class="label">时长:</div>
+          <div class="content">{{product.duration}}</div>
+        </li>
+        <li>
+          <div class="label">分辨率:</div>
+          <div class="content">{{product.resolution}}</div>
         </li>
        
       </ul>
