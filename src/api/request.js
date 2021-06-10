@@ -48,12 +48,12 @@ instance.interceptors.response.use(function (response) {
   const {
     data
   } = response
-  if (data.status == '-101') {
-    // 用户未登录
-    if(router.app._route.path !== '/login') {
-      router.push('/login')
-    }
-  }
+  // if (data.status == '-101') {
+  //   // 用户未登录
+  //   if(router.app._route.path !== '/login') {
+  //     router.push('/login')
+  //   }
+  // }
   // 对响应数据做点什么
   return response.data;
 }, function (error) {

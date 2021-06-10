@@ -103,9 +103,9 @@ export default {
             } else if (element.type == 2) {
               this.$router.push({ path: "/viewList" });
             }
-            window.addEventListener("beforeunload", () => {
-              sessionStorage.setItem("isLogin", "1");
-            });
+            // window.addEventListener("beforeunload", () => {
+            //   sessionStorage.setItem("isLogin", "1");
+            // });
             document.documentElement.style.fontSize = "";
             window.removeEventListener("resize", this.onWindowResize);
           } else {

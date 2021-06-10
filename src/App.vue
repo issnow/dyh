@@ -19,17 +19,17 @@ export default {
   async created() {
     
     // console.log(this, 'this')
-    if(sessionStorage.getItem('isLogin') == 1) {
-      let {status, element,msg } = await checkLogin()
-      if(status == 1) {
-        this['user/SET_ROUTES'](element)
-      }else {
-        this.$message({
-          type: 'error',
-          message: msg
-        })
-      }
-    }
+    // if(sessionStorage.getItem('isLogin') == 1) {
+    //   let {status, element,msg } = await checkLogin()
+    //   if(status == 1) {
+    //     this['user/SET_ROUTES'](element)
+    //   }else {
+    //     this.$message({
+    //       type: 'error',
+    //       message: msg
+    //     })
+    //   }
+    // }
     
 
     // 在页面加载时读取sessionStorage里的状态信息
