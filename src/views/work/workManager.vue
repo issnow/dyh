@@ -338,10 +338,12 @@ export default {
         console.log(this.filterResolution, "filterResolution");
         console.log(this.filterWh_ratio, "filterWh_ratio");
       } else {
-        this.$message({
-          type: "error",
-          message: msg,
-        });
+        if (status != "-101") {
+          this.$message({
+            type: "error",
+            message: msg,
+          });
+        }
       }
     },
     async _productGetList() {
@@ -366,10 +368,12 @@ export default {
           pageCount: fsp.pageCount,
         };
       } else {
-        this.$message({
-          type: "error",
-          message: msg,
-        });
+        if (status != "-101") {
+          this.$message({
+            type: "error",
+            message: msg,
+          });
+        }
       }
     },
     selectDelete() {
@@ -395,10 +399,12 @@ export default {
               });
               this._productGetList();
             } else {
-              this.$message({
-                type: "error",
-                message: msg,
-              });
+              if (status != "-101") {
+                this.$message({
+                  type: "error",
+                  message: msg,
+                });
+              }
             }
           })
           .catch(() => {
@@ -434,10 +440,12 @@ export default {
         });
         this._productGetList();
       } else {
-        this.$message({
-          type: "error",
-          message: msg,
-        });
+        if (status != "-101") {
+          this.$message({
+            type: "error",
+            message: msg,
+          });
+        }
       }
     },
     onDelete(code) {
@@ -461,10 +469,12 @@ export default {
             });
             this._productGetList();
           } else {
-            this.$message({
-              type: "error",
-              message: msg,
-            });
+            if (status != "-101") {
+              this.$message({
+                type: "error",
+                message: msg,
+              });
+            }
           }
         })
         .catch(() => {

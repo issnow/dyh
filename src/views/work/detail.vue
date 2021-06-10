@@ -184,9 +184,12 @@ import {
   productTagList,
   productEdit,
 } from "@api/workManager";
+import { checkLogin } from "@api/user";
 import _ from "lodash";
 import videoPlay from "./videoPlay";
 import bar from "./bar";
+import Vue from "vue";
+
 export default {
   components: {
     videoPlay,
@@ -340,10 +343,12 @@ export default {
             label: d.name,
           }));
         } else {
-          this.$message({
-            type: "error",
-            message: res.msg,
-          });
+          if (res.status != "-101") {
+            this.$message({
+              type: "error",
+              message: res.msg,
+            });
+          }
         }
         this.$refs.form.validate();
       });
@@ -384,36 +389,25 @@ export default {
           label: c.name,
         }));
       } else {
-        this.$message({
-          type: "error",
-          message: res.msg,
-        });
+        if (res.status != "-101") {
+          this.$message({
+            type: "error",
+            message: res.msg,
+          });
+        }
       }
     },
     async asyncGetEntityList() {
       let { status, element, msg } = await productEntityList();
       if (status == 1) {
-        // element.forEach(async (e) => {
-        //   let res = await productEntityList({ id: e.id, name: "" });
-        //   if (res.status == 1) {
-        //     e.data = res.element.map((c) => ({
-        //       value: c.id,
-        //       label: c.name,
-        //     }));
-        //     // e.option = res.element.map((c) => ({
-        //     //   value: c.id,
-        //     //   label: c.name,
-        //     // }));
-        //     e.option = [];
-        //     e.search = false;
-        //   }
-        // });
         this.entityList = element;
       } else {
-        this.$message({
-          type: "error",
-          message: msg,
-        });
+        if (status != "-101") {
+          this.$message({
+            type: "error",
+            message: msg,
+          });
+        }
       }
     },
     async _productTagList() {
@@ -421,10 +415,12 @@ export default {
       if (status == 1) {
         this.options = element;
       } else {
-        this.$message({
-          type: "error",
-          message: msg,
-        });
+        if (status != "-101") {
+          this.$message({
+            type: "error",
+            message: msg,
+          });
+        }
       }
     },
     formatList(obj, duration) {
@@ -526,11 +522,13 @@ export default {
         }
         this.url = url;
       } else {
-        this.$router.go(-1);
-        this.$message({
-          type: "error",
-          message: msg,
-        });
+        // this.$router.go(-1);
+        if (status != "-101") {
+          this.$message({
+            type: "error",
+            message: msg,
+          });
+        }
       }
     },
     // getImg(src) {
@@ -567,10 +565,12 @@ export default {
                   message: msg,
                 });
               } else {
-                this.$message({
-                  type: "error",
-                  message: msg,
-                });
+                if (status != "-101") {
+                  this.$message({
+                    type: "error",
+                    message: msg,
+                  });
+                }
               }
             })
             .catch(() => {

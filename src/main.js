@@ -29,28 +29,27 @@ Vue.config.productionTip = false
 console.log('env', process.env.NODE_ENV);
 
 
-router.beforeEach(async (to, from, next) => {
-  console.log(to, from, 'to');
-  if(to.path !='/login') {
-    let {
-      status,
-      element,
-      msg
-    } = await checkLogin()
-    if (status == 1) {
-      // store.commit('user/SET_ROUTES', element)
-      next()
-    } else if(status == '-101') {
-      Vue.prototype.$message({
-        type: 'error',
-        message: msg
-      })
-      next('/login')
-    }
-  }else {
-    next()
-  }
-})
+// router.beforeEach(async (to, from, next) => {
+//   console.log(to, from, 'to');
+//   if(to.path !='/login') {
+//     let {
+//       status,
+//       element,
+//       msg
+//     } = await checkLogin()
+//     if (status == 1) {
+//       next()
+//     } else if(status == '-101') {
+//       Vue.prototype.$message({
+//         type: 'error',
+//         message: msg
+//       })
+//       next('/login')
+//     }
+//   }else {
+//     next()
+//   }
+// })
 
 new Vue({
   router,
