@@ -25,6 +25,12 @@ li {
 //   border-right: 0;
 // }
 
+.el-tooltip__popper {
+  max-width: 40vw;
+  // word-wrap: none;
+  word-break: break-all;
+}
+
 .el-message {
   z-index: 99999 !important;
 }

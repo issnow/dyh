@@ -14,6 +14,10 @@ import './config/element.js'
 import './iconfont/iconfont.css'
 
 import api from './api/request'
+import {
+  checkLogin
+} from '@api/user'
+
 
 Vue.use(VueLazyload)
 
@@ -22,15 +26,30 @@ Vue.prototype.$api = api
 
 Vue.config.productionTip = false
 
-console.log('env',process.env.NODE_ENV);
+console.log('env', process.env.NODE_ENV);
 
 
-router.beforeEach((to, from, next)=>{
-  if(to.path == '/login') {
-    sessionStorage.removeItem('isLogin')
-  }
-  next()
-})
+// router.beforeEach(async (to, from, next) => {
+//   console.log(to, from, 'to');
+//   if(to.path !='/login') {
+//     let {
+//       status,
+//       element,
+//       msg
+//     } = await checkLogin()
+//     if (status == 1) {
+//       next()
+//     } else if(status == '-101') {
+//       Vue.prototype.$message({
+//         type: 'error',
+//         message: msg
+//       })
+//       next('/login')
+//     }
+//   }else {
+//     next()
+//   }
+// })
 
 new Vue({
   router,

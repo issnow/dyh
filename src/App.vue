@@ -18,12 +18,14 @@ export default {
   },
   async created() {
     
-    // console.log(this, 'this')
     if(sessionStorage.getItem('isLogin') == 1) {
       let {status, element,msg } = await checkLogin()
       if(status == 1) {
         this['user/SET_ROUTES'](element)
       }else {
+        if(status == '-101') {
+          this.$router.push('/login')
+        }
         this.$message({
           type: 'error',
           message: msg
