@@ -277,7 +277,7 @@ export default {
     height: 100%;
     max-width: 84px;
     max-height: 48px;
-    // background: #ccc;
+    background: #ccc;
     // background-image: url("./../assets/img.png");
     // background-position: center;
     // background-repeat: no-repeat;
@@ -308,8 +308,8 @@ export default {
             justify-content: center;
             align-items: center;
             // background-image: url("./../assets/bg.jpg");
-            background-repeat: no-repeat;
-            background-size: 86px 48px;
+            // background-repeat: no-repeat;
+            // background-size: 86px 48px;
             opacity: 0.4;
         }
     }
@@ -331,9 +331,9 @@ export default {
             display: flex;
             justify-content: center;
             align-items: center;
-            background-image: url("./../assets/audioPlayhover.png");
-            background-repeat: no-repeat;
-            background-size: 28px 28px;
+            // background-image: url("./../assets/audioPlayhover.png");
+            // background-repeat: no-repeat;
+            // background-size: 28px 28px;
         }
     }
     .poctureClass {
@@ -389,9 +389,9 @@ export default {
 .el-icon-video-plays {
     width: 28px;
     height: 28px;
-    background-image: url("./../assets/audioPlayhover.png");
-    background-repeat: no-repeat;
-    background-size: 28px 28px;
+    // background-image: url("./../assets/audioPlayhover.png");
+    // background-repeat: no-repeat;
+    // background-size: 28px 28px;
     position: absolute;
     left: 38px;
     top: 23px;
