@@ -100,12 +100,14 @@
       <el-table-column
         prop="video_size"
         label="大小（M）"
-        width="100"
+        width="120"
+        sortable="custom"
       ></el-table-column>
       <el-table-column
         prop="duration"
         label="时长（S）"
-        width="100"
+        width="120"
+        sortable="custom"
       ></el-table-column>
       <el-table-column label="状态" prop="status_title" width="130">
         <template slot="header" scope="scope">
@@ -316,15 +318,34 @@ export default {
       this.page.pageSize = 10;
       this._productGetList();
     },
-    sortChange({ order }) {
+    sortChange({ order, prop }) {
+      console.log(arguments, "arguments");
       if (order == "ascending") {
+        switch (prop) {
+          case "duration":
+            this.listParams.order = 22;
+            break;
+          case "video_size":
+            this.listParams.order = 12;
+            break;
+          case "created_at":
+            this.listParams.order = 2;
+            break;
+        }
         // 升序
-        this.listParams.order = 2;
-      } else if (order == "descending") {
-        // 降序
-        this.listParams.order = 1;
       } else {
-        this.listParams.order = 1;
+        switch (prop) {
+          case "duration":
+            this.listParams.order = 21;
+            break;
+          case "video_size":
+            this.listParams.order = 11;
+            break;
+          case "created_at":
+            this.listParams.order = 1;
+            break;
+        }
+        // 降序
       }
     },
     async _productChoicesList() {
@@ -335,8 +356,8 @@ export default {
         this.filterWh_ratio = element.wh_ratio;
 
         // console.log(this.selectData, "selectData");
-        console.log(this.filterResolution, "filterResolution");
-        console.log(this.filterWh_ratio, "filterWh_ratio");
+        // console.log(this.filterResolution, "filterResolution");
+        // console.log(this.filterWh_ratio, "filterWh_ratio");
       } else {
         if (status != "-101") {
           this.$message({
