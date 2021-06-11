@@ -50,7 +50,7 @@
             </el-select>
           </template>
         </el-table-column>
-        <el-table-column prop="wh_ratio" label="画幅" width="130">
+        <el-table-column prop="wh_ratio" label="画幅" width="140">
           <template slot="header" scope="scope">
             <el-select
                 class="select-color"
@@ -70,9 +70,9 @@
           </template>
         </el-table-column>
         <!-- <el-table-column prop="view" label="预览" width="120"></el-table-column> -->
-        <el-table-column prop="video_size" label="大小（M）" width="100"></el-table-column>
-        <el-table-column prop="duration" label="时长（S）" width="100"></el-table-column>
-        <el-table-column prop="status_title" label="状态" width="100">
+        <el-table-column prop="video_size" label="大小（M）" width="120" sortable></el-table-column>
+        <el-table-column prop="duration" label="时长（S）" width="120" sortable></el-table-column>
+        <el-table-column prop="status_title" label="状态" width="150">
           <template slot="header" scope="scope">
             <el-select
                 class="select-color"
