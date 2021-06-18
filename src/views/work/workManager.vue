@@ -358,13 +358,6 @@ export default {
         // console.log(this.selectData, "selectData");
         // console.log(this.filterResolution, "filterResolution");
         // console.log(this.filterWh_ratio, "filterWh_ratio");
-      } else {
-        if (status != "-101") {
-          this.$message({
-            type: "error",
-            message: msg,
-          });
-        }
       }
     },
     async _productGetList() {
@@ -388,13 +381,6 @@ export default {
           // 共几页
           pageCount: fsp.pageCount,
         };
-      } else {
-        if (status != "-101") {
-          this.$message({
-            type: "error",
-            message: msg,
-          });
-        }
       }
     },
     selectDelete() {
@@ -419,13 +405,6 @@ export default {
                 message: msg,
               });
               this._productGetList();
-            } else {
-              if (status != "-101") {
-                this.$message({
-                  type: "error",
-                  message: msg,
-                });
-              }
             }
           })
           .catch(() => {
@@ -460,13 +439,6 @@ export default {
           message: msg,
         });
         this._productGetList();
-      } else {
-        if (status != "-101") {
-          this.$message({
-            type: "error",
-            message: msg,
-          });
-        }
       }
     },
     onDelete(code) {
@@ -489,13 +461,6 @@ export default {
               message: msg,
             });
             this._productGetList();
-          } else {
-            if (status != "-101") {
-              this.$message({
-                type: "error",
-                message: msg,
-              });
-            }
           }
         })
         .catch(() => {
