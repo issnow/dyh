@@ -209,14 +209,11 @@ import {
   againExportProduct,
 } from "@api/workManager";
 import videoPreview from "@component/videoPreview";
-import submitDialog from "./submitDialog";
+// import submitDialog from "./submitDialog";
 import _ from "lodash";
 export default {
   components: {
     submitDialog: () => import("./submitDialog.vue"),
-    // submitDialog: () => ({
-    //   component: import("./submitDialog"),
-    // }),
     videoPreview,
   },
   data() {

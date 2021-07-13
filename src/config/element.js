@@ -42,7 +42,8 @@ import {
   MessageBox,
   Upload,
   cascader,
-  Tooltip
+  Tooltip,
+  Image
 } from 'element-ui';
 Vue.use(Button)
 Vue.use(ButtonGroup)
@@ -85,6 +86,7 @@ Vue.use(DropdownItem);
 Vue.use(Upload);
 Vue.use(cascader);
 Vue.use(Tooltip);
+Vue.use(Image);
 
 
 

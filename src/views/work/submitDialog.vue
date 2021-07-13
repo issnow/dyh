@@ -5,7 +5,7 @@
     class="work-submit"
     :before-close="beforeClose"
     width="45%"
-    :close-on-click-modal='false'
+    :close-on-click-modal="false"
   >
     <el-form
       :model="form"
@@ -28,7 +28,6 @@
           show-word-limit
         >
         </el-input>
-        <!-- <div>上限50个字符。</div> -->
       </el-form-item>
       <el-form-item label="标签:" prop="label">
         <el-select v-model="form.label" placeholder="请选择">
@@ -45,14 +44,14 @@
         <div class="label">实体:</div>
         <div class="right">
           <el-form-item
-            v-for="(e, i) in entityList"
+            v-for="e in entityList"
             :key="e.id"
             :label="e.name + ':'"
             :prop="'thing' + e.id"
             label-width="60px"
           >
             <el-select
-              v-model="form['thing' + i]"
+              v-model="form['thing' + e.id]"
               placeholder="请选择"
               filterable
               multiple
@@ -166,6 +165,7 @@ export default {
   },
   methods: {
     visibleChange(visi, e) {
+      console.log(visi, e, "visit");
       if(!visi) this.$refs.form.validateField(`thing${e.id}`)
       if (this.selectID == e.id) {
         return;
@@ -179,7 +179,11 @@ export default {
 
       // selectid是已经选择的一级实体框id,如果当前的selectid和上一次的e.id一样
       // 那么就直接使用缓存的arrList,解决每次点击option之后,执行visibleChange方法会置空arrList
-      if (this.selectID == e.id && query.length == 0 && this.arrList.length!== 0) {
+      if (
+        this.selectID == e.id &&
+        query.length == 0 &&
+        this.arrList.length !== 0
+      ) {
         return;
       }
       this.selectID = e.id;
@@ -197,22 +201,6 @@ export default {
     async asyncGetEntityList() {
       let { status, element } = await productEntityList();
       if (status == 1) {
-        // element.forEach(async (e) => {
-        //   let res = await productEntityList({ id: e.id, name: "" });
-        //   if (res.status == 1) {
-        //     e.data = res.element.map((c) => ({
-        //       value: c.id,
-        //       label: c.name,
-        //     }));
-        //     // e.option = res.element.map((c) => ({
-        //     //   value: c.id,
-        //     //   label: c.name,
-        //     // }));
-        //     e.option = [];
-        //     e.search = false;
-        //   }
-        // });
-        console.log(element, "element");
         this.entityList = element;
       }
     },
@@ -241,6 +229,7 @@ export default {
       this.$emit("hideDialog");
     },
     submitForm(formName) {
+      console.log(this.form, "form");
       this.$refs[formName].validate(async (valid) => {
         if (valid) {
           this.loading = true;
@@ -255,6 +244,7 @@ export default {
             entity,
           };
           console.log(params);
+          return;
           let { msg, status } = await productApplyAudit(params);
           if (status == 1) {
             this.$message({
@@ -284,7 +274,7 @@ export default {
 .work-submit {
   .shiti {
     display: flex;
-    >.label {
+    > .label {
       padding-top: 10px;
       width: 90px;
       padding-right: 12px;
