@@ -209,14 +209,11 @@ import {
   againExportProduct,
 } from "@api/workManager";
 import videoPreview from "@component/videoPreview";
-import submitDialog from "./submitDialog";
+// import submitDialog from "./submitDialog";
 import _ from "lodash";
 export default {
   components: {
     submitDialog: () => import("./submitDialog.vue"),
-    // submitDialog: () => ({
-    //   component: import("./submitDialog"),
-    // }),
     videoPreview,
   },
   data() {
@@ -358,13 +355,6 @@ export default {
         // console.log(this.selectData, "selectData");
         // console.log(this.filterResolution, "filterResolution");
         // console.log(this.filterWh_ratio, "filterWh_ratio");
-      } else {
-        if (status != "-101") {
-          this.$message({
-            type: "error",
-            message: msg,
-          });
-        }
       }
     },
     async _productGetList() {
@@ -388,13 +378,6 @@ export default {
           // 共几页
           pageCount: fsp.pageCount,
         };
-      } else {
-        if (status != "-101") {
-          this.$message({
-            type: "error",
-            message: msg,
-          });
-        }
       }
     },
     selectDelete() {
@@ -419,13 +402,6 @@ export default {
                 message: msg,
               });
               this._productGetList();
-            } else {
-              if (status != "-101") {
-                this.$message({
-                  type: "error",
-                  message: msg,
-                });
-              }
             }
           })
           .catch(() => {
@@ -460,13 +436,6 @@ export default {
           message: msg,
         });
         this._productGetList();
-      } else {
-        if (status != "-101") {
-          this.$message({
-            type: "error",
-            message: msg,
-          });
-        }
       }
     },
     onDelete(code) {
@@ -489,13 +458,6 @@ export default {
               message: msg,
             });
             this._productGetList();
-          } else {
-            if (status != "-101") {
-              this.$message({
-                type: "error",
-                message: msg,
-              });
-            }
           }
         })
         .catch(() => {

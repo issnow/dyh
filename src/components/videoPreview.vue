@@ -5,7 +5,7 @@
     @mouseover="comMouseOver"
     @mouseout="comMouseOut"
   >
-    <div class="mask" ref="mask">
+    <div class="mask" ref="mask" v-if="isVideo">
       <img src="../assets/audioPlay.png" class="play-btn" width="23" alt=""/>
     </div>
     <i class="el-icon-video-plays" ref="playbutton" style="display: none"></i>

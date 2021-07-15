@@ -1,4 +1,7 @@
 import router from '../router'
+import {
+  Message
+} from 'element-ui'
 // export const baseURL = 'http://172.18.20.78/dayunhe/backend/public'
 export const baseURL = 'http://123.60.24.237:8085'
 
@@ -48,27 +51,71 @@ instance.interceptors.response.use(function (response) {
   const {
     data
   } = response
-  // if (data.status == '-101') {
-  //   // 用户未登录
-  //   if(router.app._route.path !== '/login') {
-  //     router.push('/login')
-  //   }
-  // }
   // 对响应数据做点什么
+  console.log(response.data, 'res --success');
+  let {
+    status,
+    msg
+  } = response.data
+  if (status != 1) {
+    Message.error({
+      type: 'error',
+      message: msg,
+    })
+  }
   return response.data;
 }, function (error) {
+  let msg
   // 对响应错误做点什么
   // return Promise.reject(error);
   const res = error.response
+
   if (res) {
     switch (res.status) {
+      case 400:
+        msg = '请求错误，请检查您的网络是否可用！';
+        break;
       case 401:
-        // 无权限处理
-        // location.href = ''
+        msg = '请先登陆！';
         break;
-      default:
+      case 402:
+        msg = '登陆过期，请重新登陆！';
         break;
+      case 403:
+        msg = '拒绝访问！';
+        break;
+      case 404:
+        msg = '请求地址错误：' + err.response.config.url;
+        break;
+      case 408:
+        msg = '请求超时，请重试！';
+        break;
+      case 500:
+        msg = '服务器内部错误！';
+        break;
+      case 501:
+        msg = '服务未实现！';
+        break;
+      case 502:
+        msg = '网关错误！';
+        break;
+      case 503:
+        msg = '服务不可用！';
+        break;
+      case 504:
+        msg = '网关超时！';
+        break;
+      case 505:
+        msg = 'HTTP版本不受支持！';
+        break;
+        // default: msg = '未知错误！'; break;
     }
+  }
+  if (msg) {
+    Message.error({
+      type: 'error',
+      message: msg,
+    })
   }
 });
 

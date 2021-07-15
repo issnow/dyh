@@ -26,10 +26,6 @@ export default {
         if(status == '-101') {
           this.$router.push('/login')
         }
-        this.$message({
-          type: 'error',
-          message: msg
-        })
       }
     }
     

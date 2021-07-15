@@ -166,11 +166,6 @@
             this.scaleList = res.element.wh_ratio;
             this.sizeList = res.element.resolution;
             this.statusList = res.element.status;
-          } else {
-            this.$message({
-              type: "error",
-              message: res.msg
-            });
           }
         }).catch(error => {
           console.log(error);
@@ -246,11 +241,6 @@
               pageCount
             }
             this.tableData = res.datas
-          }else{
-            this.$message({
-              type: "error",
-              message: res.msg
-            })
           }
         }).catch(error => {
           console.log(error);

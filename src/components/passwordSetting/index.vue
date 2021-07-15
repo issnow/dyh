@@ -113,11 +113,6 @@ export default {
               message: msg,
             });
             this.onCancel()
-          }else {
-            this.$message({
-              type: 'error',
-              message: msg
-            })
           }
         } else {
           console.log("error submit!!");

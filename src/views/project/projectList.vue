@@ -238,11 +238,6 @@
               this.$refs.creatForm.resetFields();
               this.creatForm.resolution_id = 1;
               this.creatForm.wh_ratio_id = 1;
-            }else{
-              this.$message({
-                type: "error",
-                message: res.msg
-              });
             }
           }).catch(error => {
             console.log(error);
@@ -256,11 +251,6 @@
           if (res.status == 1) {
             this.scaleList = res.element.wh_ratio;
             this.sizeList = res.element.resolution;
-          } else {
-            this.$message({
-              type: "error",
-              message: res.msg
-            });
           }
         }).catch(error => {
           console.log(error);
@@ -339,11 +329,6 @@
               type: "success",
               message: res.msg
             });
-          }else{
-            this.$message({
-              type: "error",
-              message: res.msg
-            })
           }
         });
       },
@@ -391,11 +376,6 @@
               pageCount
             }
             this.tableData = res.datas
-          }else{
-            this.$message({
-              type: "error",
-              message: res.msg
-            })
           }
         }).catch(error => {
           console.log(error);
