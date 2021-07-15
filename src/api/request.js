@@ -57,7 +57,7 @@ instance.interceptors.response.use(function (response) {
     status,
     msg
   } = response.data
-  if (status == '-101') {
+  if (status != 1) {
     Message.error({
       type: 'error',
       message: msg,

@@ -178,6 +178,7 @@ import imagePreview from "@component/imagePreview";
 import pdfPreview from "@component/pdfPreview";
 import submitDialog from "../work/submitDialog.vue";
 import uploadProduct from "./uploadProduct.vue";
+import { getList, del, applyAudit } from "@api/product";
 export default {
   components: {
     videoPreview,
@@ -194,6 +195,9 @@ export default {
         title: "",
         status: "",
         type: "",
+      },
+      listParams: {
+        order: "1",
       },
       rules: {
         title: [
@@ -258,7 +262,29 @@ export default {
         return require("@/assets/" + src);
       }
     },
-    _productGetList() {},
+        async _productGetList() {
+      this.loading = true;
+      const params = {
+        ...this.form,
+        ...this.listParams,
+        pageSize: this.page.pageSize,
+        pageNo: this.page.pageNo,
+      };
+      console.log(params, "params");
+      let { status, datas, fsp, msg } = await getList(params);
+      this.loading = false;
+      if (status == 1) {
+        this.tableData = datas;
+        this.page = {
+          pageNo: fsp.pageNo,
+          pageSize: fsp.pageSize,
+          // 共几条
+          recordCount: fsp.recordCount,
+          // 共几页
+          pageCount: fsp.pageCount,
+        };
+      }
+    },
     clear() {
       this.$refs.form.resetFields();
       this._productGetList();

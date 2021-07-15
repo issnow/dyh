@@ -107,8 +107,6 @@ export default {
             // });
             document.documentElement.style.fontSize = "";
             window.removeEventListener("resize", this.onWindowResize);
-          } else {
-            this.$message({ message: msg, type: "error" });
           }
         } else {
           console.log("error submit!!");
