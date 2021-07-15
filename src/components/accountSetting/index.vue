@@ -193,11 +193,6 @@ export default {
         // if (status == 1) {
         //   this["user/SET_USER_INFO"](element);
         // }
-      } else {
-        this.$message({
-          type: "error",
-          message: msg,
-        });
       }
     },
     resetFields() {
@@ -224,11 +219,6 @@ export default {
             this["user/asyncGetUserInfo"]();
             this.$emit("hideDialog");
             ee.emit("getTableData");
-          } else {
-            this.$message({
-              type: "error",
-              message: msg,
-            });
           }
         } else {
           // console.log("error submit!!");

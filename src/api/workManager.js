@@ -26,9 +26,14 @@ export const productTagList = (params) => {
 }
 
 
-// 实体
-export const productEntityList = (params) => {
-  return axios.post('/api/product/entityList', params)
+
+// 实体列表
+export const newAllEntity = (params) => {
+  return axios.post('/api/product/allEntity', params)
+}
+// 搜索实体
+export const newSearchEntity= (params) => {
+  return axios.post('/api/product/searchEntities', params)
 }
 
 // 作品详情

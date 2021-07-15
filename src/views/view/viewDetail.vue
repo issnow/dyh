@@ -151,11 +151,6 @@ export default {
                   type: "success",
                   message: res.msg
                 });
-              }else{
-                this.$message({
-                  type: "error",
-                  message: res.msg
-                })
               }
             }).catch(error => {
               console.log(error);
@@ -186,11 +181,6 @@ export default {
 
           this.tagName = this.product.tag_names_str;
           this.entityList = this.product.entities;
-        }else{
-          this.$message({
-            type: "error",
-            message: res.msg
-          })
         }
       }).catch(error => {
         console.log(error);

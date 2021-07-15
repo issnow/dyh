@@ -62,19 +62,18 @@
             >
             </el-input>
             <span v-show="!isEdit">{{ viewInfo.title }}</span>
-            <!-- <div class="tip">上限20个字符。</div> -->
           </el-form-item>
-          <el-form-item label="标签:" prop="tag">
-            <el-select v-show="isEdit" v-model="form.tag" placeholder="请选择">
+          <el-form-item label="精神文明:" prop="tag" >
+            <el-select v-show="isEdit" v-model="form.tag" placeholder="请选择" multiple>
               <el-option
                 v-for="item in options"
-                :key="item.key"
-                :label="item.name"
-                :value="item.key"
+                :key="item"
+                :label="item"
+                :value="item"
               >
               </el-option>
             </el-select>
-            <span v-show="!isEdit">{{ viewInfo.tag_names_str }}</span>
+            <span v-show="!isEdit">{{ viewInfo.tag.join(',') }}</span>
           </el-form-item>
 
           <div class="shiti">
@@ -84,14 +83,14 @@
             <div class="right">
               <el-form-item
                 v-show="isEdit"
-                v-for="e in entityList"
-                :key="e.name"
-                :label="e.name + ':'"
-                :prop="'thing' + e.id"
+                v-for="(e,i) in entityList"
+                :key="e.f_name"
+                :label="e.f_name + ':'"
+                :prop="'thing' + i"
                 label-width="60px"
               >
                 <el-select
-                  v-model="form['thing' + e.id]"
+                  v-model="form['thing' + i]"
                   placeholder="请选择"
                   filterable
                   multiple
@@ -102,7 +101,6 @@
                       remoteMethod(query, e);
                     }
                   "
-                  @focus="onFocus(e)"
                   @visible-change="
                     (visi) => {
                       visibleChange(visi, e);
@@ -121,12 +119,12 @@
               </el-form-item>
               <el-form-item
                 v-show="!isEdit"
-                v-for="(e, i) in viewInfo.entities"
+                v-for="(e, i) in viewInfo.entity"
                 :key="i"
-                :label="e.ftext"
+                :label="e.f_name"
                 label-width="60px"
               >
-                {{ e.text.reduce((p, n) => p + "," + n) }}
+                {{ e.s_name.reduce((p, n) => p + "," + n) }}
               </el-form-item>
             </div>
           </div>
@@ -142,7 +140,6 @@
               show-word-limit
             >
             </el-input>
-            <!-- <div class="tip">上限50个字符。</div> -->
             <span v-show="!isEdit">{{ viewInfo.description }}</span>
           </el-form-item>
         </el-form>
@@ -180,24 +177,20 @@
 <script>
 import {
   productDetail,
-  productEntityList,
   productTagList,
   productEdit,
+  newAllEntity,
+  newSearchEntity,
 } from "@api/workManager";
 import { checkLogin } from "@api/user";
 import _ from "lodash";
 import videoPlay from "./videoPlay";
 import bar from "./bar";
-import Vue from "vue";
 
 export default {
   components: {
     videoPlay,
     bar,
-  },
-  created() {
-    this.asyncGetEntityList();
-    this._productTagList();
   },
   data() {
     let tempRule = {},
@@ -214,7 +207,7 @@ export default {
       form: {
         description: "",
         title: "",
-        tag: "",
+        tag: [],
         // thing: "",
         // thing2: "",
         ...tempForm,
@@ -222,9 +215,9 @@ export default {
       // 查看
       viewInfo: {
         title: "",
-        tag_names_str: "",
+        tag: [],
         description: "",
-        entities: [],
+        entity: [],
       },
       rules:
         this.$route.params.isEdit === "1"
@@ -303,12 +296,14 @@ export default {
   },
   mounted() {
     this.init();
+    this.asyncGetEntityList();
+    this._productTagList();
   },
   methods: {
     onEdit() {
       this.isEdit = true;
       let tempRule = {};
-      for (let i = 1; i < 20; i++) {
+      for (let i = 0; i < 20; i++) {
         tempRule["thing" + i] = {
           required: true,
           message: "请输入",
@@ -334,24 +329,17 @@ export default {
         ],
         ...tempRule,
       };
-      this.viewInfo.entities.forEach(async (c) => {
-        let res = await productEntityList({ id: c.fid, name: "" });
-        this.form["thing" + c.fid] = c.sid;
-        if (res.status == 1) {
-          this.arrList = res.element.map((d) => ({
-            value: d.id,
-            label: d.name,
-          }));
-        } else {
-          if (res.status != "-101") {
-            this.$message({
-              type: "error",
-              message: res.msg,
-            });
-          }
-        }
-        this.$refs.form.validate();
-      });
+      // this.viewInfo.entities.forEach(async (c) => {
+      //   let res = await productEntityList({ id: c.fid, name: "" });
+      //   this.form["thing" + c.fid] = c.sid;
+      //   if (res.status == 1) {
+      //     this.arrList = res.element.map((d) => ({
+      //       value: d.id,
+      //       label: d.name,
+      //     }));
+      //   }
+      //   this.$refs.form.validate();
+      // });
     },
     visibleChange(visi, e) {
       if (!visi) this.$refs.form.validateField(`thing${e.id}`);
@@ -388,39 +376,18 @@ export default {
           value: c.id,
           label: c.name,
         }));
-      } else {
-        if (res.status != "-101") {
-          this.$message({
-            type: "error",
-            message: res.msg,
-          });
-        }
       }
     },
     async asyncGetEntityList() {
-      let { status, element, msg } = await productEntityList();
+      let { status, element, msg } = await newAllEntity();
       if (status == 1) {
         this.entityList = element;
-      } else {
-        if (status != "-101") {
-          this.$message({
-            type: "error",
-            message: msg,
-          });
-        }
       }
     },
     async _productTagList() {
       let { status, element, msg } = await productTagList();
       if (status == 1) {
         this.options = element;
-      } else {
-        if (status != "-101") {
-          this.$message({
-            type: "error",
-            message: msg,
-          });
-        }
       }
     },
     formatList(obj, duration) {
@@ -471,11 +438,10 @@ export default {
       if (status == 1) {
         const {
           description,
-          entities,
-          tag_ids,
+          entity,
           url,
           title,
-          tag_names_str,
+          tag,
           resolution,
           duration,
           wh_ratio,
@@ -493,14 +459,14 @@ export default {
         }
         this.form = {
           ...this.form,
-          tag: tag_ids[0] / 1,
+          tag,
           description,
           title,
         };
         this.viewInfo = {
           title,
-          tag_names_str,
-          entities,
+          tag,
+          entity,
           description,
           resolution,
           duration,
@@ -509,26 +475,18 @@ export default {
           video_format,
         };
         if (this.isEdit) {
-          entities.forEach(async (c) => {
-            let res = await productEntityList({ id: c.fid, name: "" });
-            this.form["thing" + c.fid] = c.sid;
-            if (res.status == 1) {
-              this.arrList = res.element.map((d) => ({
-                value: d.id,
-                label: d.name,
-              }));
-            }
+          entity.forEach(async (c) => {
+            // let res = await productEntityList({ id: c.fid, name: "" });
+            // this.form["thing" + c.fid] = c.sid;
+            // if (res.status == 1) {
+            //   this.arrList = res.element.map((d) => ({
+            //     value: d.id,
+            //     label: d.name,
+            //   }));
+            // }
           });
         }
         this.url = url;
-      } else {
-        // this.$router.go(-1);
-        if (status != "-101") {
-          this.$message({
-            type: "error",
-            message: msg,
-          });
-        }
       }
     },
     // getImg(src) {
@@ -564,13 +522,6 @@ export default {
                   type: "success",
                   message: msg,
                 });
-              } else {
-                if (status != "-101") {
-                  this.$message({
-                    type: "error",
-                    message: msg,
-                  });
-                }
               }
             })
             .catch(() => {

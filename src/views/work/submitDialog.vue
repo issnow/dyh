@@ -29,13 +29,13 @@
         >
         </el-input>
       </el-form-item>
-      <el-form-item label="标签:" prop="label">
-        <el-select v-model="form.label" placeholder="请选择">
+      <el-form-item label="精神文明:" prop="label">
+        <el-select v-model="form.label" placeholder="请选择" multiple>
           <el-option
             v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
+            :key="item"
+            :label="item"
+            :value="item"
           >
           </el-option>
         </el-select>
@@ -44,14 +44,14 @@
         <div class="label">实体:</div>
         <div class="right">
           <el-form-item
-            v-for="e in entityList"
-            :key="e.id"
-            :label="e.name + ':'"
-            :prop="'thing' + e.id"
+            v-for="(e, i) in entityList"
+            :key="i"
+            :label="e.f_name + ':'"
+            :prop="'thing' + i"
             label-width="60px"
           >
             <el-select
-              v-model="form['thing' + e.id]"
+              v-model="form['thing' +i]"
               placeholder="请选择"
               filterable
               multiple
@@ -61,19 +61,18 @@
                   remoteMethod(query, e);
                 }
               "
-              @focus="onFocus(e)"
               @visible-change="
                 (visi) => {
-                  visibleChange(visi, e);
+                  visibleChange(visi, i);
                 }
               "
               :loading="selectLoading"
             >
               <el-option
-                v-for="item in arrList"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
+                v-for="item in e.s_name"
+                :key="item"
+                :label="item"
+                :value="item"
               >
               </el-option>
             </el-select>
@@ -81,23 +80,6 @@
         </div>
       </div>
 
-      <!-- <el-form-item label="人物" prop="thing1">
-        <el-select
-          v-model="form.thing1"
-          placeholder="请选择"
-          filterable
-          remote
-          :remote-method="remoteMethod1"
-        >
-          <el-option
-            v-for="item in options2"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          >
-          </el-option>
-        </el-select>
-      </el-form-item> -->
     </el-form>
 
     <div slot="footer" class="dialog-footer">
@@ -113,15 +95,16 @@
 import _ from "lodash";
 import {
   productTagList,
-  productEntityList,
   productApplyAudit,
+  newAllEntity,
+  newSearchEntity
 } from "@api/workManager";
 export default {
   props: ["visible", "code", "title"],
   data() {
     let tempRule = {},
       tempForm = {};
-    for (let i = 1; i < 20; i++) {
+    for (let i = 0; i < 20; i++) {
       tempRule["thing" + i] = {
         required: true,
         message: "请输入",
@@ -150,56 +133,27 @@ export default {
       // 标签
       options: [],
       entityList: [],
-      // 搜出来的实体列表
-      arrList: [],
       selectLoading: false,
-      // 一级实体select框的id
-      selectID: "",
     };
   },
   mounted() {
     this._productTagList();
-  },
-  created() {
     this.asyncGetEntityList();
   },
   methods: {
-    visibleChange(visi, e) {
-      console.log(visi, e, "visit");
-      if(!visi) this.$refs.form.validateField(`thing${e.id}`)
-      if (this.selectID == e.id) {
-        return;
-      }
-      if (!visi) {
-        this.arrList = [];
-      }
+    visibleChange(visi, i) {
+      if(!visi) this.$refs.form.validateField(`thing${i}`)
     },
     async onFocus(e, query = "") {
-      // console.log('onFocus', e.id, query, this.selectID)
-
-      // selectid是已经选择的一级实体框id,如果当前的selectid和上一次的e.id一样
-      // 那么就直接使用缓存的arrList,解决每次点击option之后,执行visibleChange方法会置空arrList
-      if (
-        this.selectID == e.id &&
-        query.length == 0 &&
-        this.arrList.length !== 0
-      ) {
-        return;
-      }
-      this.selectID = e.id;
-
       this.selectLoading = true;
-      let res = await productEntityList({ id: e.id, name: query });
+      let res = await newSearchEntity({ f_name: e.f_name, s_name: query });
       this.selectLoading = false;
       if (res.status == 1) {
-        this.arrList = res.element.map((c) => ({
-          value: c.id,
-          label: c.name,
-        }));
+        e.s_name = res.element
       }
     },
     async asyncGetEntityList() {
-      let { status, element } = await productEntityList();
+      let { status, element } = await newAllEntity();
       if (status == 1) {
         this.entityList = element;
       }
@@ -207,18 +161,12 @@ export default {
     remoteMethod: _.debounce(function (query, e) {
       if (query !== "") {
         this.onFocus(e, query);
-      } else {
-        this.selectID = "";
-        this.arrList = [];
       }
     }, 600),
     async _productTagList() {
       let { status, element } = await productTagList();
       if (status == 1) {
-        this.options = element.map((e) => ({
-          value: e.key,
-          label: e.name,
-        }));
+        this.options = element
       }
     },
     resetFields() {
@@ -243,8 +191,8 @@ export default {
             tag: [this.form.label],
             entity,
           };
-          console.log(params);
-          return;
+          // console.log(params);
+          // return;
           let { msg, status } = await productApplyAudit(params);
           if (status == 1) {
             this.$message({
@@ -253,11 +201,6 @@ export default {
             });
             this.beforeClose();
             this.$emit("_productGetList");
-          } else {
-            this.$message({
-              type: "error",
-              message: msg,
-            });
           }
           this.loading = false;
         } else {
