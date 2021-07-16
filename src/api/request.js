@@ -2,8 +2,8 @@ import router from '../router'
 import {
   Message
 } from 'element-ui'
-// export const baseURL = 'http://172.18.20.78/dayunhe/backend/public'
-export const baseURL = process.env.NODE_ENV == 'development' ? 'http://123.60.24.237:8085' : 'https://api-dyh.videoyi.com'
+// export const baseURL = process.env.NODE_ENV == 'development' ? 'http://123.60.24.237:8085' : 'https://api-dyh.videoyi.com'
+export const baseURL = 'https://api-dyh.videoyi.com'
 
 const axios = require('axios')
 let instance = axios.create({
