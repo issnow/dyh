@@ -103,16 +103,16 @@
                   "
                   @visible-change="
                     (visi) => {
-                      visibleChange(visi, e);
+                      visibleChange(visi, i);
                     }
                   "
                   :loading="loading"
                 >
                   <el-option
-                    v-for="item in arrList"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
+                    v-for="item in e.s_name"
+                    :key="item"
+                    :label="item"
+                    :value="item"
                   >
                   </el-option>
                 </el-select>
@@ -195,7 +195,7 @@ export default {
   data() {
     let tempRule = {},
       tempForm = {};
-    for (let i = 1; i < 20; i++) {
+    for (let i = 0; i < 20; i++) {
       tempRule["thing" + i] = {
         required: true,
         message: "请输入",
@@ -250,8 +250,6 @@ export default {
       data: {},
       isEdit: this.$route.params.isEdit === "1",
       entityList: [],
-      // 搜出来的实体列表
-      arrList: [],
       url: "",
       // task审核
       task: {
@@ -292,6 +290,7 @@ export default {
           ],
         },
       ],
+      entityMap: null
     };
   },
   mounted() {
@@ -329,59 +328,38 @@ export default {
         ],
         ...tempRule,
       };
-      // this.viewInfo.entities.forEach(async (c) => {
-      //   let res = await productEntityList({ id: c.fid, name: "" });
-      //   this.form["thing" + c.fid] = c.sid;
-      //   if (res.status == 1) {
-      //     this.arrList = res.element.map((d) => ({
-      //       value: d.id,
-      //       label: d.name,
-      //     }));
-      //   }
-      //   this.$refs.form.validate();
-      // });
+      let obj = {}
+      this.viewInfo.entity.forEach(e=>{
+        obj[this.entityMap.get(e.f_name)] = e.s_name
+      })
+      this.form = {...this.form, ...obj}
     },
     visibleChange(visi, e) {
-      if (!visi) this.$refs.form.validateField(`thing${e.id}`);
-      if (this.selectID == e.id) {
-        return;
-      }
-      if (!visi) {
-        this.arrList = [];
-      }
+      if (!visi) this.$refs.form.validateField(`thing${e}`);
     },
     remoteMethod: _.debounce(function (query, e) {
       if (query !== "") {
         this.onFocus(e, query);
-      } else {
-        this.selectID = "";
-        this.arrList = [];
       }
     }, 600),
     async onFocus(e, query = "") {
-      if (
-        this.selectID == e.id &&
-        query.length == 0 &&
-        this.arrList.length !== 0
-      ) {
-        return;
-      }
-      this.selectID = e.id;
-
       this.loading = true;
-      let res = await productEntityList({ id: e.id, name: query });
+      let res = await newSearchEntity({ f_name: e.f_name, s_name: query });
       this.loading = false;
       if (res.status == 1) {
-        this.arrList = res.element.map((c) => ({
-          value: c.id,
-          label: c.name,
-        }));
+        e.s_name = res.element
       }
     },
     async asyncGetEntityList() {
       let { status, element, msg } = await newAllEntity();
       if (status == 1) {
+        let arr = []
         this.entityList = element;
+        element.forEach((e, i)=>{
+          arr.push([e.f_name, 'thing' + i])
+        })
+
+        this.entityMap = new Map(arr)
       }
     },
     async _productTagList() {

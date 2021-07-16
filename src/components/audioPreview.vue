@@ -28,22 +28,22 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.audio-preview {
-  ::v-deep .el-dialog.is-fullscreen {
-    background-color: rgba(0,0,0,.5);
-    .el-dialog__close {
-      font-size: 50px;
-      color: #fff;
-    }
-    .el-dialog__body {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: calc(100% - 30px);
-      .audio-play {
-        width: 30%;
-      }
-    }
-  }
-}
+// .audio-preview {
+//   ::v-deep .el-dialog.is-fullscreen {
+//     background-color: rgba(0,0,0,.5);
+//     .el-dialog__close {
+//       font-size: 50px;
+//       color: #fff;
+//     }
+//     .el-dialog__body {
+//       display: flex;
+//       justify-content: center;
+//       align-items: center;
+//       height: calc(100% - 30px);
+//       .audio-play {
+//         width: 30%;
+//       }
+//     }
+//   }
+// }
 </style>

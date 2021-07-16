@@ -14,12 +14,23 @@ export const routes = [{
     // hidden: true
   },
   {
+    // 作品管理详情页
     path: '/workDetail/:code/:isEdit',
     component: Layout,
     children: [{
       path: '',
       component: () => import('@view/work/detail'),
       name: 'workDetail'
+    }]
+  },
+  {
+    // 成品管理详情页
+    path: '/productDetail/:code/:isEdit',
+    component: Layout,
+    children: [{
+      path: '',
+      component: () => import('@view/product/detail'),
+      name: 'productDetail'
     }]
   },
   {

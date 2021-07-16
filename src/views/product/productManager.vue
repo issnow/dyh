@@ -55,26 +55,34 @@
     >
       <el-table-column type="selection" width="55"> </el-table-column>
       <el-table-column prop="title" label="成品名称"></el-table-column>
-      <el-table-column prop="type" label="类型" width="120"></el-table-column>
+      <el-table-column
+        prop="media_type_title"
+        label="类型"
+        width="120"
+      ></el-table-column>
       <el-table-column label="预览" width="160">
         <template slot-scope="scope">
           <videoPreview
-            v-if="scope.row.type == 1"
+            v-if="scope.row.media_type == 1"
             :isVideo="true"
-            :source="getImg('product/demo2.mp4')"
-            :bgImage="getImg('product/7.jpg')"
+            :source="scope.row.url"
+            :bgImage="scope.row.cover_url"
           />
           <videoPreview
-            v-if="scope.row.type == 2"
+            v-if="scope.row.media_type == 2"
             :isAudio="true"
-            source="http://mp.333ttt.com/mp3music/28458239.mp3"
+            :source="scope.row.url"
           />
           <imagePreview
-            v-if="scope.row.type == 3"
-            :src="getImg('product/girl01.jpeg')"
-            :list="[getImg('product/girl01.jpeg')]"
+            v-if="scope.row.media_type == 3"
+            :src="scope.row.url"
+            :list="[scope.row.url]"
           />
-          <pdfPreview v-if="scope.row.type == 4" />
+          <el-button
+            v-if="scope.row.media_type == 4"
+            @click="onpdfPre(scope.row.url)"
+            >预览pdf</el-button
+          >
         </template>
       </el-table-column>
       <el-table-column
@@ -83,16 +91,14 @@
         width="120"
         sortable="custom"
       ></el-table-column>
-      <el-table-column label="状态" prop="status" width="130"></el-table-column>
-
-      <!-- <el-table-column label="状态" prop="status_title" width="130">
+      <el-table-column label="状态" prop="status" width="130">
         <template slot="header" scope="scope">
           <el-select
             class="select-color"
             v-model="form.status"
             placeholder="请选择"
             clearable
-            @change="filterSelect($event, 'status')"
+            @change="filterSelect"
           >
             <el-option
               v-for="item in selectData"
@@ -104,7 +110,7 @@
         </template>
         <template slot-scope="scope">
           <el-tooltip
-            v-if="scope.row.status == 6"
+            v-if="scope.row.status == 7"
             class="item"
             effect="dark"
             :content="scope.row.audit_note"
@@ -114,7 +120,7 @@
           </el-tooltip>
           <span v-else>{{ scope.row.status_title }}</span>
         </template>
-      </el-table-column> -->
+      </el-table-column>
       <el-table-column
         prop="created_at"
         label="创作时间"
@@ -123,21 +129,31 @@
       ></el-table-column>
       <el-table-column fixed="right" label="操作" width="300">
         <template slot-scope="scope">
-          <!-- scope.row.status -->
           <el-button
+            v-if="[12, 13, 3, 7, 8].includes(scope.row.status)"
             type="text"
             class="del-red"
             @click="onDelete(scope.row.code)"
             >删除</el-button
           >
-          <!-- v-if="[2].includes(scope.row.status)" -->
-          <el-button type="text" @click="onTranscoding(scope.row.id)"
+          <el-button
+            v-if="[13].includes(scope.row.status)"
+            type="text"
+            @click="onTranscoding(scope.row.code)"
             >重新转码</el-button
           >
-          <el-button type="text" @click="onReview(scope.row)"
+          <el-button
+            v-if="[3].includes(scope.row.status)"
+            type="text"
+            @click="onReview(scope.row)"
             >提交审核</el-button
           >
-          <el-button type="text" @click="onWatch(scope.row.id)">查看</el-button>
+          <el-button
+            v-if="[3, 4, 7, 8].includes(scope.row.status)"
+            type="text"
+            @click="onWatch(scope.row.code)"
+            >查看</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
@@ -168,6 +184,12 @@
       :visible="uploadProducVisible"
       @hideDialog="uploadProducVisible = false"
     />
+    
+    <pdfPreview
+      :src="pdfsrc"
+      :visible="pdfVisible"
+      @handleClose="pdfVisible = false"
+    />
   </div>
 </template>
 
@@ -178,7 +200,8 @@ import imagePreview from "@component/imagePreview";
 import pdfPreview from "@component/pdfPreview";
 import submitDialog from "../work/submitDialog.vue";
 import uploadProduct from "./uploadProduct.vue";
-import { getList, del, applyAudit } from "@api/product";
+import { getList, del, applyAudit, reTranscode } from "@api/product";
+import { productChoicesList } from "@api/workManager";
 export default {
   components: {
     videoPreview,
@@ -190,11 +213,12 @@ export default {
   },
   data() {
     return {
+      pdfVisible: false,
+      pdfsrc: "",
       loading: false,
       form: {
         title: "",
         status: "",
-        type: "",
       },
       listParams: {
         order: "1",
@@ -206,41 +230,7 @@ export default {
         status: [{ required: true, message: "请选择状态", trigger: "change" }],
       },
       multipleSelection: [],
-      tableData: [
-        {
-          code: 1,
-          title: "1",
-          // 1视频,2音频,3图片,4pdf
-          type: 1,
-          url: "",
-          cover_url: "",
-          video_size: 100,
-          status: 1,
-          create_at: 2021,
-        },
-        {
-          code: 1,
-          title: "1",
-          // 1视频,2音频,3图片,4pdf
-          type: 2,
-          url: "",
-          cover_url: "",
-          video_size: 100,
-          status: 1,
-          create_at: 2021,
-        },
-        {
-          code: 1,
-          title: "1",
-          // 1视频,2音频,3图片,4pdf
-          type: 3,
-          url: "",
-          cover_url: "",
-          video_size: 100,
-          status: 1,
-          create_at: 2021,
-        },
-      ],
+      tableData: [],
       page: {
         pageNo: 1,
         pageSize: 10,
@@ -254,15 +244,45 @@ export default {
       title: "",
       submitDialogVisible: false,
       uploadProducVisible: false,
+      selectData: [],
     };
   },
+  watch: {
+    listParams: {
+      handler(value) {
+        this._productGetList();
+      },
+      deep: true,
+    },
+  },
+  mounted() {
+    this._productGetList();
+    this._productChoicesList();
+  },
   methods: {
+    async _productChoicesList() {
+      const { status, element, msg } = await productChoicesList({ type: 1 });
+      if (status == 1) {
+        this.selectData = element.status;
+      }
+    },
+    // 筛选列表
+    filterSelect(value) {
+      this.form.status = value;
+      this.page.pageNo = 1;
+      this.page.pageSize = 10;
+      this._productGetList();
+    },
+    onpdfPre(url) {
+      this.pdfsrc = url;
+      this.pdfVisible = true;
+    },
     getImg(src) {
       if (src) {
         return require("@/assets/" + src);
       }
     },
-        async _productGetList() {
+    async _productGetList() {
       this.loading = true;
       const params = {
         ...this.form,
@@ -270,7 +290,7 @@ export default {
         pageSize: this.page.pageSize,
         pageNo: this.page.pageNo,
       };
-      console.log(params, "params");
+      // console.log(params, "params");
       let { status, datas, fsp, msg } = await getList(params);
       this.loading = false;
       if (status == 1) {
@@ -307,20 +327,20 @@ export default {
           type: "warning",
         })
           .then(async () => {
-            // let len = this.tableData.length;
-            // let { status, msg } = await productDel({
-            //   code: this.multipleSelection.map((e) => e.code),
-            // });
-            // if (status == 1) {
-            //   if (len == 1 && this.page.pageNo > 1) {
-            //     this.page.pageNo--;
-            //   }
-            //   this.$message({
-            //     type: "success",
-            //     message: msg,
-            //   });
-            //   this._productGetList();
-            // }
+            let len = this.tableData.length;
+            let { status, msg } = await del({
+              code: this.multipleSelection.map((e) => e.code),
+            });
+            if (status == 1) {
+              if (len == 1 && this.page.pageNo > 1) {
+                this.page.pageNo--;
+              }
+              this.$message({
+                type: "success",
+                message: msg,
+              });
+              this._productGetList();
+            }
           })
           .catch(() => {
             this.$message({
@@ -338,7 +358,30 @@ export default {
     handleSelectionChange(val) {
       this.multipleSelection = val;
     },
-    sortChange() {},
+    sortChange({ order, prop }) {
+      console.log(arguments, "arguments");
+      if (order == "ascending") {
+        switch (prop) {
+          case "video_size":
+            this.listParams.order = 12;
+            break;
+          case "created_at":
+            this.listParams.order = 2;
+            break;
+        }
+        // 升序
+      } else {
+        switch (prop) {
+          case "video_size":
+            this.listParams.order = 11;
+            break;
+          case "created_at":
+            this.listParams.order = 1;
+            break;
+        }
+        // 降序
+      }
+    },
     onDelete(code) {
       this.$confirm("请确认是否删除该成品?", "删除确认", {
         confirmButtonText: "确定",
@@ -346,20 +389,20 @@ export default {
         type: "warning",
       })
         .then(async () => {
-          // let len = this.tableData.length;
-          // let { status, msg } = await productDel({
-          //   code: [code],
-          // });
-          // if (status == 1) {
-          //   if (len == 1 && this.page.pageNo > 1) {
-          //     this.page.pageNo--;
-          //   }
-          //   this.$message({
-          //     type: "success",
-          //     message: msg,
-          //   });
-          //   this._productGetList();
-          // }
+          let len = this.tableData.length;
+          let { status, msg } = await del({
+            code: [code],
+          });
+          if (status == 1) {
+            if (len == 1 && this.page.pageNo > 1) {
+              this.page.pageNo--;
+            }
+            this.$message({
+              type: "success",
+              message: msg,
+            });
+            this._productGetList();
+          }
         })
         .catch(() => {
           this.$message({
@@ -368,13 +411,26 @@ export default {
           });
         });
     },
-    onTranscoding() {},
+    async onTranscoding(code) {
+      let p = {
+        code,
+      };
+      let { status, msg } = await reTranscode(p);
+      if (status == 1) {
+        this.$message({
+          type: "success",
+          message: msg,
+        });
+      }
+    },
     onReview({ code, title }) {
       this.code = code;
       this.submitDialogVisible = true;
       this.title = title;
     },
-    onWatch() {},
+    onWatch(code) {
+      this.$router.push({ path: `/productDetail/${code}/0` });
+    },
     handleSizeChange(val) {
       this.page = { ...this.page, pageSize: val };
       this._productGetList();

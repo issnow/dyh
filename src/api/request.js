@@ -3,7 +3,7 @@ import {
   Message
 } from 'element-ui'
 // export const baseURL = 'http://172.18.20.78/dayunhe/backend/public'
-export const baseURL = 'http://123.60.24.237:8085'
+export const baseURL = process.env.NODE_ENV == 'development' ? 'http://123.60.24.237:8085' : 'https://api-dyh.videoyi.com'
 
 const axios = require('axios')
 let instance = axios.create({
@@ -52,7 +52,7 @@ instance.interceptors.response.use(function (response) {
     data
   } = response
   // 对响应数据做点什么
-  console.log(response.data, 'res --success');
+  // console.log(response.data, 'res --success');
   let {
     status,
     msg

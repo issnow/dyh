@@ -6,7 +6,6 @@
       :preview-src-list="list"
     >
     </el-image>
-    <a :href="src" download>下载</a>
   </div>
 </template>
 

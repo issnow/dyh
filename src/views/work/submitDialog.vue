@@ -14,9 +14,8 @@
       label-width="90px"
       class="work-submit-form"
     >
-      <el-form-item label="名称:">
-        {{ title }}
-        <div>视频名称不可修改。</div>
+      <el-form-item label="名称:" prop="title">
+        <el-input v-model.trim="form.title" ></el-input>
       </el-form-item>
       <el-form-item label="描述:" prop="desc">
         <el-input
@@ -114,12 +113,16 @@ export default {
     }
     return {
       form: {
+        title: '',
         desc: "",
         label: "",
         ...tempForm,
       },
       loading: false,
       rules: {
+        title: [
+          { required: true, message: "请输入", trigger: "blur" },
+        ],
         desc: [
           { required: true, message: "请输入", trigger: "blur" },
           // { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" },
@@ -177,11 +180,10 @@ export default {
       this.$emit("hideDialog");
     },
     submitForm(formName) {
-      console.log(this.form, "form");
       this.$refs[formName].validate(async (valid) => {
         if (valid) {
+          console.log(this.form, 'form')
           this.loading = true;
-          console.log(this.form, "form");
           const entity = Object.values(this.form)
             .filter((e) => Array.isArray(e))
             .flat();
@@ -191,8 +193,8 @@ export default {
             tag: [this.form.label],
             entity,
           };
-          // console.log(params);
-          // return;
+          console.log(params);
+          return;
           let { msg, status } = await productApplyAudit(params);
           if (status == 1) {
             this.$message({
