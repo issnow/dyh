@@ -28,12 +28,6 @@ instance.interceptors.request.use(function (config) {
     config.url = config.url.replace('/api', '')
     config.baseURL = baseURL
   }
-  // if(config.method === 'post') {
-  //   config.headers = {
-  //     ...config.headers,
-  //     'Content-Type': 'application/x-www-form-urlencoded'
-  //   }
-  // }
   if (sessionStorage.getItem('token')) {
     config.headers = {
       ...config.headers,
