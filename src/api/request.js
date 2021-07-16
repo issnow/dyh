@@ -26,7 +26,7 @@ let instance = axios.create({
 instance.interceptors.request.use(function (config) {
   if (process.env.NODE_ENV == 'production') {
     config.url = config.url.replace('/api', '')
-    config.baseURL = baseURL
+    config.baseURL = 'https://api-dyh.videoyi.com'
   }
   if (sessionStorage.getItem('token')) {
     config.headers = {
