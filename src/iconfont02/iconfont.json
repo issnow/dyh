@@ -1,0 +1,156 @@
+{
+  "id": "2553287",
+  "name": "moviebook",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "1242220",
+      "name": "close",
+      "font_class": "close",
+      "unicode": "e62b",
+      "unicode_decimal": 58923
+    },
+    {
+      "icon_id": "1443587",
+      "name": "close",
+      "font_class": "close1",
+      "unicode": "e65d",
+      "unicode_decimal": 58973
+    },
+    {
+      "icon_id": "4767009",
+      "name": "vertical right",
+      "font_class": "verticalright",
+      "unicode": "e7ea",
+      "unicode_decimal": 59370
+    },
+    {
+      "icon_id": "4767010",
+      "name": "vertical left",
+      "font_class": "verticalleft",
+      "unicode": "e7eb",
+      "unicode_decimal": 59371
+    },
+    {
+      "icon_id": "4767050",
+      "name": "indent",
+      "font_class": "indent",
+      "unicode": "e7f3",
+      "unicode_decimal": 59379
+    },
+    {
+      "icon_id": "4767051",
+      "name": "outdent",
+      "font_class": "outdent",
+      "unicode": "e7f4",
+      "unicode_decimal": 59380
+    },
+    {
+      "icon_id": "21933794",
+      "name": "login-text",
+      "font_class": "yingpuzhichi",
+      "unicode": "e606",
+      "unicode_decimal": 58886
+    },
+    {
+      "icon_id": "21933776",
+      "name": "login-logo",
+      "font_class": "denglulogo",
+      "unicode": "e604",
+      "unicode_decimal": 58884
+    },
+    {
+      "icon_id": "21933749",
+      "name": "daxunhe-title-text",
+      "font_class": "biaotilogowenzi",
+      "unicode": "e603",
+      "unicode_decimal": 58883
+    },
+    {
+      "icon_id": "21933614",
+      "name": "daxunhe-title-icon",
+      "font_class": "biaotilogotuxing",
+      "unicode": "e602",
+      "unicode_decimal": 58882
+    },
+    {
+      "icon_id": "5875502",
+      "name": "name",
+      "font_class": "name",
+      "unicode": "e625",
+      "unicode_decimal": 58917
+    },
+    {
+      "icon_id": "10043883",
+      "name": "Organization",
+      "font_class": "Organization",
+      "unicode": "e62a",
+      "unicode_decimal": 58922
+    },
+    {
+      "icon_id": "10793033",
+      "name": "role",
+      "font_class": "role",
+      "unicode": "e61c",
+      "unicode_decimal": 58908
+    },
+    {
+      "icon_id": "11810456",
+      "name": "用户ID",
+      "font_class": "yonghuID",
+      "unicode": "e680",
+      "unicode_decimal": 59008
+    },
+    {
+      "icon_id": "14629225",
+      "name": "phone-number",
+      "font_class": "phone-number",
+      "unicode": "e620",
+      "unicode_decimal": 58912
+    },
+    {
+      "icon_id": "20279234",
+      "name": "email",
+      "font_class": "email",
+      "unicode": "e600",
+      "unicode_decimal": 58880
+    },
+    {
+      "icon_id": "4503727",
+      "name": "user",
+      "font_class": "user",
+      "unicode": "e6e1",
+      "unicode_decimal": 59105
+    },
+    {
+      "icon_id": "4194150",
+      "name": "用户管理",
+      "font_class": "yonghuguanli",
+      "unicode": "e605",
+      "unicode_decimal": 58885
+    },
+    {
+      "icon_id": "6584908",
+      "name": "审核",
+      "font_class": "shenhe",
+      "unicode": "e6a0",
+      "unicode_decimal": 59040
+    },
+    {
+      "icon_id": "7171160",
+      "name": "项目管理",
+      "font_class": "xiangmu",
+      "unicode": "e628",
+      "unicode_decimal": 58920
+    },
+    {
+      "icon_id": "19178304",
+      "name": "作品",
+      "font_class": "zuopin",
+      "unicode": "e601",
+      "unicode_decimal": 58881
+    }
+  ]
+}

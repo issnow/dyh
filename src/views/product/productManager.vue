@@ -184,7 +184,7 @@
       :visible="uploadProducVisible"
       @hideDialog="uploadProducVisible = false"
     />
-    
+
     <pdfPreview
       :src="pdfsrc"
       :visible="pdfVisible"
@@ -276,11 +276,6 @@ export default {
     onpdfPre(url) {
       this.pdfsrc = url;
       this.pdfVisible = true;
-    },
-    getImg(src) {
-      if (src) {
-        return require("@/assets/" + src);
-      }
     },
     async _productGetList() {
       this.loading = true;
