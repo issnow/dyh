@@ -106,7 +106,7 @@ export default {
     setCurrentRoute() {
       let path = this.$route.path
       switch (path) {
-        // case '/workDetail':
+        // case '/productDetail':
         //   this.activeIndex = '/workManager'
         //   return;
         case '/viewDetail':
@@ -115,6 +115,10 @@ export default {
       }
       if(path.includes('/workDetail')) {
         this.activeIndex = '/workManager'
+        return
+      }
+      if(path.includes('/productDetail')) {
+        this.activeIndex = '/productManager'
         return
       }
       this.activeIndex = this.$route.path;

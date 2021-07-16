@@ -128,7 +128,7 @@
         </template>
         <template slot-scope="scope">
           <el-tooltip
-            v-if="scope.row.status == 6"
+            v-if="scope.row.status == 7"
             class="item"
             effect="dark"
             :content="scope.row.audit_note"
@@ -281,7 +281,6 @@ export default {
   watch: {
     listParams: {
       handler(value) {
-        console.log(value, "value");
         this._productGetList();
       },
       deep: true,

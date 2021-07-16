@@ -52,7 +52,7 @@ instance.interceptors.response.use(function (response) {
     data
   } = response
   // 对响应数据做点什么
-  console.log(response.data, 'res --success');
+  // console.log(response.data, 'res --success');
   let {
     status,
     msg

@@ -11,7 +11,7 @@ import './css/index.scss'
 import 'element-ui/lib/theme-chalk/index.css';
 
 import './config/element.js'
-import './iconfont/iconfont.css'
+import './iconfont1/iconfont.css'
 
 import api from './api/request'
 import {
