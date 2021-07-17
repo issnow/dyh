@@ -23,16 +23,16 @@ export const routes = [{
       name: 'workDetail'
     }]
   },
-  {
-    // 成品管理详情页
-    path: '/productDetail/:code/:isEdit',
-    component: Layout,
-    children: [{
-      path: '',
-      component: () => import('@view/product/detail'),
-      name: 'productDetail'
-    }]
-  },
+  // {
+  //   // 成品管理详情页
+  //   path: '/productDetail/:code/:isEdit',
+  //   component: Layout,
+  //   children: [{
+  //     path: '',
+  //     component: () => import('@view/product/detail'),
+  //     name: 'productDetail'
+  //   }]
+  // },
   {
     path: '/viewDetail',
     component: Layout,
