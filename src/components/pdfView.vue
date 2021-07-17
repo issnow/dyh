@@ -11,6 +11,7 @@
           @link-clicked="linkNumber"
       ></pdf>
     </div>
+    <el-button icon="el-icon-download" class="download" @click="download"></el-button>
   </div>
 </template>
 
@@ -49,20 +50,19 @@ export default {
       this.src.promise.then(pdf => {
         this.numPages = pdf.numPages;
       });
-      console.log('src', this.src);
-      // console.log('pdf', this.pdf);
-
     },
-    linkNumber(number){
+    linkNumber(number) {
       console.log('number', number);
       const index = number - 1;
       const pdfs = this.$refs['pdf'];
-      const pdf = pdfs[index]
-
-      // pdf[number - 1].scrollIntoView();
-      console.log('pdf', pdf);
-
-    }
+      const pdf = pdfs[index];
+      pdf.$el.scrollIntoView({
+        behavior: "smooth",
+      });
+    },
+    download() {
+      window.open(this.url + '?response-content-type=application/octet-stream');
+    },
   },
 
 
@@ -73,25 +73,28 @@ export default {
 .pdf-view {
   width: 100%;
   height: 100%;
-  display: flex;
-  flex-direction: column;
   background: #E6E6E6;
+  position: relative;
 
-
-  .pdf{
-    margin: 10px;
+  .download {
+    position: absolute;
+    top: 30px;
+    right: 30px;
   }
 
   .content {
-    flex: 1;
-    //height: 300px;
-    //width: 400px;
+    width: 100%;
+    height: 100%;
     overflow: auto;
     background: #E6E6E6;
   }
 
-  .pager {
-    height: 50px;
+  .pdf {
+    margin: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04)
+
   }
+
+
 }
 </style>

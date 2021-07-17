@@ -117,7 +117,7 @@ import picInfo from './viewDetailPicInfo';
 import audioInfo from './viewDetailAudioInfo';
 import textInfo from './viewDetailTextInfo';
 import aiAudit from './aiAudit';
-import pdfView from './pdfView';
+import pdfView from '@/components/pdfView';
 
 import {
   getAuditDetail,
