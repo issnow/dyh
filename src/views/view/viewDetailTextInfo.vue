@@ -50,7 +50,7 @@ export default {
     .content-line{
       display: flex;
       align-items: center;
-      justify-content: start;
+      justify-content: flex-start;
       margin-top: 10px;
     }
 
