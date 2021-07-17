@@ -1,58 +1,60 @@
-import Vue from 'vue'
-import { 
-  Button, 
-  ButtonGroup,
-  Container,
-  Header,
-  Aside,
-  Main,
-  Footer,
-  Row,
-  Col,
-  Menu,
-  Submenu,
-  MenuItem,
-  MenuItemGroup,
-  Card,
-  Input,
-  InputNumber,
-  Radio,
-  RadioGroup,
-  RadioButton,
-  Checkbox,
-  CheckboxButton,
-  CheckboxGroup,
-  Switch,
-  Select,
-  Option,
-  OptionGroup,
-  Dialog,
-  Form,
-  FormItem,
-  Breadcrumb,
-  BreadcrumbItem,
-  Table,
-  TableColumn,
-  Pagination,
-  Loading,
-  Dropdown,
-  DropdownMenu,
-  DropdownItem,
-  Message,
-  MessageBox,
-  Upload,
-  cascader,
-  Tooltip
+import Vue from 'vue';
+import {
+    Button,
+    ButtonGroup,
+    Container,
+    Header,
+    Aside,
+    Main,
+    Footer,
+    Row,
+    Col,
+    Menu,
+    Submenu,
+    MenuItem,
+    MenuItemGroup,
+    Card,
+    Input,
+    InputNumber,
+    Radio,
+    RadioGroup,
+    RadioButton,
+    Checkbox,
+    CheckboxButton,
+    CheckboxGroup,
+    Switch,
+    Select,
+    Option,
+    OptionGroup,
+    Dialog,
+    Form,
+    FormItem,
+    Breadcrumb,
+    BreadcrumbItem,
+    Table,
+    TableColumn,
+    Pagination,
+    Loading,
+    Dropdown,
+    DropdownMenu,
+    DropdownItem,
+    Message,
+    MessageBox,
+    Upload,
+    cascader,
+    Tooltip,
+    Tag,
 } from 'element-ui';
-Vue.use(Button)
-Vue.use(ButtonGroup)
-Vue.use(Container)
-Vue.use(Header)
-Vue.use(Aside)
-Vue.use(Main)
-Vue.use(Footer)
-Vue.use(Row)
-Vue.use(Col)
+
+Vue.use(Button);
+Vue.use(ButtonGroup);
+Vue.use(Container);
+Vue.use(Header);
+Vue.use(Aside);
+Vue.use(Main);
+Vue.use(Footer);
+Vue.use(Row);
+Vue.use(Col);
 Vue.use(Menu);
 Vue.use(Submenu);
 Vue.use(MenuItem);
@@ -85,7 +87,7 @@ Vue.use(DropdownItem);
 Vue.use(Upload);
 Vue.use(cascader);
 Vue.use(Tooltip);
-
+Vue.use(Tag);
 
 
 Vue.prototype.$loading = Loading.service;

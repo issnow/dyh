@@ -54,8 +54,10 @@ export default {
   data() {
     return {
       form: {
-        email: "",
-        password: "",
+        email: "fang_xu@moviebook.com ",
+        password: "12345678",
+        // email: '123@moviebook.cn',
+        // password: "123456",
       },
       rules: {
         email: [
