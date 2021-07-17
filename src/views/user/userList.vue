@@ -166,11 +166,6 @@ export default {
         const { pageNo, pageSize, recordCount, pageCount } = fsp;
         this.page = { pageNo, pageSize, recordCount, pageCount };
         this.tableData = datas;
-      } else {
-        this.$message({
-          type: "error",
-          message: msg,
-        });
       }
 
       // console.log("res", res);

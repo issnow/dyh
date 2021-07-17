@@ -94,6 +94,7 @@ export default {
           this.loading = false;
           if (status == 1) {
             sessionStorage.setItem("token", element.token);
+            localStorage.setItem("nvseditlogintoken", element.token);
             this.$message({ message: msg, type: "success" });
             this["user/SET_USER_INFO"](element);
             this["user/SET_ROUTES"](element);
@@ -108,8 +109,6 @@ export default {
             // });
             document.documentElement.style.fontSize = "";
             window.removeEventListener("resize", this.onWindowResize);
-          } else {
-            this.$message({ message: msg, type: "error" });
           }
         } else {
           console.log("error submit!!");

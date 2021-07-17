@@ -1,5 +1,7 @@
 const path = require('path');
 module.exports = {
+  publicPath: '/m/',
+  outputDir: path.resolve(__dirname, 'dist/m'),
   // configureWebpack: {
   //   plugins: [
   //     // new MyAwesomeWebpackPlugin()
@@ -32,7 +34,6 @@ module.exports = {
   //   }
   // }
   configureWebpack: config => {
-
     config.resolve.alias = {
       ...config.resolve.alias,
       '@component': path.resolve(__dirname, 'src/components'),

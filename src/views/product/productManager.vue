@@ -31,6 +31,12 @@
               @click="selectDelete"
               >批量删除</el-button
             >
+            <el-button
+              icon="el-icon-delete"
+              type="primary"
+              @click="uploadProducVisible = true"
+              >上传成品</el-button
+            >
           </el-form-item>
         </el-col>
       </el-row>
@@ -49,52 +55,34 @@
     >
       <el-table-column type="selection" width="55"> </el-table-column>
       <el-table-column prop="title" label="成品名称"></el-table-column>
-      <el-table-column prop="resolution" label="分辨率" width="120">
-        <template slot="header" scope="scope">
-          <el-select
-            class="select-color"
-            v-model="form.resolution"
-            placeholder="分辨率"
-            clearable
-            @change="filterSelect($event, 'resolution')"
-          >
-            <el-option
-              v-for="e in filterResolution"
-              :key="e.key"
-              :value="e.key"
-              :label="e.name"
-            >
-            </el-option>
-          </el-select>
-        </template>
-      </el-table-column>
-      <el-table-column prop="wh_ratio" label="画幅" width="130">
-        <template slot="header" slot-scope="scope">
-          <el-select
-            class="select-color"
-            v-model="form.wh_ratio"
-            placeholder="画幅比例"
-            clearable
-            @change="filterSelect($event, 'wh_ratio')"
-          >
-            <el-option
-              v-for="item in filterWh_ratio"
-              :key="item.key"
-              :value="item.key"
-              :label="item.name"
-            >
-              <!-- {{item.name}} -->
-            </el-option>
-          </el-select>
-        </template>
-      </el-table-column>
+      <el-table-column
+        prop="media_type_title"
+        label="类型"
+        width="120"
+      ></el-table-column>
       <el-table-column label="预览" width="160">
         <template slot-scope="scope">
           <videoPreview
+            v-if="scope.row.media_type == 1"
             :isVideo="true"
             :source="scope.row.url"
             :bgImage="scope.row.cover_url"
           />
+          <videoPreview
+            v-if="scope.row.media_type == 2"
+            :isAudio="true"
+            :source="scope.row.url"
+          />
+          <imagePreview
+            v-if="scope.row.media_type == 3"
+            :src="scope.row.url"
+            :list="[scope.row.url]"
+          />
+          <el-button
+            v-if="scope.row.media_type == 4"
+            @click="onpdfPre(scope.row.url)"
+            >预览pdf</el-button
+          >
         </template>
       </el-table-column>
       <el-table-column
@@ -103,20 +91,14 @@
         width="120"
         sortable="custom"
       ></el-table-column>
-      <el-table-column
-        prop="duration"
-        label="时长（S）"
-        width="120"
-        sortable="custom"
-      ></el-table-column>
-      <el-table-column label="状态" prop="status_title" width="130">
+      <el-table-column label="状态" prop="status" width="130">
         <template slot="header" scope="scope">
           <el-select
             class="select-color"
             v-model="form.status"
             placeholder="请选择"
             clearable
-            @change="filterSelect($event, 'status')"
+            @change="filterSelect"
           >
             <el-option
               v-for="item in selectData"
@@ -145,21 +127,20 @@
         width="200"
         sortable="custom"
       ></el-table-column>
-      <el-table-column fixed="right" label="操作" width="200">
+      <el-table-column fixed="right" label="操作" width="300">
         <template slot-scope="scope">
-          <!-- scope.row.status -->
           <el-button
-            v-if="[1, 2, 3, 6, 7, 5].includes(scope.row.status)"
+            v-if="[12, 13, 3, 7, 8].includes(scope.row.status)"
             type="text"
-            @click="onDelete(scope.row.code)"
             class="del-red"
+            @click="onDelete(scope.row.code)"
             >删除</el-button
           >
           <el-button
-            v-if="[2].includes(scope.row.status)"
+            v-if="[13].includes(scope.row.status)"
             type="text"
-            @click="onGenerate(scope.row.id)"
-            >重新合成</el-button
+            @click="onTranscoding(scope.row.code)"
+            >重新转码</el-button
           >
           <el-button
             v-if="[3].includes(scope.row.status)"
@@ -168,7 +149,7 @@
             >提交审核</el-button
           >
           <el-button
-            v-if="![1, 2].includes(scope.row.status)"
+            v-if="[3, 4, 7, 8].includes(scope.row.status)"
             type="text"
             @click="onWatch(scope.row.code)"
             >查看</el-button
@@ -198,27 +179,58 @@
       @hideDialog="submitDialogVisible = false"
       @_productGetList="_productGetList"
     />
+
+    <uploadProduct
+      :visible="uploadProducVisible"
+      @hideDialog="uploadProducVisible = false"
+    />
+
+    <pdfPreview
+      :src="pdfsrc"
+      :visible="pdfVisible"
+      @handleClose="pdfVisible = false"
+    />
   </div>
 </template>
 
 <script>
-import {
-  productGetList,
-  productChoicesList,
-  productDel,
-  againExportProduct,
-} from "@api/workManager";
 import videoPreview from "@component/videoPreview";
-// import submitDialog from "./submitDialog";
-import _ from "lodash";
+import audioPreview from "@component/audioPreview";
+import imagePreview from "@component/imagePreview";
+import pdfPreview from "@component/pdfPreview";
+import submitDialog from "../work/submitDialog.vue";
+import uploadProduct from "./uploadProduct.vue";
+import { getList, del, applyAudit, reTranscode } from "@api/product";
+import { productChoicesList } from "@api/workManager";
 export default {
   components: {
-    submitDialog: () => import("./submitDialog.vue"),
     videoPreview,
+    submitDialog,
+    uploadProduct,
+    audioPreview,
+    imagePreview,
+    pdfPreview,
   },
   data() {
     return {
-      submitDialogVisible: false,
+      pdfVisible: false,
+      pdfsrc: "",
+      loading: false,
+      form: {
+        title: "",
+        status: "",
+      },
+      listParams: {
+        order: "1",
+      },
+      rules: {
+        title: [
+          { required: true, message: "请输入作品名称关键字", trigger: "blur" },
+        ],
+        status: [{ required: true, message: "请选择状态", trigger: "change" }],
+      },
+      multipleSelection: [],
+      tableData: [],
       page: {
         pageNo: 1,
         pageSize: 10,
@@ -227,55 +239,12 @@ export default {
         // 共几页
         pageCount: 0,
       },
-      listParams: {
-        // wh_ratio: "",
-        // resolution: "",
-        order: "1",
-      },
-      loading: false,
-      form: {
-        title: "",
-        status: "",
-        wh_ratio: "",
-        resolution: "",
-      },
-      rules: {
-        title: [
-          { required: true, message: "请输入作品名称关键字", trigger: "blur" },
-        ],
-        status: [{ required: true, message: "请选择状态", trigger: "change" }],
-      },
-      // 状态
-      selectData: [],
-      status: "",
-      value: "",
-      searchValue: "",
-      tableData: [],
-      // tableData: [
-      //   {
-      //     code: "ea2037fe7e6b665380fa942024f2d1a9",
-      //     cover_url:
-      //       "https://yingpu.obs.myhuaweicloud.com/crowdCreation/prod/product/9156be90e947a6d3e8f7e3a14499cf61.jpeg",
-      //     created_at: "2021-05-19 11:02:04",
-      //     duration: 20,
-      //     resolution: "540",
-      //     resolution_id: 1,
-      //     status: 9,
-      //     status_title: "已发布",
-      //     title: "测试1",
-      //     url:
-      //       "http://test.api.videoai.moviebook.cn/files/cutProcessingVideo/20210518/2021051814083938461.mp4",
-      //     video_size: 22809.07,
-      //     wh_ratio: "16:9",
-      //     wh_ratio_id: 1,
-      //   },
-      // ],
-      multipleSelection: [],
-      filterResolution: [],
-      filterWh_ratio: [],
       // 提交审核code
       code: "",
       title: "",
+      submitDialogVisible: false,
+      uploadProducVisible: false,
+      selectData: [],
     };
   },
   watch: {
@@ -286,75 +255,27 @@ export default {
       deep: true,
     },
   },
-  beforeDestroy() {
-    clearTimeout(this.timer);
-  },
   mounted() {
-    this._productChoicesList();
     this._productGetList();
+    this._productChoicesList();
   },
   methods: {
-    clear() {
-      this.$refs.form.resetFields();
-      this._productGetList();
-    },
-    // 筛选列表
-    filterSelect(value, type) {
-      switch (type) {
-        case "wh_ratio":
-          this.form.wh_ratio = value;
-          break;
-        case "resolution":
-          this.form.resolution = value;
-        case "status":
-          this.form.status = value;
-          break;
-      }
-      this.page.pageNo = 1;
-      this.page.pageSize = 10;
-      this._productGetList();
-    },
-    sortChange({ order, prop }) {
-      console.log(arguments, "arguments");
-      if (order == "ascending") {
-        switch (prop) {
-          case "duration":
-            this.listParams.order = 22;
-            break;
-          case "video_size":
-            this.listParams.order = 12;
-            break;
-          case "created_at":
-            this.listParams.order = 2;
-            break;
-        }
-        // 升序
-      } else {
-        switch (prop) {
-          case "duration":
-            this.listParams.order = 21;
-            break;
-          case "video_size":
-            this.listParams.order = 11;
-            break;
-          case "created_at":
-            this.listParams.order = 1;
-            break;
-        }
-        // 降序
-      }
-    },
     async _productChoicesList() {
       const { status, element, msg } = await productChoicesList({ type: 1 });
       if (status == 1) {
         this.selectData = element.status;
-        this.filterResolution = element.resolution;
-        this.filterWh_ratio = element.wh_ratio;
-
-        // console.log(this.selectData, "selectData");
-        // console.log(this.filterResolution, "filterResolution");
-        // console.log(this.filterWh_ratio, "filterWh_ratio");
       }
+    },
+    // 筛选列表
+    filterSelect(value) {
+      this.form.status = value;
+      this.page.pageNo = 1;
+      this.page.pageSize = 10;
+      this._productGetList();
+    },
+    onpdfPre(url) {
+      this.pdfsrc = url;
+      this.pdfVisible = true;
     },
     async _productGetList() {
       this.loading = true;
@@ -364,8 +285,8 @@ export default {
         pageSize: this.page.pageSize,
         pageNo: this.page.pageNo,
       };
-      console.log(params, "params");
-      let { status, datas, fsp, msg } = await productGetList(params);
+      // console.log(params, "params");
+      let { status, datas, fsp, msg } = await getList(params);
       this.loading = false;
       if (status == 1) {
         this.tableData = datas;
@@ -379,8 +300,21 @@ export default {
         };
       }
     },
+    clear() {
+      this.$refs.form.resetFields();
+      this._productGetList();
+    },
+    handleSubmitForm(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (!valid) {
+          console.log("error submit!!");
+          return false;
+        }
+        // 请求接口
+        console.log(this.form, "form");
+      });
+    },
     selectDelete() {
-      console.log("multipleSelection", this.multipleSelection);
       if (this.multipleSelection.length > 0) {
         this.$confirm("请确认是否删除该成品?", "删除确认", {
           confirmButtonText: "确定",
@@ -389,7 +323,7 @@ export default {
         })
           .then(async () => {
             let len = this.tableData.length;
-            let { status, msg } = await productDel({
+            let { status, msg } = await del({
               code: this.multipleSelection.map((e) => e.code),
             });
             if (status == 1) {
@@ -417,24 +351,30 @@ export default {
       }
     },
     handleSelectionChange(val) {
-      console.log(val, "val");
       this.multipleSelection = val;
     },
-    onReview({ code, title }) {
-      this.code = code;
-      this.submitDialogVisible = true;
-      this.title = title;
-    },
-    async onGenerate(id) {
-      let { status, msg } = await againExportProduct({
-        id,
-      });
-      if (status == 1) {
-        this.$message({
-          type: "success",
-          message: msg,
-        });
-        this._productGetList();
+    sortChange({ order, prop }) {
+      console.log(arguments, "arguments");
+      if (order == "ascending") {
+        switch (prop) {
+          case "video_size":
+            this.listParams.order = 12;
+            break;
+          case "created_at":
+            this.listParams.order = 2;
+            break;
+        }
+        // 升序
+      } else {
+        switch (prop) {
+          case "video_size":
+            this.listParams.order = 11;
+            break;
+          case "created_at":
+            this.listParams.order = 1;
+            break;
+        }
+        // 降序
       }
     },
     onDelete(code) {
@@ -445,7 +385,7 @@ export default {
       })
         .then(async () => {
           let len = this.tableData.length;
-          let { status, msg } = await productDel({
+          let { status, msg } = await del({
             code: [code],
           });
           if (status == 1) {
@@ -466,34 +406,35 @@ export default {
           });
         });
     },
-    onWatch(code) {
-      this.$router.push({ path: `/workDetail/${code}/0` });
+    async onTranscoding(code) {
+      let p = {
+        code,
+      };
+      let { status, msg } = await reTranscode(p);
+      if (status == 1) {
+        this.$message({
+          type: "success",
+          message: msg,
+        });
+      }
     },
-    // onEdit(code) {
-    //   this.$router.push({ path: `/workDetail/${code}/1` });
-    // },
-    handleSubmitForm(formName) {
-      this.$refs[formName].validate((valid) => {
-        if (!valid) {
-          console.log("error submit!!");
-          return false;
-        }
-        // 请求接口
-        console.log(this.form, "form");
-
-        this._productGetList();
-      });
+    onReview({ code, title }) {
+      this.code = code;
+      this.submitDialogVisible = true;
+      this.title = title;
+    },
+    onWatch(code) {
+      this.$router.push({ path: `/productDetail/${code}/0` });
     },
     handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
       this.page = { ...this.page, pageSize: val };
       this._productGetList();
     },
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
       this.page = { ...this.page, pageNo: val };
       this._productGetList();
     },
+    uploadProduct() {},
   },
 };
 </script>
@@ -506,9 +447,5 @@ export default {
       color: #f56c6c;
     }
   }
-}
-.work-name {
-  display: inline-block;
-  width: 220px;
 }
 </style>
