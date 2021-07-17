@@ -4,7 +4,7 @@
       <div class="work-detail-info">
         <div class="title" v-if="hideTask">审核结果:</div>
         <ul class="list" v-if="hideTask">
-          <li>
+          <li v-if="!isProductDetail">
             <div class="label">AI审核:</div>
             <div class="content">
               <div class="item" v-for="(e, i) in checkList" :key="i">
@@ -57,14 +57,22 @@
               :rows="2"
               placeholder="请输入内容"
               v-model.trim="form.title"
-              maxlength="20"
+              maxlength="50"
               show-word-limit
             >
             </el-input>
             <span v-show="!isEdit">{{ viewInfo.title }}</span>
           </el-form-item>
-          <el-form-item label="精神文明:" prop="tag" >
-            <el-select v-show="isEdit" v-model="form.tag" placeholder="请选择" multiple>
+          <el-form-item label="类型:" v-if="isProductDetail">
+            <span>{{ viewInfo.media_type_title }}</span>
+          </el-form-item>
+          <el-form-item label="精神文明:" prop="tag">
+            <el-select
+              v-show="isEdit"
+              v-model="form.tag"
+              placeholder="请选择"
+              multiple
+            >
               <el-option
                 v-for="item in options"
                 :key="item"
@@ -73,7 +81,7 @@
               >
               </el-option>
             </el-select>
-            <span v-show="!isEdit">{{ viewInfo.tag.join(',') }}</span>
+            <span v-show="!isEdit">{{ viewInfo.tag.join(",") }}</span>
           </el-form-item>
 
           <div class="shiti">
@@ -83,7 +91,7 @@
             <div class="right">
               <el-form-item
                 v-show="isEdit"
-                v-for="(e,i) in entityList"
+                v-for="(e, i) in entityList"
                 :key="e.f_name"
                 :label="e.f_name + ':'"
                 :prop="'thing' + i"
@@ -124,7 +132,11 @@
                 :label="e.f_name"
                 label-width="60px"
               >
-                {{ e.s_name.reduce((p, n) => p + "," + n) }}
+                {{
+                  e.s_name.length
+                    ? e.s_name.reduce((p, n) => p + "," + n)
+                    : null
+                }}
               </el-form-item>
             </div>
           </div>
@@ -136,25 +148,57 @@
               :rows="3"
               placeholder="请输入内容"
               v-model.trim="form.description"
-              maxlength="50"
+              maxlength="200"
               show-word-limit
             >
             </el-input>
             <span v-show="!isEdit">{{ viewInfo.description }}</span>
           </el-form-item>
         </el-form>
-        <div class="info-list">
+        <div
+          class="info-list"
+          :class="{ product: isProductDetail }"
+          v-if="viewInfo.media_type == 1"
+        >
+          <div class="title">视频信息:</div>
           <div><span>格式:</span>{{ viewInfo.video_format }}</div>
           <div><span>大小:</span>{{ viewInfo.video_size }}</div>
-          <div><span>画幅:</span>{{ viewInfo.wh_ratio }}</div>
-          <div><span>时长:</span>{{ viewInfo.duration }}</div>
-          <div><span>分辨率:</span>{{ viewInfo.resolution }}</div>
+          <div v-if="isProductDetail">
+            <span>创建时间:</span>{{ viewInfo.created_at }}
+          </div>
+          <div v-if="isProductDetail">
+            <span>更新时间:</span>{{ viewInfo.updated_at }}
+          </div>
+          <div v-if="!isProductDetail">
+            <span>画幅:</span>{{ viewInfo.wh_ratio }}
+          </div>
+          <div v-if="!isProductDetail">
+            <span>时长:</span>{{ viewInfo.duration }}
+          </div>
+          <div v-if="!isProductDetail">
+            <span>分辨率:</span>{{ viewInfo.resolution }}
+          </div>
         </div>
       </div>
 
       <div class="work-detail-suggest">
-        <div class="video-play-area">
+        <div class="video-play-area" v-if="viewInfo.media_type == 1">
           <videoPlay :src="url"></videoPlay>
+        </div>
+        <div class="picture-area" v-if="viewInfo.media_type == 3">
+          <imagePreview
+            :src="viewInfo.url"
+            :list="[viewInfo.url]"
+            :styleObj="{ width: '50%', marginLeft: '25%' }"
+          />
+          <itemInfo :viewInfo="viewInfo" title="图片信息" />
+        </div>
+        <div class="ma3-area" v-if="viewInfo.media_type == 2">
+          <audio :src="viewInfo.url" controls preload style="margin-left:30px"></audio>
+          <itemInfo :viewInfo="viewInfo" title="音频信息" />
+        </div>
+        <div class="pdf-area" v-if="viewInfo.media_type == 4">
+          <itemInfo :viewInfo="viewInfo" title="文本信息" />
         </div>
       </div>
     </div>
@@ -182,15 +226,17 @@ import {
   newAllEntity,
   newSearchEntity,
 } from "@api/workManager";
-import { checkLogin } from "@api/user";
+import imagePreview from "@component/imagePreview";
 import _ from "lodash";
 import videoPlay from "./videoPlay";
 import bar from "./bar";
-
+import itemInfo from "./itemInfo.vue";
 export default {
   components: {
     videoPlay,
     bar,
+    imagePreview,
+    itemInfo,
   },
   data() {
     let tempRule = {},
@@ -238,10 +284,10 @@ export default {
               //   { required: true, message: "请输入", trigger: "blur" },
               //   // { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" },
               // ],
-              description: [
-                { required: true, message: "请输入", trigger: "blur" },
-                // { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" },
-              ],
+              // description: [
+              //   { required: true, message: "请输入", trigger: "blur" },
+              //   // { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" },
+              // ],
               ...tempRule,
             }
           : {},
@@ -260,37 +306,10 @@ export default {
       selectID: "",
       editLoading: false,
       hideTask: false,
-      checkList: [
-        {
-          title: "语音1",
-          list: [
-            {
-              left: "10%",
-              width: "5%",
-              backgroundColor: "#008000",
-              text: "提示文字",
-            },
-            {
-              left: "17%",
-              width: "10%",
-              backgroundColor: "#3c8cff",
-              text: "提示文字",
-            },
-          ],
-        },
-        {
-          title: "视频1",
-          list: [
-            {
-              left: "10%",
-              width: "14%",
-              backgroundColor: "#008000",
-              text: "提示文字",
-            },
-          ],
-        },
-      ],
-      entityMap: null
+      checkList: [],
+      entityMap: null,
+      // 区分成品还是作品,true是成品详情
+      isProductDetail: this.$route.path.includes("productDetail"),
     };
   },
   mounted() {
@@ -322,17 +341,17 @@ export default {
         //   { required: true, message: "请输入", trigger: "blur" },
         //   // { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" },
         // ],
-        description: [
-          { required: true, message: "请输入", trigger: "blur" },
-          // { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" },
-        ],
+        // description: [
+        //   { required: true, message: "请输入", trigger: "blur" },
+        //   // { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" },
+        // ],
         ...tempRule,
       };
-      let obj = {}
-      this.viewInfo.entity.forEach(e=>{
-        obj[this.entityMap.get(e.f_name)] = e.s_name
-      })
-      this.form = {...this.form, ...obj}
+      let obj = {};
+      this.viewInfo.entity.forEach((e) => {
+        obj[this.entityMap.get(e.f_name)] = e.s_name;
+      });
+      this.form = { ...this.form, ...obj };
     },
     visibleChange(visi, e) {
       if (!visi) this.$refs.form.validateField(`thing${e}`);
@@ -347,19 +366,19 @@ export default {
       let res = await newSearchEntity({ f_name: e.f_name, s_name: query });
       this.loading = false;
       if (res.status == 1) {
-        e.s_name = res.element
+        e.s_name = res.element;
       }
     },
     async asyncGetEntityList() {
       let { status, element, msg } = await newAllEntity();
       if (status == 1) {
-        let arr = []
+        let arr = [];
         this.entityList = element;
-        element.forEach((e, i)=>{
-          arr.push([e.f_name, 'thing' + i])
-        })
+        element.forEach((e, i) => {
+          arr.push([e.f_name, "thing" + i]);
+        });
 
-        this.entityMap = new Map(arr)
+        this.entityMap = new Map(arr);
       }
     },
     async _productTagList() {
@@ -414,18 +433,8 @@ export default {
       this.editLoading = false;
       console.log(element, "element");
       if (status == 1) {
-        const {
-          description,
-          entity,
-          url,
-          title,
-          tag,
-          resolution,
-          duration,
-          wh_ratio,
-          video_size,
-          video_format,
-        } = element.product;
+        const { description, entity, url, title, tag, duration } =
+          element.product;
         this.hideTask = !!element.task;
         // const { audit_note, audit_status, audit_status_title } = element.task;
         this.task = {
@@ -441,17 +450,7 @@ export default {
           description,
           title,
         };
-        this.viewInfo = {
-          title,
-          tag,
-          entity,
-          description,
-          resolution,
-          duration,
-          wh_ratio,
-          video_size,
-          video_format,
-        };
+        this.viewInfo = element.product;
         if (this.isEdit) {
           entity.forEach(async (c) => {
             // let res = await productEntityList({ id: c.fid, name: "" });
@@ -515,7 +514,9 @@ export default {
       });
     },
     onCancel() {
-      this.$router.push("/workManager");
+      this.$router.push(
+        this.isProductDetail ? "/productManager" : "/workManager"
+      );
       this.$refs.form.resetFields();
     },
   },
@@ -536,12 +537,13 @@ export default {
       font-weight: 600;
     }
     &-suggest {
-      display: flex;
-      justify-content: center;
+      // display: flex;
+      // justify-content: center;
       padding-top: 34px;
       width: 60%;
 
       .video-play-area {
+        margin-left: 30px;
         width: 44vw;
         height: 24.75vw;
         background-color: #000;
@@ -559,7 +561,7 @@ export default {
       }
       .info-list {
         margin-bottom: 10px;
-        div {
+        div:not(.title) {
           display: inline-block;
           width: 30%;
           margin-bottom: 14px;
@@ -570,6 +572,9 @@ export default {
             text-align: right;
             padding-right: 12px;
           }
+        }
+        &.product div:not(.title) {
+          width: 50%;
         }
       }
       .list {

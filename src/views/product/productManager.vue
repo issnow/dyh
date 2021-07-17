@@ -77,12 +77,18 @@
             v-if="scope.row.media_type == 3"
             :src="scope.row.url"
             :list="[scope.row.url]"
+            :styleObj="{width: '84px'}"
           />
-          <el-button
+          <!-- <el-button
             v-if="scope.row.media_type == 4"
             @click="onpdfPre(scope.row.url)"
             >预览pdf</el-button
-          >
+          > -->
+          <i
+            class="iconfont icon-pdf"
+            v-if="scope.row.media_type == 4"
+            @click="onpdfPre(scope.row.url)"
+          ></i>
         </template>
       </el-table-column>
       <el-table-column
@@ -261,7 +267,7 @@ export default {
   },
   methods: {
     async _productChoicesList() {
-      const { status, element, msg } = await productChoicesList({ type: 1 });
+      const { status, element, msg } = await productChoicesList({ type: 6 });
       if (status == 1) {
         this.selectData = element.status;
       }
@@ -446,6 +452,10 @@ export default {
     .del-red span {
       color: #f56c6c;
     }
+  }
+  .icon-pdf {
+    font-size: 28px;
+    cursor: pointer;
   }
 }
 </style>
