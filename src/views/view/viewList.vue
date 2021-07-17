@@ -161,7 +161,7 @@
     methods: {
       // 获取画幅，分辨率，状态列表
       getChoicesList(){
-        getChoicesList({type: 1}).then(res => {
+        getChoicesList({type: 5}).then(res => {
           if (res.status == 1) {
             this.scaleList = res.element.wh_ratio;
             this.sizeList = res.element.resolution;

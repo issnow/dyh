@@ -15,7 +15,12 @@
       class="work-submit-form"
     >
       <el-form-item label="名称:" prop="title">
-        <el-input v-model.trim="form.title" ></el-input>
+        <el-input
+          v-model.trim="form.title"
+          placeholder="请输入名称"
+          maxlength="50"
+          show-word-limit
+        ></el-input>
       </el-form-item>
       <el-form-item label="描述:" prop="desc">
         <el-input
@@ -23,7 +28,7 @@
           :rows="2"
           placeholder="请输入内容"
           v-model.trim="form.desc"
-          maxlength="50"
+          maxlength="200"
           show-word-limit
         >
         </el-input>
@@ -50,7 +55,7 @@
             label-width="60px"
           >
             <el-select
-              v-model="form['thing' +i]"
+              v-model="form['thing' + i]"
               placeholder="请选择"
               filterable
               multiple
@@ -78,7 +83,6 @@
           </el-form-item>
         </div>
       </div>
-
     </el-form>
 
     <div slot="footer" class="dialog-footer">
@@ -96,7 +100,7 @@ import {
   productTagList,
   productApplyAudit,
   newAllEntity,
-  newSearchEntity
+  newSearchEntity,
 } from "@api/workManager";
 export default {
   props: ["visible", "code", "title"],
@@ -113,52 +117,64 @@ export default {
     }
     return {
       form: {
-        title: '',
+        title: "",
         desc: "",
         label: "",
         ...tempForm,
       },
       loading: false,
       rules: {
-        title: [
-          { required: true, message: "请输入", trigger: "blur" },
-        ],
-        desc: [
-          { required: true, message: "请输入", trigger: "blur" },
-          // { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" },
-        ],
+        title: [{ required: true, message: "请输入", trigger: "blur" }],
+        // desc: [
+        //   { required: true, message: "请输入", trigger: "blur" },
+        //   // { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" },
+        // ],
         label: [
           { required: true, message: "请输入", trigger: "blur" },
           // { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" },
         ],
-        ...tempRule,
+        // ...tempRule,
       },
       // 标签
       options: [],
       entityList: [],
       selectLoading: false,
+      entityMap: null,
     };
   },
   mounted() {
     this._productTagList();
     this.asyncGetEntityList();
   },
+  watch: {
+    title: {
+      handler(v) {
+        this.form.title = this.title;
+      },
+      immediate: true,
+    },
+  },
   methods: {
     visibleChange(visi, i) {
-      if(!visi) this.$refs.form.validateField(`thing${i}`)
+      if (!visi) this.$refs.form.validateField(`thing${i}`);
     },
     async onFocus(e, query = "") {
       this.selectLoading = true;
       let res = await newSearchEntity({ f_name: e.f_name, s_name: query });
       this.selectLoading = false;
       if (res.status == 1) {
-        e.s_name = res.element
+        e.s_name = res.element;
       }
     },
     async asyncGetEntityList() {
       let { status, element } = await newAllEntity();
       if (status == 1) {
         this.entityList = element;
+        let arr = [];
+        element.forEach((e, i) => {
+          arr.push([`thing${i}`, e.f_name]);
+        });
+        this.entityMap = new Map(arr);
       }
     },
     remoteMethod: _.debounce(function (query, e) {
@@ -169,7 +185,7 @@ export default {
     async _productTagList() {
       let { status, element } = await productTagList();
       if (status == 1) {
-        this.options = element
+        this.options = element;
       }
     },
     resetFields() {
@@ -182,19 +198,24 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate(async (valid) => {
         if (valid) {
-          console.log(this.form, 'form')
+          console.log(this.form, "form");
           this.loading = true;
-          const entity = Object.values(this.form)
-            .filter((e) => Array.isArray(e))
-            .flat();
+          const entity = Object.entries(this.form).filter(
+            ([key, value]) => Array.isArray(value) && key.includes("thing")
+          );
+          for (let e of entity) {
+            e.unshift(this.entityMap.get(e[0]));
+            e.splice(1, 1);
+          }
           const params = {
+            title: this.form.title,
             code: this.code,
             desc: this.form.desc,
-            tag: [this.form.label],
+            tag: this.form.label,
             entity,
           };
-          console.log(params);
-          return;
+          // console.log(params);
+          // return
           let { msg, status } = await productApplyAudit(params);
           if (status == 1) {
             this.$message({

@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-image
-      style="width: 100px; height: 100px"
+      :style='styleObj'
       :src="src"
       :preview-src-list="list"
     >
@@ -11,7 +11,7 @@
 
 <script>
 export default {
-  props: ['src', 'list']
+  props: ['src', 'list', 'styleObj']
 };
 </script>
 
