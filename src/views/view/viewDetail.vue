@@ -72,7 +72,12 @@
       </div>
     </div>
     <div class="work-detail-info">
-      <video :src="product.url" controls></video>
+      <pdf-view :url="product.url"></pdf-view>
+<!--      <video :src="product.url" controls></video>-->
+
+
+
+
       <!--      <div class="title">审核建议:</div>-->
       <!--      <el-form-->
       <!--          :model="form"-->
@@ -106,13 +111,13 @@
 </template>
 
 <script>
-import pdf from 'vue-pdf';
 import videoPlay from "./videoPlay";
 import videoInfo from './viewDetailVideoInfo';
 import picInfo from './viewDetailPicInfo';
 import audioInfo from './viewDetailAudioInfo';
 import textInfo from './viewDetailTextInfo';
 import aiAudit from './aiAudit';
+import pdfView from './pdfView';
 
 import {
   getAuditDetail,
@@ -129,6 +134,7 @@ export default {
     audioInfo,
     textInfo,
     aiAudit,
+    pdfView
   },
   data() {
     return {
