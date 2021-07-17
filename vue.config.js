@@ -1,7 +1,7 @@
 const path = require('path');
 module.exports = {
-  publicPath: '/m/',
-  outputDir: path.resolve(__dirname, 'dist/m'),
+  // publicPath: '/m/',
+  // outputDir: path.resolve(__dirname, 'dist/m'),
   // configureWebpack: {
   //   plugins: [
   //     // new MyAwesomeWebpackPlugin()
