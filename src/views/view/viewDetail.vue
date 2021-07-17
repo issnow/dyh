@@ -106,6 +106,7 @@
 </template>
 
 <script>
+import pdf from 'vue-pdf';
 import videoPlay from "./videoPlay";
 import videoInfo from './viewDetailVideoInfo';
 import picInfo from './viewDetailPicInfo';
