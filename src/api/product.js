@@ -18,10 +18,15 @@ export const applyAudit = (params) => {
 }
 // 添加本地成品
 export const add = (params) => {
-  return axios.post('http://local.dyh.com/product/add', params)
+  return axios.post('/api/product/add', params)
 }
 
 // 成片详情
 export const detail = (params) => {
   return axios.post('/api/product/detail', params)
+}
+
+// 获取临时凭证
+export const temporaryKey = (params) => {
+  return axios.post('/api/product/temporaryKey')
 }

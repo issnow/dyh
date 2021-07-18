@@ -194,8 +194,8 @@
           <itemInfo :viewInfo="viewInfo" title="音频信息" />
         </div>
         <div class="pdf-area" v-if="viewInfo.media_type == 4">
-          <div class="pwd-wrap">
-            <pdfView :url="viewInfo.url"/>
+          <div class="pdf-wrap">
+            <pdfView :url="viewInfo.url" />
           </div>
           <itemInfo :viewInfo="viewInfo" title="文本信息" />
         </div>
@@ -255,8 +255,6 @@ export default {
         description: "",
         title: "",
         tag: [],
-        // thing: "",
-        // thing2: "",
         ...tempForm,
       },
       // 查看
@@ -291,6 +289,7 @@ export default {
       hideTask: false,
       checkList: [],
       entityMap: null,
+      keyValueMap: null,
       // 区分成品还是作品,true是成品详情
       isProductDetail: this.$route.path.includes("productDetail"),
     };
@@ -312,9 +311,9 @@ export default {
         };
       }
       this.rules = {
-        title: [{ required: true, message: "请输入1", trigger: "blur" }],
+        title: [{ required: true, message: "请输入", trigger: "blur" }],
         tag: [{ required: true, message: "请输入", trigger: "blur" }],
-        ...tempRule,
+        // ...tempRule,
       };
       let obj = {};
       this.viewInfo.entity.forEach((e) => {
@@ -341,12 +340,15 @@ export default {
     async asyncGetEntityList() {
       let { status, element, msg } = await newAllEntity();
       if (status == 1) {
-        let arr = [];
+        let arr = [],
+          arr2 = [];
         this.entityList = element;
         element.forEach((e, i) => {
           arr.push([e.f_name, "thing" + i]);
+          arr2.push(["thing" + i, e.f_name]);
         });
         this.entityMap = new Map(arr);
+        this.keyValueMap = new Map(arr2);
       }
     },
     async _productTagList() {
@@ -401,8 +403,7 @@ export default {
       this.editLoading = false;
       console.log(element, "element");
       if (status == 1) {
-        const { description, entity, url, title, tag, duration } =
-          element.product;
+        const { description, url, title, tag, duration } = element.product;
         this.hideTask = !!element.task;
         // const { audit_note, audit_status, audit_status_title } = element.task;
         this.task = {
@@ -419,25 +420,13 @@ export default {
           title,
         };
         this.viewInfo = element.product;
-        if (this.isEdit) {
-          entity.forEach(async (c) => {
-            // let res = await productEntityList({ id: c.fid, name: "" });
-            // this.form["thing" + c.fid] = c.sid;
-            // if (res.status == 1) {
-            //   this.arrList = res.element.map((d) => ({
-            //     value: d.id,
-            //     label: d.name,
-            //   }));
-            // }
-          });
-        }
         this.url = url;
       }
     },
     submitForm(formName) {
       this.$refs[formName].validate(async (valid) => {
         if (valid) {
-          // console.log(this.form);
+          console.log("form---", this.form);
 
           this.$confirm("确认提交更新该作品的基本信息?", "提交确认", {
             confirmButtonText: "提交",
@@ -445,13 +434,23 @@ export default {
             type: "warning",
           })
             .then(async () => {
-              const entity = Object.values(this.form)
-                .filter((e) => Array.isArray(e))
-                .flat();
+              
+              const entity = [];
+              for (let key in this.form) {
+                let v = this.form[key];
+                if (key.includes("thing") && Array.isArray(v)) {
+                  let cur = {
+                    f_name: this.keyValueMap.get(key),
+                    s_name: v
+                  }
+                  entity.push(cur);
+                }
+              }
               let params = {
+                title: this.form.title,
                 code: this.$route.params.code,
                 desc: this.form.description,
-                tag: [this.form.tag],
+                tag: this.form.tag,
                 entity,
               };
               console.log(params, "params");
@@ -490,12 +489,10 @@ export default {
 @import "@css/var.scss";
 .work-detail-wrap {
   padding-bottom: 30px;
-  height: 100%;
   .work-detail {
     display: flex;
     padding: 50px 30px;
     // min-height: 660px;
-    height: 100%;
     .title {
       font-size: 16px;
       color: $deepDark;
@@ -506,7 +503,6 @@ export default {
       // justify-content: center;
       padding-top: 34px;
       width: 60%;
-      height: 100%;
 
       .video-play-area {
         margin-left: 30px;
@@ -516,8 +512,8 @@ export default {
       }
       .pdf-area {
         height: 100%;
-        .pwd-wrap {
-          height: calc(100% - 216px);
+        .pdf-wrap {
+          height: calc(100vh - 370px);
         }
       }
     }

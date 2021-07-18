@@ -183,6 +183,9 @@
     <uploadProduct
       :visible="uploadProducVisible"
       @hideDialog="uploadProducVisible = false"
+      :wh_ratio='wh_ratio'
+      :resolution='resolution'
+      :media_type='media_type'
     />
 
     <pdfPreview
@@ -243,8 +246,11 @@ export default {
       code: "",
       title: "",
       submitDialogVisible: false,
-      uploadProducVisible: false,
+      uploadProducVisible: true,
       selectData: [],
+      wh_ratio: [],
+      resolution: [],
+      media_type: [],
     };
   },
   watch: {
@@ -264,6 +270,9 @@ export default {
       const { status, element, msg } = await productChoicesList({ type: 6 });
       if (status == 1) {
         this.selectData = element.status;
+        this.wh_ratio = element.wh_ratio
+        this.resolution = element.resolution
+        this.media_type = element.media_type
       }
     },
     // 筛选列表
