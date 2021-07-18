@@ -46,7 +46,7 @@ export const getAuditDetail = (params) => {
 }
 
 // 审核结果
-export const getAudit = (params) => {
+export const auditTask = (params) => {
   return axios.post('/api/task/audit', params)
 }
 

@@ -45,12 +45,11 @@
       <div class="work-detail-audit">
         <div class="header">审核结果:</div>
         <div class="content">
-          <div class="info-item">
+          <div class="info-item" v-if="task.ai">
             <div class="info-label">AI审核:</div>
             <div class="info-content">
-              <div v-if="!task.ai">无</div>
-              <ai-audit v-if="task.ai" title="视频" :audit="task.ai.frame" :duration="product.duration"></ai-audit>
-              <ai-audit v-if="task.ai" style="margin-top: 5px;" title="字幕" :audit="task.ai.ocr"
+              <ai-audit title="视频" :audit="task.ai.frame" :duration="product.duration"></ai-audit>
+              <ai-audit style="margin-top: 5px;" title="字幕" :audit="task.ai.ocr"
                         :duration="product.duration"></ai-audit>
             </div>
           </div>
@@ -72,39 +71,18 @@
       </div>
     </div>
     <div class="work-detail-info">
-      <pdf-view :url="product.url"></pdf-view>
-<!--      <video :src="product.url" controls></video>-->
-
-
-
-
-      <!--      <div class="title">审核建议:</div>-->
-      <!--      <el-form-->
-      <!--          :model="form"-->
-      <!--          :rules="rules"-->
-      <!--          ref="form"-->
-      <!--          label-width="90px"-->
-      <!--          class="info-form"-->
-      <!--      >-->
-      <!--        <el-form-item label="建议:" prop="audit_note">-->
-<!--                <el-input-->
-<!--                    type="textarea"-->
-<!--                    :rows="3"-->
-<!--                    placeholder="请输入内容"-->
-<!--                    v-model="form.audit_note"-->
-<!--                    maxlength="50"-->
-<!--                    show-word-limit-->
-<!--                >-->
-<!--                </el-input>-->
-                <!-- <div class="tip">上限50个字符。</div> -->
-<!--              </el-form-item>-->
-      <!--      </el-form>-->
-      <div class="foot-btn">
+      <div class="content">
+        <video v-if="product.media_type === 1" :src="product.url" controls></video>
+        <audio v-if="product.media_type === 2" :src="product.url" controls></audio>
+        <img v-if="product.media_type === 3" :src="product.url">
+        <pdf-view :url="product.url" v-if="product.media_type === 4"></pdf-view>
+      </div>
+      <div class="footer">
         <el-button type="primary" @click="submitForm(1)" :loading="loading"
         >审核通过
-        </el-button
-        >
-        <el-button @click="submitForm(2)">审核驳回</el-button>
+        </el-button>
+        <el-button type="danger" @click="submitForm(2)">审核驳回</el-button>
+        <el-button @click="back">返 回</el-button>
       </div>
     </div>
   </div>
@@ -121,7 +99,7 @@ import pdfView from '@/components/pdfView';
 
 import {
   getAuditDetail,
-  getAudit,
+  auditTask,
   getTagList,
   getEntityList,
 } from "@api/project";
@@ -134,20 +112,14 @@ export default {
     audioInfo,
     textInfo,
     aiAudit,
-    pdfView
+    pdfView,
   },
   data() {
     return {
       loading: false,
       code: '',
-      audit_status: '',
-      audit_note: '',
-      rules: {
-        description: [
-          {required: false, message: "请输入", trigger: "blur"},
-        ],
-      },
-
+      // audit_status: '',   // 审核状态
+      audit_note: '',   //审核内容
       product: {},
       task: {},
 
@@ -167,48 +139,52 @@ export default {
       }
     },
 
-    // 提交审核
-    submitForm(val) {
-      this.form.audit_status = val;
-      this.loading = true;
+    // 提交审核 1-通过; 2-驳回
+    async submitForm(val) {
+      if (val === 2 && this.audit_note === '') {
+        this.$message({
+          type: 'error',
+          message: '审核驳回必须填写人工审核内容',
+        });
+        return;
+      }
 
-      this.$refs['form'].validate(async (valid) => {
-        if (valid) {
-          const params = {
-            ...this.form,
-          };
-          this.$confirm("确认该作品相关信息符合规范，审核通过?", "审核确认", {
-            confirmButtonText: "提交",
-            cancelButtonText: "取消",
-            type: "warning",
-          }).then(() => {
-            getAudit(params).then(res => {
-              if (res.status == 1) {
-                this.loading = false;
-                this.$message({
-                  type: "success",
-                  message: res.msg,
-                });
-              } else {
-                this.$message({
-                  type: "error",
-                  message: res.msg,
-                });
-              }
-            }).catch(error => {
-              console.log(error);
-            });
+      const confirmTip = {
+        1: {
+          title: '审核通过',
+          message: '确认该作品相关信息符合规范，审核通过?',
+        },
+        2: {
+          title: '审核驳回',
+          message: '确认该作品相关信息不符合规范，审核驳回?',
+        },
+      };
 
-          }).catch(() => {
-            this.$message({
-              type: "info",
-              message: "已取消",
-            });
-          });
-        } else {
-          return false;
-        }
+      const confirmValue = await this.$confirm(confirmTip[val].message, confirmTip[val].title, {
+        confirmButtonText: "提交",
+        cancelButtonText: "取消",
+        type: "warning",
+      }).catch(() => {
       });
+
+      if (confirmValue) {
+        const params = {
+          code: this.$route.query.code,
+          audit_status: val,
+          audit_note: this.audit_note,
+        };
+
+        this.loading = true;
+        const result = await auditTask(params);
+        this.loading = false;
+        if (result.status === 1) {
+          this.$message({
+            type: "success",
+            message: '审核成功',
+          });
+          this.$router.back();
+        }
+      }
     },
 
     // 获取审核列表
@@ -238,6 +214,11 @@ export default {
       });
     },
 
+    // 返回
+    back() {
+      this.$router.back();
+    },
+
   },
 };
 </script>
@@ -253,121 +234,108 @@ export default {
   padding: 20px 30px;
 
 
-  .title {
-    font-size: 16px;
-    color: $deepDark;
-    font-weight: 600;
-  }
-
-  .work-detail-base {
-    .header {
-      font-size: 14px;
-      font-weight: 600;
-      width: 60px;
-      text-align: right;
-    }
-
-    .content {
-      margin-top: 10px;
-
-      > .info-item {
-        margin-top: 10px;
-      }
-    }
-  }
-
-  .work-detail-audit {
-    margin-top: 20px;
-
-    .header {
-      font-size: 14px;
-      font-weight: 600;
-      width: 60px;
-      text-align: right;
-    }
-
-    .content {
-      margin-top: 10px;
-
-      > .info-item {
-        margin-top: 10px;
-        width: 100%;
-      }
-    }
-
-
-  }
-
-  .info-item {
-    width: 100%;
-    font-size: 14px;
-    display: flex;
-    align-items: center;
-
-    .info-label {
-      width: 60px;
-      text-align: right;
-      margin-right: 10px;
-    }
-
-    .info-content {
-      flex: 1;
-    }
-  }
-
-  &-suggest {
+  .work-detail-suggest {
     width: 50%;
+    height: 100%;
     padding-right: 30px;
     border-right: 1px dashed $dark;
+    overflow: auto;
 
-    .list {
-      li {
+    .work-detail-base {
+      .header {
         font-size: 14px;
-        display: flex;
-        margin-bottom: 20px;
+        font-weight: 600;
+        width: 60px;
+        text-align: right;
+      }
 
-        .label {
-          width: 100px;
-          text-align: right;
-          margin-right: 10px;
-          color: $dark;
-        }
+      .content {
+        margin-top: 10px;
 
-        .content {
-          flex: 1;
-          color: $gray;
+        > .info-item {
+          margin-top: 10px;
         }
       }
     }
 
-    .video-play-area {
-      width: 44vw;
-      height: 24.75vw;
+    .work-detail-audit {
+      margin-top: 20px;
+
+      .header {
+        font-size: 14px;
+        font-weight: 600;
+        width: 60px;
+        text-align: right;
+      }
+
+      .content {
+        margin-top: 10px;
+
+        > .info-item {
+          margin-top: 10px;
+          width: 100%;
+        }
+      }
+
+
     }
+
+    .info-item {
+      width: 100%;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+
+      .info-label {
+        width: 60px;
+        text-align: right;
+        margin-right: 10px;
+      }
+
+      .info-content {
+        flex: 1;
+      }
+    }
+
   }
 
-  &-info {
+  .work-detail-info {
     position: relative;
-    padding-left: 40px;
-    width: 60%;
+    //padding-left: 40px;
+    width: 50%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 
-    .title {
-      margin-bottom: 16px;
+    .content {
+      height: calc(100% - 100px);
+      width: 100%;
+      padding: 0 40px;
     }
 
-    .tip {
-      color: $gray;
-    }
-
-    .foot-btn {
-      position: absolute;
-      bottom: 0;
-      text-align: center;
+    .footer {
+      height: 40px;
+      width: 100%;
+      display: flex;
+      justify-content: flex-end;
     }
   }
 
   video {
     width: 100%;
+    display: block;
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: top;
     display: block;
   }
 }
