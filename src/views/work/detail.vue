@@ -11,14 +11,6 @@
                 <div class="label">{{ e.title }}:</div>
                 <bar :item="e.list"></bar>
               </div>
-              <!-- <div class="item">
-                <div class="label">xxx</div>
-                <bar></bar>
-              </div>
-              <div class="item">
-                <div class="label">xxx</div>
-                <bar></bar>
-              </div> -->
               <div class="item circel">
                 <div class="label">说明:</div>
                 <div style="font-size: 13px" class="btn-group">
@@ -30,7 +22,6 @@
                   <el-button type="text" size="mini">涉暴</el-button>
                   <i></i>
                   <el-button type="text" size="mini">其他</el-button>
-                  <!-- <i></i><el-button size="mini" type="primary">涉政</el-button><i></i>涉黄<i></i>涉暴<i></i>其他 -->
                 </div>
               </div>
             </div>
@@ -194,10 +185,18 @@
           <itemInfo :viewInfo="viewInfo" title="图片信息" />
         </div>
         <div class="ma3-area" v-if="viewInfo.media_type == 2">
-          <audio :src="viewInfo.url" controls preload style="margin-left:30px"></audio>
+          <audio
+            :src="viewInfo.url"
+            controls
+            preload
+            style="margin-left: 30px"
+          ></audio>
           <itemInfo :viewInfo="viewInfo" title="音频信息" />
         </div>
         <div class="pdf-area" v-if="viewInfo.media_type == 4">
+          <div class="pdf-wrap">
+            <pdfView :url="viewInfo.url" />
+          </div>
           <itemInfo :viewInfo="viewInfo" title="文本信息" />
         </div>
       </div>
@@ -227,6 +226,7 @@ import {
   newSearchEntity,
 } from "@api/workManager";
 import imagePreview from "@component/imagePreview";
+import pdfView from "@component/pdfView";
 import _ from "lodash";
 import videoPlay from "./videoPlay";
 import bar from "./bar";
@@ -237,6 +237,7 @@ export default {
     bar,
     imagePreview,
     itemInfo,
+    pdfView,
   },
   data() {
     let tempRule = {},
@@ -254,8 +255,6 @@ export default {
         description: "",
         title: "",
         tag: [],
-        // thing: "",
-        // thing2: "",
         ...tempForm,
       },
       // 查看
@@ -268,26 +267,8 @@ export default {
       rules:
         this.$route.params.isEdit === "1"
           ? {
-              title: [
-                { required: true, message: "请输入", trigger: "blur" },
-                // { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" },
-              ],
-              tag: [
-                { required: true, message: "请输入", trigger: "blur" },
-                // { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" },
-              ],
-              // thing: [
-              //   { required: true, message: "请输入", trigger: "blur" },
-              //   // { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" },
-              // ],
-              // thing2: [
-              //   { required: true, message: "请输入", trigger: "blur" },
-              //   // { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" },
-              // ],
-              // description: [
-              //   { required: true, message: "请输入", trigger: "blur" },
-              //   // { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" },
-              // ],
+              title: [{ required: true, message: "请输入", trigger: "blur" }],
+              tag: [{ required: true, message: "请输入", trigger: "blur" }],
               ...tempRule,
             }
           : {},
@@ -308,6 +289,7 @@ export default {
       hideTask: false,
       checkList: [],
       entityMap: null,
+      keyValueMap: null,
       // 区分成品还是作品,true是成品详情
       isProductDetail: this.$route.path.includes("productDetail"),
     };
@@ -329,23 +311,9 @@ export default {
         };
       }
       this.rules = {
-        title: [
-          { required: true, message: "请输入1", trigger: "blur" },
-          // { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" },
-        ],
-        tag: [
-          { required: true, message: "请输入", trigger: "blur" },
-          // { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" },
-        ],
-        // thing: [
-        //   { required: true, message: "请输入", trigger: "blur" },
-        //   // { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" },
-        // ],
-        // description: [
-        //   { required: true, message: "请输入", trigger: "blur" },
-        //   // { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" },
-        // ],
-        ...tempRule,
+        title: [{ required: true, message: "请输入", trigger: "blur" }],
+        tag: [{ required: true, message: "请输入", trigger: "blur" }],
+        // ...tempRule,
       };
       let obj = {};
       this.viewInfo.entity.forEach((e) => {
@@ -372,13 +340,15 @@ export default {
     async asyncGetEntityList() {
       let { status, element, msg } = await newAllEntity();
       if (status == 1) {
-        let arr = [];
+        let arr = [],
+          arr2 = [];
         this.entityList = element;
         element.forEach((e, i) => {
           arr.push([e.f_name, "thing" + i]);
+          arr2.push(["thing" + i, e.f_name]);
         });
-
         this.entityMap = new Map(arr);
+        this.keyValueMap = new Map(arr2);
       }
     },
     async _productTagList() {
@@ -433,8 +403,7 @@ export default {
       this.editLoading = false;
       console.log(element, "element");
       if (status == 1) {
-        const { description, entity, url, title, tag, duration } =
-          element.product;
+        const { description, url, title, tag, duration } = element.product;
         this.hideTask = !!element.task;
         // const { audit_note, audit_status, audit_status_title } = element.task;
         this.task = {
@@ -451,30 +420,13 @@ export default {
           title,
         };
         this.viewInfo = element.product;
-        if (this.isEdit) {
-          entity.forEach(async (c) => {
-            // let res = await productEntityList({ id: c.fid, name: "" });
-            // this.form["thing" + c.fid] = c.sid;
-            // if (res.status == 1) {
-            //   this.arrList = res.element.map((d) => ({
-            //     value: d.id,
-            //     label: d.name,
-            //   }));
-            // }
-          });
-        }
         this.url = url;
       }
     },
-    // getImg(src) {
-    //   if (src) {
-    //     return require("@/assets/" + src);
-    //   }
-    // },
     submitForm(formName) {
       this.$refs[formName].validate(async (valid) => {
         if (valid) {
-          // console.log(this.form);
+          console.log("form---", this.form);
 
           this.$confirm("确认提交更新该作品的基本信息?", "提交确认", {
             confirmButtonText: "提交",
@@ -482,13 +434,23 @@ export default {
             type: "warning",
           })
             .then(async () => {
-              const entity = Object.values(this.form)
-                .filter((e) => Array.isArray(e))
-                .flat();
+              
+              const entity = [];
+              for (let key in this.form) {
+                let v = this.form[key];
+                if (key.includes("thing") && Array.isArray(v)) {
+                  let cur = {
+                    f_name: this.keyValueMap.get(key),
+                    s_name: v
+                  }
+                  entity.push(cur);
+                }
+              }
               let params = {
+                title: this.form.title,
                 code: this.$route.params.code,
                 desc: this.form.description,
-                tag: [this.form.tag],
+                tag: this.form.tag,
                 entity,
               };
               console.log(params, "params");
@@ -547,6 +509,12 @@ export default {
         width: 44vw;
         height: 24.75vw;
         background-color: #000;
+      }
+      .pdf-area {
+        height: 100%;
+        .pdf-wrap {
+          height: calc(100vh - 370px);
+        }
       }
     }
     &-info {
