@@ -11,14 +11,6 @@
                 <div class="label">{{ e.title }}:</div>
                 <bar :item="e.list"></bar>
               </div>
-              <!-- <div class="item">
-                <div class="label">xxx</div>
-                <bar></bar>
-              </div>
-              <div class="item">
-                <div class="label">xxx</div>
-                <bar></bar>
-              </div> -->
               <div class="item circel">
                 <div class="label">说明:</div>
                 <div style="font-size: 13px" class="btn-group">
@@ -30,7 +22,6 @@
                   <el-button type="text" size="mini">涉暴</el-button>
                   <i></i>
                   <el-button type="text" size="mini">其他</el-button>
-                  <!-- <i></i><el-button size="mini" type="primary">涉政</el-button><i></i>涉黄<i></i>涉暴<i></i>其他 -->
                 </div>
               </div>
             </div>
@@ -194,10 +185,18 @@
           <itemInfo :viewInfo="viewInfo" title="图片信息" />
         </div>
         <div class="ma3-area" v-if="viewInfo.media_type == 2">
-          <audio :src="viewInfo.url" controls preload style="margin-left:30px"></audio>
+          <audio
+            :src="viewInfo.url"
+            controls
+            preload
+            style="margin-left: 30px"
+          ></audio>
           <itemInfo :viewInfo="viewInfo" title="音频信息" />
         </div>
         <div class="pdf-area" v-if="viewInfo.media_type == 4">
+          <div class="pwd-wrap">
+            <pdfView :url="viewInfo.url"/>
+          </div>
           <itemInfo :viewInfo="viewInfo" title="文本信息" />
         </div>
       </div>
@@ -227,6 +226,7 @@ import {
   newSearchEntity,
 } from "@api/workManager";
 import imagePreview from "@component/imagePreview";
+import pdfView from "@component/pdfView";
 import _ from "lodash";
 import videoPlay from "./videoPlay";
 import bar from "./bar";
@@ -237,6 +237,7 @@ export default {
     bar,
     imagePreview,
     itemInfo,
+    pdfView,
   },
   data() {
     let tempRule = {},
@@ -268,26 +269,8 @@ export default {
       rules:
         this.$route.params.isEdit === "1"
           ? {
-              title: [
-                { required: true, message: "请输入", trigger: "blur" },
-                // { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" },
-              ],
-              tag: [
-                { required: true, message: "请输入", trigger: "blur" },
-                // { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" },
-              ],
-              // thing: [
-              //   { required: true, message: "请输入", trigger: "blur" },
-              //   // { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" },
-              // ],
-              // thing2: [
-              //   { required: true, message: "请输入", trigger: "blur" },
-              //   // { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" },
-              // ],
-              // description: [
-              //   { required: true, message: "请输入", trigger: "blur" },
-              //   // { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" },
-              // ],
+              title: [{ required: true, message: "请输入", trigger: "blur" }],
+              tag: [{ required: true, message: "请输入", trigger: "blur" }],
               ...tempRule,
             }
           : {},
@@ -329,22 +312,8 @@ export default {
         };
       }
       this.rules = {
-        title: [
-          { required: true, message: "请输入1", trigger: "blur" },
-          // { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" },
-        ],
-        tag: [
-          { required: true, message: "请输入", trigger: "blur" },
-          // { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" },
-        ],
-        // thing: [
-        //   { required: true, message: "请输入", trigger: "blur" },
-        //   // { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" },
-        // ],
-        // description: [
-        //   { required: true, message: "请输入", trigger: "blur" },
-        //   // { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" },
-        // ],
+        title: [{ required: true, message: "请输入1", trigger: "blur" }],
+        tag: [{ required: true, message: "请输入", trigger: "blur" }],
         ...tempRule,
       };
       let obj = {};
@@ -377,7 +346,6 @@ export default {
         element.forEach((e, i) => {
           arr.push([e.f_name, "thing" + i]);
         });
-
         this.entityMap = new Map(arr);
       }
     },
@@ -466,11 +434,6 @@ export default {
         this.url = url;
       }
     },
-    // getImg(src) {
-    //   if (src) {
-    //     return require("@/assets/" + src);
-    //   }
-    // },
     submitForm(formName) {
       this.$refs[formName].validate(async (valid) => {
         if (valid) {
@@ -527,10 +490,12 @@ export default {
 @import "@css/var.scss";
 .work-detail-wrap {
   padding-bottom: 30px;
+  height: 100%;
   .work-detail {
     display: flex;
     padding: 50px 30px;
     // min-height: 660px;
+    height: 100%;
     .title {
       font-size: 16px;
       color: $deepDark;
@@ -541,12 +506,19 @@ export default {
       // justify-content: center;
       padding-top: 34px;
       width: 60%;
+      height: 100%;
 
       .video-play-area {
         margin-left: 30px;
         width: 44vw;
         height: 24.75vw;
         background-color: #000;
+      }
+      .pdf-area {
+        height: 100%;
+        .pwd-wrap {
+          height: calc(100% - 216px);
+        }
       }
     }
     &-info {

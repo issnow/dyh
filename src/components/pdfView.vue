@@ -39,10 +39,12 @@ export default {
   mounted() {
   },
   watch: {
-    url(val) {
-      console.log('url', val);
-      this.loadPdf(val);
-    },
+    url: {
+      handler(val) {
+        this.loadPdf(val);
+      },
+      immediate: true
+    }
   },
   methods: {
     loadPdf(url) {

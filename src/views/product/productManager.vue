@@ -68,22 +68,16 @@
             :source="scope.row.url"
             :bgImage="scope.row.cover_url"
           />
-          <videoPreview
+          <audioPreview
             v-if="scope.row.media_type == 2"
-            :isAudio="true"
             :source="scope.row.url"
           />
           <imagePreview
             v-if="scope.row.media_type == 3"
             :src="scope.row.url"
             :list="[scope.row.url]"
-            :styleObj="{width: '84px'}"
+            :styleObj="{ width: '84px' }"
           />
-          <!-- <el-button
-            v-if="scope.row.media_type == 4"
-            @click="onpdfPre(scope.row.url)"
-            >预览pdf</el-button
-          > -->
           <i
             class="iconfont icon-pdf"
             v-if="scope.row.media_type == 4"
