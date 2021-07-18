@@ -80,7 +80,7 @@
         <el-table-column prop="updated_at" label="更新时间" width="200" sortable></el-table-column>
         <el-table-column fixed="right" label="操作">
           <template slot-scope="scope">
-            <el-button type="text" @click="onEdit">去创作</el-button>
+            <el-button type="text" @click="onEdit(scope.row.id)">去创作</el-button>
             <el-button type="text" @click="omDelete(scope.row)" class="del-red">删除</el-button>
           </template>
         </el-table-column>
@@ -272,7 +272,8 @@
         this.$refs.form.resetFields();
         this.getProjectList();
       },
-      onEdit(){
+      onEdit(id){
+        window.open(`https://dyh.videoyi.com:447/App?projectId=${id}`)
       },
 
       // 选中项目

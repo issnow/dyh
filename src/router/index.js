@@ -29,7 +29,7 @@ export const routes = [{
     component: Layout,
     children: [{
       path: '',
-      component: () => import('@view/product/detail'),
+      component: () => import('@view/work/detail'),
       name: 'productDetail'
     }]
   },

@@ -1,8 +1,8 @@
 @font-face {
   font-family: "iconfont"; /* Project id 2553287 */
-  src: url('iconfont.woff2?t=1626433458708') format('woff2'),
-       url('iconfont.woff?t=1626433458708') format('woff'),
-       url('iconfont.ttf?t=1626433458708') format('truetype');
+  src: url('iconfont.woff2?t=1626510339190') format('woff2'),
+       url('iconfont.woff?t=1626510339190') format('woff'),
+       url('iconfont.ttf?t=1626510339190') format('truetype');
 }
 
 .iconfont {
@@ -11,6 +11,10 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-pdf:before {
+  content: "\e619";
 }
 
 .icon-close:before {
