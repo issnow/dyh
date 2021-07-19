@@ -24,7 +24,7 @@
         </el-row>
       </el-form>
 
-      <el-table 
+      <el-table
         v-loading='loading'
         class="mb20"
         :data="tableData"
@@ -100,7 +100,7 @@
       </el-pagination>
 
       <!-- 创建项目 -->
-      <el-dialog 
+      <el-dialog
         title="创建项目"
         :visible="isShow"
         :before-close="handleClose"
@@ -109,7 +109,7 @@
         width="30%">
         <el-form :model="creatForm" label-width="80px" :rules="creatFormRules" ref="creatForm">
           <el-form-item label="项目名称" prop="title">
-            <el-input 
+            <el-input
               v-model="creatForm.title"
               placeholder="请输入项目名称"
               maxlength="20"
@@ -150,11 +150,11 @@
 </template>
 
 <script>
-  import { 
+  import {
     getChoicesList,
     createProject,
     delProject,
-    getProjectList 
+    getProjectList
   } from "@api/project";
 
   export default {
@@ -186,11 +186,11 @@
             { required: true, message: "请选择分辨率", trigger: "change" }
           ]
         },
-        isShow: false,   
+        isShow: false,
         isDelete: false, //删除弹窗
         scaleList: [], //画幅比例列表
         sizeList: [],  //分辨率列表
-        
+
         page: {
           pageNo: 1,
           pageSize: 10,
@@ -256,7 +256,7 @@
           console.log(error);
         })
       },
-      
+
       // 搜索列表
       searchProject(){
         this.$refs['form'].validate((valid) => {
@@ -273,7 +273,7 @@
         this.getProjectList();
       },
       onEdit(id){
-        window.open(`https://dyh.videoyi.com:447/App?projectId=${id}`)
+        window.open(`https://dyh.videoyi.com/App?projectId=${id}`)
       },
 
       // 选中项目
@@ -286,7 +286,7 @@
         const params = {
           projectId: this.projectId
         };
-        
+
         this.$confirm('请确认是否删除该项目?', '删除确认', {
           confirmButtonText: '确认',
           cancelButtonText: '取消',
@@ -297,7 +297,7 @@
           this.$message({
             type: 'info',
             message: '已取消删除'
-          });          
+          });
         });
 
       },
@@ -307,7 +307,7 @@
         const params = {
           projectId: row.id
         };
-        
+
         this.$confirm('请确认是否删除该项目?', '删除确认', {
           confirmButtonText: '确认',
           cancelButtonText: '取消',
@@ -318,7 +318,7 @@
           this.$message({
             type: 'info',
             message: '已取消删除'
-          });          
+          });
         });
 
       },
@@ -333,7 +333,7 @@
           }
         });
       },
-      
+
       // 筛选列表
       filterSelect(value, type) {
           console.log(type);
@@ -347,10 +347,10 @@
           }
           this.page.pageNo = 1;
           this.page.pageSize = 10;
-          
+
           this.getProjectList();
       },
-      
+
       // 获取项目列表
       getProjectList(){
         this.loading = true;
