@@ -1,10 +1,17 @@
 {
   "id": "2553287",
-  "name": "moviebook",
+  "name": "dyh",
   "font_family": "iconfont",
   "css_prefix_text": "icon-",
-  "description": "",
+  "description": "大运河项目",
   "glyphs": [
+    {
+      "icon_id": "17335274",
+      "name": "作品",
+      "font_class": "zuopin1",
+      "unicode": "e6a9",
+      "unicode_decimal": 59049
+    },
     {
       "icon_id": "1116065",
       "name": "pdf",

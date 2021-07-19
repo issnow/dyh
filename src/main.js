@@ -10,7 +10,7 @@ import './css/index.scss'
 import 'element-ui/lib/theme-chalk/index.css';
 
 import './config/element.js'
-import './iconfont03/iconfont.css'
+import './iconfont04/iconfont.css'
 
 import api from './api/request'
 
