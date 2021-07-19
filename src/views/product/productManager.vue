@@ -32,7 +32,7 @@
               >批量删除</el-button
             >
             <el-button
-              icon="el-icon-delete"
+              icon="el-icon-upload2"
               type="primary"
               @click="uploadProducVisible = true"
               >上传成品</el-button
@@ -246,7 +246,7 @@ export default {
       code: "",
       title: "",
       submitDialogVisible: false,
-      uploadProducVisible: true,
+      uploadProducVisible: false,
       selectData: [],
       wh_ratio: [],
       resolution: [],

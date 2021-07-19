@@ -4,7 +4,7 @@ import router from './router'
 import store from './store/index'
 import VueLazyload from 'vue-lazyload'
 
-
+import './config/dist/esdk-obs-browserjs-without-polyfill-3.19.5.min'
 import 'normalize.css/normalize.css' // a modern alternative to CSS resets
 
 import './css/index.scss'
