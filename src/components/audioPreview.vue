@@ -48,6 +48,8 @@ export default {
     }
   }
   .flotStyle {
+    margin-left: 50%;
+    transform: translateX(-50%);
     width: 28px;
     height: 28px;
     display: flex;

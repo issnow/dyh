@@ -54,6 +54,7 @@
     // min-height: calc(100vh - 120px);
     overflow: scroll;
     background-color: #fff;
+    overflow: auto;
   }
   .footer {
     height: 70px;

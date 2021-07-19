@@ -114,7 +114,7 @@
           <el-select
             class="select-color"
             v-model="form.status"
-            placeholder="请选择"
+            placeholder="状态"
             clearable
             @change="filterSelect($event, 'status')"
           >
@@ -241,7 +241,7 @@ export default {
       },
       rules: {
         title: [
-          { required: true, message: "请输入作品名称关键字", trigger: "blur" },
+          { required: false, message: "请输入作品名称关键字", trigger: "blur" },
         ],
         status: [{ required: true, message: "请选择状态", trigger: "change" }],
       },
@@ -479,8 +479,6 @@ export default {
           return false;
         }
         // 请求接口
-        console.log(this.form, "form");
-
         this._productGetList();
       });
     },

@@ -168,7 +168,7 @@ export default {
       },
       rules: {
         title: [
-          {required: true, message: "请输入成品品名称关键字", trigger: "blur"},
+          {required: false, message: "请输入成品品名称关键字", trigger: "blur"},
         ],
       },
       // 111

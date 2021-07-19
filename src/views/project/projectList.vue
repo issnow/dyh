@@ -166,7 +166,7 @@
         },
         rules: {
           title: [
-            { required: true, message: "请输入项目名称或简称", trigger: "blur" },
+            { required: false, message: "请输入项目名称或简称", trigger: "blur" },
           ]
         },
         creatForm: {

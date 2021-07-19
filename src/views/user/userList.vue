@@ -11,12 +11,19 @@
         <el-col :span="6">
           <el-form-item label="搜索" prop="email">
             <el-input v-model.trim="form.email" placeholder="请输入关键字">
-                <el-button slot="append" icon="el-icon-search" @click="submitForm('form')" :loading="loading"></el-button>
+              <el-button
+                slot="append"
+                icon="el-icon-search"
+                @click="submitForm('form')"
+                :loading="loading"
+              ></el-button>
             </el-input>
           </el-form-item>
         </el-col>
         <el-col :span="2" class="text-center">
-            <el-button type="primary" @click="clear" :loading="loading">重置</el-button>
+          <el-button type="primary" @click="clear" :loading="loading"
+            >重置</el-button
+          >
         </el-col>
       </el-row>
     </el-form>
@@ -88,7 +95,7 @@
       layout="total, slot, prev, pager, next, sizes, jumper"
       :total="page.recordCount"
       class="common-pagination"
-      :hide-on-single-page='true'
+      :hide-on-single-page="true"
     >
       <span>第{{ page.pageNo }}/{{ page.pageCount }}页</span>
     </el-pagination>
@@ -108,7 +115,7 @@ export default {
       },
       rules: {
         email: [
-          { required: true, message: "请输入关键字", trigger: "blur" },
+          { required: false, message: "请输入关键字", trigger: "blur" },
           // { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" },
         ],
         state: [{ required: true, message: "请输入", trigger: "change" }],
