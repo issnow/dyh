@@ -89,7 +89,31 @@
             </el-select>
           </template>
         </el-table-column>
-        <!-- <el-table-column prop="view" label="预览" width="120"></el-table-column> -->
+         <el-table-column prop="view" label="预览" width="120">
+           <template slot-scope="scope">
+             <videoPreview
+                 v-if="scope.row.media_type == 1"
+                 :isVideo="true"
+                 :source="scope.row.url"
+                 :bgImage="scope.row.cover_url"
+             />
+             <audioPreview
+                 v-if="scope.row.media_type == 2"
+                 :source="scope.row.url"
+             />
+             <imagePreview
+                 v-if="scope.row.media_type == 3"
+                 :src="scope.row.url"
+                 :list="[scope.row.url]"
+                 :styleObj="{ width: '84px' }"
+             />
+             <i
+                 class="iconfont icon-pdf"
+                 v-if="scope.row.media_type == 4"
+                 @click="onpdfPre(scope.row.url)"
+             ></i>
+           </template>
+         </el-table-column>
         <el-table-column prop="video_size" label="大小（M）" width="120" sortable></el-table-column>
         <el-table-column prop="duration" label="时长（S）" width="120" sortable></el-table-column>
         <el-table-column prop="status_title" label="状态" width="150">
