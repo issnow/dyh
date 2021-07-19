@@ -283,6 +283,8 @@ export default {
     // background-repeat: no-repeat;
     opacity: 1;
     border-radius: 4px;
+    margin-left: 50%;
+    transform: translateX(-50%);
     .el-dialog__body {
         width: 100%;
         height: 100%;

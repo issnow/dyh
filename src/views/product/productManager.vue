@@ -60,7 +60,7 @@
         label="类型"
         width="120"
       ></el-table-column>
-      <el-table-column label="预览" width="160">
+      <el-table-column label="预览" width="160" class-name='td-center'>
         <template slot-scope="scope">
           <videoPreview
             v-if="scope.row.media_type == 1"
@@ -91,12 +91,12 @@
         width="120"
         sortable="custom"
       ></el-table-column>
-      <el-table-column label="状态" prop="status" width="130">
+      <el-table-column label="状态" prop="status" width="130" class="td">
         <template slot="header" scope="scope">
           <el-select
             class="select-color"
             v-model="form.status"
-            placeholder="请选择"
+            placeholder="状态"
             clearable
             @change="filterSelect"
           >
@@ -457,6 +457,7 @@ export default {
     }
   }
   .icon-pdf {
+    margin-left: calc(50% - 14px);
     font-size: 28px;
     cursor: pointer;
   }

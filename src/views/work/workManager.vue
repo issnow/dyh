@@ -114,7 +114,7 @@
           <el-select
             class="select-color"
             v-model="form.status"
-            placeholder="请选择"
+            placeholder="状态"
             clearable
             @change="filterSelect($event, 'status')"
           >
