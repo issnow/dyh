@@ -136,12 +136,26 @@
 </template>
 
 <script>
+
+import videoPreview from "@component/videoPreview";
+import audioPreview from "@component/audioPreview";
+import imagePreview from "@component/imagePreview";
+import pdfPreview from "@component/pdfPreview";
+
 import {
   getChoicesList,
   getList,
 } from "@api/project";
+import submitDialog from '../work/submitDialog';
+import uploadProduct from '../product/uploadProduct';
 
 export default {
+  components: {
+    videoPreview,
+    audioPreview,
+    imagePreview,
+    pdfPreview,
+  },
   data() {
     return {
       loading: false,
@@ -179,7 +193,6 @@ export default {
     this.getChoicesList();
     this.getList();
   },
-  components: {},
   methods: {
     // 获取画幅，分辨率，状态列表
     getChoicesList() {
