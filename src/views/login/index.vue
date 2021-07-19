@@ -93,6 +93,7 @@ export default {
           if (status == 1) {
             sessionStorage.setItem("token", element.token);
             localStorage.setItem("nvseditlogintoken", element.token);
+            localStorage.setItem("Authorization", element.token);
             this.$message({ message: msg, type: "success" });
             this["user/SET_USER_INFO"](element);
             this["user/SET_ROUTES"](element);
