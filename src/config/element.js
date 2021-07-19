@@ -45,6 +45,7 @@ import {
     Tooltip,
     Tag,
     Image,
+    Progress
 } from 'element-ui';
 
 Vue.use(Button);
@@ -90,6 +91,7 @@ Vue.use(cascader);
 Vue.use(Tooltip);
 Vue.use(Tag);
 Vue.use(Image);
+Vue.use(Progress);
 
 
 Vue.prototype.$loading = Loading.service;
