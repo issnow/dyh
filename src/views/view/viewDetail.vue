@@ -78,10 +78,10 @@
         <pdf-view :url="product.url" v-if="product.media_type === 4"></pdf-view>
       </div>
       <div class="footer">
-        <el-button type="primary" @click="submitForm(1)" :loading="loading"
+        <el-button v-if="task.audit_status === 6" type="primary" @click="submitForm(1)" :loading="loading"
         >审核通过
         </el-button>
-        <el-button type="danger" @click="submitForm(2)">审核驳回</el-button>
+        <el-button v-if="task.audit_status === 6" type="danger" @click="submitForm(2)">审核驳回</el-button>
         <el-button @click="back">返 回</el-button>
       </div>
     </div>
