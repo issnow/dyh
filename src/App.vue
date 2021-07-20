@@ -5,8 +5,7 @@
 </template>
 
 <script>
-import router, { resetRouter } from "@/router";
-import { mapGetters, mapActions, mapMutations } from "vuex";
+import { mapGetters, mapMutations } from "vuex";
 import { checkLogin } from "@api/user";
 export default {
   name: "App",

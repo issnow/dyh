@@ -130,7 +130,7 @@
       <el-table-column fixed="right" label="操作" width="300">
         <template slot-scope="scope">
           <el-button
-            v-if="[12, 13, 3, 7, 8].includes(scope.row.status)"
+            v-if="[11,12, 13, 3, 7, 8].includes(scope.row.status)"
             type="text"
             class="del-red"
             @click="onDelete(scope.row.code)"
