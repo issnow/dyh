@@ -127,7 +127,7 @@ export default {
       this.$refs.form.resetFields();
       this.percentage = 0;
     },
-    handleClose(done) {
+    handleClose() {
       this.hook && this.hook.cancel()
       this.resetFields();
       this.$emit("hideDialog");
@@ -147,6 +147,8 @@ export default {
               type: "success",
               message: msg,
             });
+            this.handleClose();
+            this.$emit("_productGetList");
           }
         } else {
           console.log("error submit!!");

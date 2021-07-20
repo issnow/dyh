@@ -186,6 +186,7 @@
       :wh_ratio="wh_ratio"
       :resolution="resolution"
       :media_type="media_type"
+      @_productGetList="_productGetList"
     />
 
     <pdfPreview
