@@ -60,7 +60,7 @@
         label="类型"
         width="120"
       ></el-table-column>
-      <el-table-column label="预览" width="160" class-name='td-center'>
+      <el-table-column label="预览" width="160" class-name="td-center">
         <template slot-scope="scope">
           <videoPreview
             v-if="scope.row.media_type == 1"
@@ -79,7 +79,7 @@
             :styleObj="{ width: '84px' }"
           />
           <i
-            class="iconfont icon-pdf"
+            class="iconfont icon-ziyuan1662"
             v-if="scope.row.media_type == 4"
             @click="onpdfPre(scope.row.url)"
           ></i>
@@ -183,9 +183,9 @@
     <uploadProduct
       :visible="uploadProducVisible"
       @hideDialog="uploadProducVisible = false"
-      :wh_ratio='wh_ratio'
-      :resolution='resolution'
-      :media_type='media_type'
+      :wh_ratio="wh_ratio"
+      :resolution="resolution"
+      :media_type="media_type"
     />
 
     <pdfPreview
@@ -270,9 +270,9 @@ export default {
       const { status, element, msg } = await productChoicesList({ type: 6 });
       if (status == 1) {
         this.selectData = element.status;
-        this.wh_ratio = element.wh_ratio
-        this.resolution = element.resolution
-        this.media_type = element.media_type
+        this.wh_ratio = element.wh_ratio;
+        this.resolution = element.resolution;
+        this.media_type = element.media_type;
       }
     },
     // 筛选列表
@@ -455,10 +455,16 @@ export default {
     .del-red span {
       color: #f56c6c;
     }
+    tbody .td-center {
+      padding: 0;
+      .cell{
+        padding: 14px 0 12px ;
+      }
+    }
   }
-  .icon-pdf {
+  .icon-ziyuan1662 {
     margin-left: calc(50% - 14px);
-    font-size: 28px;
+    font-size: 35px;
     cursor: pointer;
   }
 }

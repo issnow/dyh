@@ -1,6 +1,7 @@
 <template>
   <div class="audio-preview">
-    <div class="flotStyle" @click="dialogVisible=true"></div>
+    <!-- <div class="flotStyle" @click="dialogVisible=true"></div> -->
+    <i class="iconfont icon-Musicfiles" @click="dialogVisible=true"></i>
 
     <el-dialog
       :visible.sync="dialogVisible"
@@ -69,6 +70,11 @@ export default {
     background-image: url("./../assets/audioPlayhover.png");
     background-repeat: no-repeat;
     background-size: 28px 28px;
+  }
+  .icon-Musicfiles {
+    margin-left: calc(50% - 14px);
+    font-size: 35px;
+    cursor: pointer;
   }
 }
 </style>
