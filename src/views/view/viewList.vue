@@ -89,7 +89,7 @@
             </el-select>
           </template>
         </el-table-column>
-         <el-table-column prop="view" label="预览" width="120">
+         <el-table-column prop="view" label="预览" width="120" class-name="td-center">
            <template slot-scope="scope">
              <videoPreview
                  v-if="scope.row.media_type == 1"
@@ -108,7 +108,7 @@
                  :styleObj="{ width: '84px' }"
              />
              <i
-                 class="iconfont icon-pdf"
+                 class="iconfont icon-ziyuan1662"
                  v-if="scope.row.media_type == 4"
                  @click="onpdfPre(scope.row.url)"
              ></i>
@@ -338,6 +338,19 @@ export default {
 <style lang="scss" scoped>
 .main-wrap {
   padding: 30px;
+  ::v-deep .el-table {
+    tbody .td-center {
+      padding: 0;
+      .cell{
+        padding: 14px 0 12px ;
+      }
+    }
+  }
+  .icon-ziyuan1662 {
+    margin-left: calc(50% - 14px);
+    font-size: 35px;
+    cursor: pointer;
+  }
 }
 
 .work-name {
