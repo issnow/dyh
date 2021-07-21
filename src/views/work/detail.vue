@@ -174,7 +174,7 @@
 
       <div class="work-detail-suggest">
         <div class="video-play-area" v-if="viewInfo.media_type == 1">
-          <videoPlay :src="url"></videoPlay>
+          <videoPlay :src="viewInfo.trans_url ? viewInfo.trans_url:viewInfo.url"></videoPlay>
         </div>
         <div class="picture-area" v-if="viewInfo.media_type == 3">
           <imagePreview
@@ -186,7 +186,7 @@
         </div>
         <div class="ma3-area" v-if="viewInfo.media_type == 2">
           <audio
-            :src="viewInfo.url"
+            :src="viewInfo.trans_url ? viewInfo.trans_url:viewInfo.url"
             controls
             preload
             style="margin-left: 30px"
@@ -206,7 +206,7 @@
         >提 交</el-button
       >
       <el-button
-        v-show="!isEdit"
+        v-show="!isEdit && viewInfo.status == 7"
         :loading="editLoading"
         type="primary"
         @click="onEdit"
@@ -277,7 +277,6 @@ export default {
       data: {},
       isEdit: this.$route.params.isEdit === "1",
       entityList: [],
-      url: "",
       // task审核
       task: {
         manual: "",
@@ -420,7 +419,6 @@ export default {
           title,
         };
         this.viewInfo = element.product;
-        this.url = url;
       }
     },
     submitForm(formName) {
@@ -434,17 +432,23 @@ export default {
             type: "warning",
           })
             .then(async () => {
-              
               const entity = [];
               for (let key in this.form) {
                 let v = this.form[key];
                 if (key.includes("thing") && Array.isArray(v)) {
                   let cur = {
                     f_name: this.keyValueMap.get(key),
-                    s_name: v
-                  }
+                    s_name: v,
+                  };
                   entity.push(cur);
                 }
+              }
+              if (entity.every((e) => e.s_name.length == 0)) {
+                this.$message({
+                  type: "error",
+                  message: "请至少选择一个实体",
+                });
+                return;
               }
               let params = {
                 title: this.form.title,
@@ -453,8 +457,6 @@ export default {
                 tag: this.form.tag,
                 entity,
               };
-              console.log(params, "params");
-              // return
               let { msg, status } = await productEdit(params);
               if (status == 1) {
                 this.$message({
