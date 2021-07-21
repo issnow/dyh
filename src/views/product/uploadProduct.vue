@@ -50,6 +50,7 @@
         <div>支持扩展名:{{supportExt[form.media_type].join(',')}}</div>
       </el-form-item>
       <el-form-item>
+        <div>{{file && file.name}}</div>
         <el-progress
           :text-inside="true"
           :stroke-width="26"
@@ -109,7 +110,8 @@ export default {
         4: ['PDF']
       },
       // 取消断点上传
-      hook: null
+      hook: null,
+      file: null
     };
   },
   mounted() {},
@@ -123,6 +125,7 @@ export default {
       this.selectVideo = v == 1 ? true : false;
     },
     resetFields() {
+      this.file = null
       this.selectVideo = true;
       this.$refs.form.resetFields();
       this.percentage = 0;
@@ -168,9 +171,11 @@ export default {
       });
     },
     async fileChange() {
+      this.percentage = 0
       this.upLoading = true;
       let _this = this;
       let file = this.$refs.uploadProduct.files[0];
+      this.file = file
       let ext = file.name.slice(file.name.lastIndexOf(".") + 1).toLowerCase();
       console.log(file, ext);
 

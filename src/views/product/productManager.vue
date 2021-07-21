@@ -65,12 +65,12 @@
           <videoPreview
             v-if="scope.row.media_type == 1"
             :isVideo="true"
-            :source="scope.row.url"
+            :source="scope.row.trans_url ? scope.row.trans_url :scope.row.url"
             :bgImage="scope.row.cover_url"
           />
           <audioPreview
             v-if="scope.row.media_type == 2"
-            :source="scope.row.url"
+            :source="scope.row.trans_url ? scope.row.trans_url: scope.row.url"
           />
           <imagePreview
             v-if="scope.row.media_type == 3"

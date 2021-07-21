@@ -199,7 +199,6 @@ export default {
       this.$refs[formName].validate(async (valid) => {
         if (valid) {
           console.log(this.form, "form");
-          this.loading = true;
           const entity = Object.entries(this.form).filter(
             ([key, value]) => Array.isArray(value) && key.includes("thing")
           );
@@ -207,6 +206,15 @@ export default {
             e.unshift(this.entityMap.get(e[0]));
             e.splice(1, 1);
           }
+
+          if (entity.every((e) => e[1].length == 0)) {
+            this.$message({
+              type: "error",
+              message: "请至少选择一个实体",
+            });
+            return;
+          }
+          this.loading = true;
           const params = {
             title: this.form.title,
             code: this.code,
@@ -214,8 +222,6 @@ export default {
             tag: this.form.label,
             entity,
           };
-          // console.log(params);
-          // return
           let { msg, status } = await productApplyAudit(params);
           if (status == 1) {
             this.$message({
@@ -245,6 +251,11 @@ export default {
       width: 90px;
       padding-right: 12px;
       text-align: right;
+      &::before {
+        content: "*";
+        color: #f56c6c;
+        margin-right: 4px;
+      }
     }
     .right {
       flex: 1;
