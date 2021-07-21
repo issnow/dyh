@@ -41,16 +41,13 @@ instance.interceptors.request.use(function (config) {
 
 // 添加响应拦截器
 instance.interceptors.response.use(function (response) {
-  const {
-    data
-  } = response
   // 对响应数据做点什么
   // console.log(response.data, 'res --success');
   let {
     status,
     msg
   } = response.data
-  if (status != 1) {
+  if (status != 1&& document.querySelectorAll('.el-message').length ==0) {
     Message.error({
       type: 'error',
       message: msg,
@@ -104,7 +101,7 @@ instance.interceptors.response.use(function (response) {
         // default: msg = '未知错误！'; break;
     }
   }
-  if (msg) {
+  if (msg && document.querySelectorAll('.el-message').length ==0) {
     Message.error({
       type: 'error',
       message: msg,
