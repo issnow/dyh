@@ -8,7 +8,7 @@
         </svg> -->
       </div>
       <div v-else key="expand" class="sidebar-logo-link">
-        <img :src="getImg('logo/标题/标题logo图形.svg')" class="sidebar-logo" />
+        <img :src="getImg('logo/标题/未标题-5-01.svg')" class="sidebar-logo" />
         <img
           class="sidebar-title"
           :src="getImg('logo/标题/标题logo文字.svg')"
@@ -46,12 +46,12 @@ export default {
   width: 248px;
   height: 100%;
   line-height: 50px;
-  background: #4c7378;
+  background: #1c1e26;
   text-align: center;
   overflow: hidden;
-  img {
-    object-fit: none;
-  }
+  // img {
+  //   object-fit: none;
+  // }
   .sidebar-logo-link {
     display: flex;
     justify-content: center;
@@ -61,7 +61,9 @@ export default {
   }
   .sidebar-logo {
     margin-left: 8px;
+    margin-top: 11px;
     width: 28px;
+    height: 28px;
     margin-right: 8px;
     transition: all .28s;
   }

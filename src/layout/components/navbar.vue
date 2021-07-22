@@ -96,7 +96,7 @@ export default {
   height: 100%;
   overflow: hidden;
   position: relative;
-  background-color: #4c7378;
+  background-color: #1c1e26;
   line-height: 46px;
   padding-right: 14px;
   transition: width 0.28s;

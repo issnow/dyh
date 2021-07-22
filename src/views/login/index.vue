@@ -1,7 +1,7 @@
 <template>
   <div class="login-container">
     <div class="logo">
-      <img :src="getImg('logo/登录页/big-logo.svg')" alt="" />
+      <img :src="getImg('logo/登录页/logo02.png')" alt="" />
       <h1>欢迎登录大运河文化短视频智能剪辑平台</h1>
     </div>
     <div class="login-form-wrap">
@@ -131,7 +131,7 @@ export default {
 @import "@css/var.scss";
 .login-container {
   height: 100%;
-  background: url(../../assets/login-bg.jpg) no-repeat center;
+  background: url(../../assets/logo/登录页/bg1.jpg) no-repeat center;
   background-size: cover;
   .login-form-wrap {
     display: flex;
