@@ -174,14 +174,14 @@
 
       <div class="work-detail-suggest">
         <div class="video-play-area" v-if="viewInfo.media_type == 1">
-          <player
+          <!-- <player
             v-if="!!viewInfo.trans_url"
             :src="viewInfo.trans_url"
             :bgImage="viewInfo.cover_url"
             ref="mPlayer"
-          />
+          /> -->
 
-          <videoPlay v-else :src="viewInfo.url"></videoPlay>
+          <videoPlay :src="viewInfo.url"></videoPlay>
         </div>
         <div class="picture-area" v-if="viewInfo.media_type == 3">
           <imagePreview
@@ -238,7 +238,7 @@ import _ from "lodash";
 import videoPlay from "./videoPlay";
 import bar from "./bar";
 import itemInfo from "./itemInfo.vue";
-import player from "@component/m3u8/player";
+// import player from "@component/m3u8/player";
 export default {
   components: {
     videoPlay,
@@ -246,7 +246,7 @@ export default {
     imagePreview,
     itemInfo,
     pdfView,
-    player,
+    // player,
   },
   data() {
     let tempRule = {},
@@ -487,9 +487,9 @@ export default {
       });
     },
     onCancel() {
-      if(this.$refs.mPlayer){
-        this.$refs.mPlayer.close();
-      }
+      // if(this.$refs.mPlayer){
+      //   this.$refs.mPlayer.close();
+      // }
 
       this.$router.push(
         this.isProductDetail ? "/productManager" : "/workManager"
