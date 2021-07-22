@@ -487,7 +487,10 @@ export default {
       });
     },
     onCancel() {
-      this.$refs.mPlayer.close();
+      if(this.$refs.mPlayer){
+        this.$refs.mPlayer.close();
+      }
+
       this.$router.push(
         this.isProductDetail ? "/productManager" : "/workManager"
       );
