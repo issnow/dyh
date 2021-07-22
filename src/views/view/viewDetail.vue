@@ -15,10 +15,10 @@
           <div class="info-item">
             <div class="info-label">精神文明:</div>
             <div class="info-content">
-              <el-tag v-for="item in product.tag" :key="item" type="info" size="mini" style="margin-right: 5px;">{{
+              <div v-for="item in product.tag" :key="item" type="info" size="mini" style="margin-right: 5px;">{{
                   item
                 }}
-              </el-tag>
+              </div>
             </div>
           </div>
           <div class="info-item">
