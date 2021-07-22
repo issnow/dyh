@@ -14,6 +14,13 @@ import './iconfont05/iconfont.css'
 
 import api from './api/request'
 
+import VideoPlayer from 'vue-video-player'
+require('video.js/dist/video-js.css')
+require('vue-video-player/src/custom-theme.css')
+const hls = require('videojs-contrib-hls')
+Vue.use(hls)
+Vue.use(VideoPlayer)
+
 
 Vue.use(VueLazyload)
 

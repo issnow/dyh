@@ -14,6 +14,11 @@ export const routes = [{
     // hidden: true
   },
   {
+    path: '/hls',
+    component: () => import('@view/hls'),
+    // hidden: true
+  },
+  {
     // 作品管理详情页
     path: '/workDetail/:code/:isEdit',
     component: Layout,
