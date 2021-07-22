@@ -112,7 +112,7 @@
             <el-input
               v-model="creatForm.title"
               placeholder="请输入项目名称"
-              maxlength="20"
+              maxlength="50"
               show-word-limit
             >
             </el-input>
