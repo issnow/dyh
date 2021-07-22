@@ -63,19 +63,19 @@
       <el-table-column label="预览" width="160" class-name="td-center">
         <template slot-scope="scope">
           <videoPreview
-            v-if="scope.row.media_type == 1 && !scope.row.trans_url"
+            v-if="scope.row.media_type == 1"
             :isVideo="true"
             :source="scope.row.url"
             :bgImage="scope.row.cover_url"
           />
-          <m3u8
+          <!-- <m3u8
             :bgImage="scope.row.cover_url"
             v-if="scope.row.media_type == 1 && !!scope.row.trans_url"
             :src="scope.row.trans_url"
-          />
+          /> -->
           <audioPreview
             v-if="scope.row.media_type == 2"
-            :source="scope.row.trans_url ? scope.row.trans_url : scope.row.url"
+            :source="scope.row.url"
           />
           <imagePreview
             v-if="scope.row.media_type == 3"
@@ -211,7 +211,7 @@ import submitDialog from "../work/submitDialog.vue";
 import uploadProduct from "./uploadProduct.vue";
 import { getList, del, applyAudit, reTranscode } from "@api/product";
 import { productChoicesList } from "@api/workManager";
-import m3u8 from "@component/m3u8/index";
+// import m3u8 from "@component/m3u8/index";
 export default {
   components: {
     videoPreview,
@@ -220,7 +220,7 @@ export default {
     audioPreview,
     imagePreview,
     pdfPreview,
-    m3u8,
+    // m3u8,
   },
   data() {
     return {
