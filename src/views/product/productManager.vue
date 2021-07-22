@@ -274,9 +274,6 @@ export default {
     this._productGetList();
     this._productChoicesList();
   },
-  beforeDestroy() {
-    this.videoPause();
-  },
   methods: {
     async _productChoicesList() {
       const { status, element, msg } = await productChoicesList({ type: 6 });
