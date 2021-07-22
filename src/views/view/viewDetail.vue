@@ -72,7 +72,14 @@
     </div>
     <div class="work-detail-info">
       <div class="content">
-        <video v-if="product.media_type === 1" :src="product.url" controls></video>
+        <player
+          v-if="!!product.trans_url && product.media_type === 1"
+          :src="product.trans_url"
+          :bgImage="product.cover_url"
+          ref="mPlayer"
+        />
+        <video v-if="!product.trans_url && product.media_type === 1" :src="product.url" controls></video>
+
         <audio v-if="product.media_type === 2" :src="product.url" controls></audio>
         <img v-if="product.media_type === 3" :src="product.url">
         <pdf-view :url="product.url" v-if="product.media_type === 4"></pdf-view>
@@ -96,6 +103,7 @@ import audioInfo from './viewDetailAudioInfo';
 import textInfo from './viewDetailTextInfo';
 import aiAudit from './aiAudit';
 import pdfView from '@/components/pdfView';
+import player from "@component/m3u8/player";
 
 import {
   getAuditDetail,
@@ -113,6 +121,7 @@ export default {
     textInfo,
     aiAudit,
     pdfView,
+    player
   },
   data() {
     return {
@@ -216,6 +225,7 @@ export default {
 
     // 返回
     back() {
+      this.$refs.mPlayer.close();
       this.$router.back();
     },
 

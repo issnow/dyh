@@ -63,14 +63,19 @@
       <el-table-column label="预览" width="160" class-name="td-center">
         <template slot-scope="scope">
           <videoPreview
-            v-if="scope.row.media_type == 1"
+            v-if="scope.row.media_type == 1 && !scope.row.trans_url"
             :isVideo="true"
-            :source="scope.row.trans_url ? scope.row.trans_url :scope.row.url"
+            :source="scope.row.url"
             :bgImage="scope.row.cover_url"
+          />
+          <m3u8
+            :bgImage="scope.row.cover_url"
+            v-if="scope.row.media_type == 1 && !!scope.row.trans_url"
+            :src="scope.row.trans_url"
           />
           <audioPreview
             v-if="scope.row.media_type == 2"
-            :source="scope.row.trans_url ? scope.row.trans_url: scope.row.url"
+            :source="scope.row.trans_url ? scope.row.trans_url : scope.row.url"
           />
           <imagePreview
             v-if="scope.row.media_type == 3"
@@ -130,7 +135,7 @@
       <el-table-column fixed="right" label="操作" width="300">
         <template slot-scope="scope">
           <el-button
-            v-if="[11,12, 13, 3, 7, 8].includes(scope.row.status)"
+            v-if="[11, 12, 13, 3, 7, 8].includes(scope.row.status)"
             type="text"
             class="del-red"
             @click="onDelete(scope.row.code)"
@@ -206,6 +211,7 @@ import submitDialog from "../work/submitDialog.vue";
 import uploadProduct from "./uploadProduct.vue";
 import { getList, del, applyAudit, reTranscode } from "@api/product";
 import { productChoicesList } from "@api/workManager";
+import m3u8 from "@component/m3u8/index";
 export default {
   components: {
     videoPreview,
@@ -214,6 +220,7 @@ export default {
     audioPreview,
     imagePreview,
     pdfPreview,
+    m3u8,
   },
   data() {
     return {
@@ -252,6 +259,7 @@ export default {
       wh_ratio: [],
       resolution: [],
       media_type: [],
+      hsl: "",
     };
   },
   watch: {
@@ -426,6 +434,7 @@ export default {
           type: "success",
           message: msg,
         });
+        this._productGetList();
       }
     },
     onReview({ code, title }) {
@@ -458,8 +467,8 @@ export default {
     }
     tbody .td-center {
       padding: 0;
-      .cell{
-        padding: 14px 0 12px ;
+      .cell {
+        padding: 14px 0 12px;
       }
     }
   }

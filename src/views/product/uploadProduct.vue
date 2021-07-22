@@ -47,10 +47,10 @@
         <el-button icon="el-icon-upload2" @click="onUpload" :loading="upLoading"
           >上传文件</el-button
         >
-        <div>支持扩展名:{{supportExt[form.media_type].join(',')}}</div>
+        <div>支持扩展名:{{ supportExt[form.media_type].join(",") }}</div>
       </el-form-item>
       <el-form-item>
-        <div>{{file && file.name}}</div>
+        <div>{{ file && file.name }}</div>
         <el-progress
           :text-inside="true"
           :stroke-width="26"
@@ -64,6 +64,7 @@
       ref="uploadProduct"
       @change="fileChange"
       style="display: none"
+      :accept="accept[form.media_type]"
     />
     <div slot="footer" class="dialog-footer">
       <el-button
@@ -104,14 +105,20 @@ export default {
       loading: false,
       upLoading: false,
       supportExt: {
-        1: ['MP4','MOV','WMV','M2V','MPG'],
-        2: ['MP3','FLAC','AAC','M4A'],
-        3: ['JPG','PNG'],
-        4: ['PDF']
+        1: ["MP4", "MOV", "WMV", "M2V", "MPG"],
+        2: ["MP3", "FLAC", "AAC", "M4A"],
+        3: ["JPG", "PNG"],
+        4: ["PDF"],
+      },
+      accept: {
+        1: 'video/mp4,video/quicktime,video/x-ms-wmv,video/mpeg',
+        2: 'audio/mpeg,audio/flac,audio/x-m4a,audio/x-hx-aac-adts',
+        3: 'image/jpeg,image/png',
+        4: 'application/pdf'
       },
       // 取消断点上传
       hook: null,
-      file: null
+      file: null,
     };
   },
   mounted() {},
@@ -125,13 +132,13 @@ export default {
       this.selectVideo = v == 1 ? true : false;
     },
     resetFields() {
-      this.file = null
+      this.file = null;
       this.selectVideo = true;
       this.$refs.form.resetFields();
       this.percentage = 0;
     },
     handleClose() {
-      this.hook && this.hook.cancel()
+      this.hook && this.hook.cancel();
       this.resetFields();
       this.$emit("hideDialog");
     },
@@ -171,11 +178,11 @@ export default {
       });
     },
     async fileChange() {
-      this.percentage = 0
+      this.percentage = 0;
       this.upLoading = true;
       let _this = this;
       let file = this.$refs.uploadProduct.files[0];
-      this.file = file
+      this.file = file;
       let ext = file.name.slice(file.name.lastIndexOf(".") + 1).toLowerCase();
       console.log(file, ext);
 

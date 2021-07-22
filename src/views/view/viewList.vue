@@ -92,11 +92,16 @@
          <el-table-column prop="view" label="预览" width="120" class-name="td-center">
            <template slot-scope="scope">
              <videoPreview
-                 v-if="scope.row.media_type == 1"
+                 v-if="scope.row.media_type == 1 && !scope.row.trans_url"
                  :isVideo="true"
                  :source="scope.row.url"
                  :bgImage="scope.row.cover_url"
              />
+             <m3u8
+                :bgImage="scope.row.cover_url"
+                v-if="scope.row.media_type == 1 && !!scope.row.trans_url"
+                :src="scope.row.trans_url"
+              />
              <audioPreview
                  v-if="scope.row.media_type == 2"
                  :source="scope.row.url"
@@ -165,6 +170,7 @@ import videoPreview from "@component/videoPreview";
 import audioPreview from "@component/audioPreview";
 import imagePreview from "@component/imagePreview";
 import pdfPreview from "@component/pdfPreview";
+import m3u8 from "@component/m3u8/index";
 
 import {
   getChoicesList,
@@ -179,6 +185,7 @@ export default {
     audioPreview,
     imagePreview,
     pdfPreview,
+    m3u8
   },
   data() {
     return {

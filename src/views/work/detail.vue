@@ -174,7 +174,14 @@
 
       <div class="work-detail-suggest">
         <div class="video-play-area" v-if="viewInfo.media_type == 1">
-          <videoPlay :src="viewInfo.trans_url ? viewInfo.trans_url:viewInfo.url"></videoPlay>
+          <player
+            v-if="!!viewInfo.trans_url"
+            :src="viewInfo.trans_url"
+            :bgImage="viewInfo.cover_url"
+            ref="mPlayer"
+          />
+
+          <videoPlay v-else :src="viewInfo.url"></videoPlay>
         </div>
         <div class="picture-area" v-if="viewInfo.media_type == 3">
           <imagePreview
@@ -186,7 +193,7 @@
         </div>
         <div class="ma3-area" v-if="viewInfo.media_type == 2">
           <audio
-            :src="viewInfo.trans_url ? viewInfo.trans_url:viewInfo.url"
+            :src="viewInfo.trans_url ? viewInfo.trans_url : viewInfo.url"
             controls
             preload
             style="margin-left: 30px"
@@ -231,6 +238,7 @@ import _ from "lodash";
 import videoPlay from "./videoPlay";
 import bar from "./bar";
 import itemInfo from "./itemInfo.vue";
+import player from "@component/m3u8/player";
 export default {
   components: {
     videoPlay,
@@ -238,6 +246,7 @@ export default {
     imagePreview,
     itemInfo,
     pdfView,
+    player,
   },
   data() {
     let tempRule = {},
@@ -478,6 +487,7 @@ export default {
       });
     },
     onCancel() {
+      this.$refs.mPlayer.close();
       this.$router.push(
         this.isProductDetail ? "/productManager" : "/workManager"
       );
