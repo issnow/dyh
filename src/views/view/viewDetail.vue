@@ -225,7 +225,7 @@ export default {
     // 返回
     back() {
       // this.$refs.mPlayer.close();
-      this.$router.back();
+      this.$router.push('/viewList');
     },
 
   },
