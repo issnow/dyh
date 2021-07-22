@@ -2,7 +2,7 @@
   <div class="sidebar-logo-container" :class="{ collapse: collapse }">
     <transition name="sidebarLogoFade">
       <div v-if="collapse" key="collapse" class="sidebar-logo-link">
-        <img :src="getImg('logo/标题/标题logo图形.svg')" class="sidebar-logo" />
+        <img :src="getImg('logo/标题/未标题-5-01.svg')" class="sidebar-logo" />
         <!-- <svg class="icon" aria-hidden="true" style="font-size: 28px">
           <use xlink:href="#icon-biaotilogotuxing"></use>
         </svg> -->
