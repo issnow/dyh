@@ -14,11 +14,10 @@
           </div>
           <div class="info-item">
             <div class="info-label">精神文明:</div>
-            <div class="info-content">
-              <el-tag v-for="item in product.tag" :key="item" type="info" size="mini" style="margin-right: 5px;">{{
-                  item
-                }}
-              </el-tag>
+            <div class="info-content" style="display: flex;">
+              <div v-for="item in product.tag" :key="item" type="info" size="mini" style="margin-right: 5px;">
+                {{item }}
+              </div>
             </div>
           </div>
           <div class="info-item">
@@ -225,8 +224,10 @@ export default {
 
     // 返回
     back() {
-      this.$refs.mPlayer.close();
-      this.$router.back();
+      if(this.$refs.mPlayer){
+        this.$refs.mPlayer.close();
+      }
+      this.$router.push('/viewList');
     },
 
   },
