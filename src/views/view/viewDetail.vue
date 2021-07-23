@@ -60,7 +60,7 @@
                   :rows="3"
                   placeholder="请输入内容"
                   v-model="audit_note"
-                  maxlength="50"
+                  maxlength="200"
                   show-word-limit
               >
               </el-input>

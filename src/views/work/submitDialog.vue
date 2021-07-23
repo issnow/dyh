@@ -200,7 +200,7 @@ export default {
         if (valid) {
           console.log(this.form, "form");
           const entity = Object.entries(this.form).filter(
-            ([key, value]) => Array.isArray(value) && key.includes("thing")
+            ([key, value]) => Array.isArray(value) && value.length && key.includes("thing")
           );
           for (let e of entity) {
             e.unshift(this.entityMap.get(e[0]));
