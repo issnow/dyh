@@ -211,6 +211,7 @@ import submitDialog from "../work/submitDialog.vue";
 import uploadProduct from "./uploadProduct.vue";
 import { getList, del, applyAudit, reTranscode } from "@api/product";
 import { productChoicesList } from "@api/workManager";
+import { mapGetters, mapMutations } from "vuex";
 // import m3u8 from "@component/m3u8/index";
 export default {
   components: {
@@ -221,6 +222,9 @@ export default {
     imagePreview,
     pdfPreview,
     // m3u8,
+  },
+  computed: {
+    ...mapGetters(["params1", "page1"]),
   },
   data() {
     return {
@@ -259,7 +263,7 @@ export default {
       wh_ratio: [],
       resolution: [],
       media_type: [],
-      hsl: "",
+      copyParams: {},
     };
   },
   watch: {
@@ -271,10 +275,23 @@ export default {
     },
   },
   mounted() {
+    if (this.params1) this.init();
     this._productGetList();
     this._productChoicesList();
   },
   methods: {
+    ...mapMutations([
+      "workManager/setP1",
+      "workManager/resetP1",
+      "workManager/setPage1",
+    ]),
+    init() {
+      this.form = {
+        title: this.params1.title,
+        status: this.params1.status,
+      };
+      this.page = this.page1;
+    },
     async _productChoicesList() {
       const { status, element, msg } = await productChoicesList({ type: 6 });
       if (status == 1) {
@@ -296,6 +313,7 @@ export default {
       this.pdfVisible = true;
     },
     async _productGetList() {
+      console.log(this.params1, "----------p2");
       this.loading = true;
       const params = {
         ...this.form,
@@ -303,8 +321,12 @@ export default {
         pageSize: this.page.pageSize,
         pageNo: this.page.pageNo,
       };
+      this.copyParams = params;
       // console.log(params, "params");
-      let { status, datas, fsp, msg } = await getList(params);
+      let { status, datas, fsp, msg } = await getList(
+        this.params1 ? this.params1 : params
+      );
+      this["workManager/resetP1"]();
       this.loading = false;
       if (status == 1) {
         this.tableData = datas;
@@ -316,6 +338,7 @@ export default {
           // 共几页
           pageCount: fsp.pageCount,
         };
+        this["workManager/setPage1"](this.page);
       }
     },
     clear() {
@@ -453,7 +476,14 @@ export default {
       this.page = { ...this.page, pageNo: val };
       this._productGetList();
     },
-    uploadProduct() {},
+  },
+  beforeRouteLeave(to, from, next) {
+    if (to.path.includes("productDetail")) {
+      this["workManager/setP1"](this.copyParams);
+    } else {
+      this["workManager/resetP1"]();
+    }
+    next();
   },
 };
 </script>
