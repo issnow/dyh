@@ -211,10 +211,15 @@ import {
 import videoPreview from "@component/videoPreview";
 // import submitDialog from "./submitDialog";
 import _ from "lodash";
+import { mapGetters, mapMutations } from "vuex";
+
 export default {
   components: {
     submitDialog: () => import("./submitDialog.vue"),
     videoPreview,
+  },
+  computed: {
+    ...mapGetters(["params2", "page2"]),
   },
   data() {
     return {
@@ -276,6 +281,7 @@ export default {
       // 提交审核code
       code: "",
       title: "",
+      copyParams: {},
     };
   },
   watch: {
@@ -290,10 +296,36 @@ export default {
     clearTimeout(this.timer);
   },
   mounted() {
+    if (this.params2) this.init();
     this._productChoicesList();
     this._productGetList();
   },
+  beforeRouteLeave(to, from, next) {
+    if (to.path.includes("workDetail")) {
+      this["workManager/setP2"](this.copyParams);
+    } else {
+      this["workManager/resetP2"]();
+    }
+    next();
+  },
   methods: {
+    ...mapMutations([
+      "workManager/setP2",
+      "workManager/resetP2",
+      "workManager/setPage2",
+    ]),
+    init() {
+      this.form = {
+        title: this.params2.title,
+        status: this.params2.status,
+        wh_ratio: this.params2.wh_ratio,
+        resolution: this.params2.resolution,
+      };
+      // this.listParams = {
+      //   order: this.params2.order,
+      // };
+      this.page = this.page2;
+    },
     clear() {
       this.$refs.form.resetFields();
       this._productGetList();
@@ -357,6 +389,7 @@ export default {
       }
     },
     async _productGetList() {
+      console.log(this.params2, "----------p2");
       this.loading = true;
       const params = {
         ...this.form,
@@ -364,8 +397,12 @@ export default {
         pageSize: this.page.pageSize,
         pageNo: this.page.pageNo,
       };
-      console.log(params, "params");
-      let { status, datas, fsp, msg } = await productGetList(params);
+      this.copyParams = params;
+      // console.log(params, "params");
+      let { status, datas, fsp, msg } = await productGetList(
+        this.params2 ? this.params2 : params
+      );
+      this["workManager/resetP2"]();
       this.loading = false;
       if (status == 1) {
         this.tableData = datas;
@@ -377,6 +414,7 @@ export default {
           // 共几页
           pageCount: fsp.pageCount,
         };
+        this["workManager/setPage2"](this.page);
       }
     },
     selectDelete() {

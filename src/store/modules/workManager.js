@@ -1,6 +1,12 @@
 export default {
   namespaced: true,
   state: {
+    // 成品
+    params1: null,
+    page1: {},
+    // 作品
+    params2: null,
+    page2: {},
     entityList: [],
     form: {
       desc: "",
@@ -27,6 +33,24 @@ export default {
     },
   },
   mutations: {
+    setP1(state, p) {
+      state.params1 = p
+    },
+    setPage1(state, p) {
+      state.page1 = p
+    },
+    resetP1(state) {
+      state.params1 = null
+    },
+    setP2(state, p) {
+      state.params2 = p
+    },
+    setPage2(state, p) {
+      state.page2 = p
+    },
+    resetP2(state) {
+      state.params2 = null
+    },
     getEntityList(state, payload) {
       console.log(state, 'form0');
       state.entityList = payload
