@@ -15,7 +15,7 @@
     <div class="content-line">
       <div class="info-item">
         <div class="info-label">时长:</div>
-        <div class="info-content">{{ product.duration }}</div>
+        <div class="info-content">{{ product.duration }}(S)</div>
       </div>
 <!--      <div class="info-item">-->
 <!--        <div class="info-label">码率:</div>-->
@@ -25,7 +25,7 @@
     <div class="content-line">
       <div class="info-item">
         <div class="info-label">采样率:</div>
-        <div class="info-content">{{ product.duration }}</div>
+        <div class="info-content">{{ product.duration }}HZ</div>
       </div>
     </div>
     <div class="content-line">

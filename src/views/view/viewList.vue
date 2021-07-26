@@ -27,6 +27,7 @@
           :data="tableData"
           border
           style="width: 100%"
+          empty-text="无相关数据"
           :default-sort="{prop: 'time', order: 'descending'}"
       >
         <el-table-column prop="title" label="成品名称"></el-table-column>
@@ -162,7 +163,6 @@
         <span>第{{ page.pageNo }}/{{ page.pageCount }}页</span>
       </el-pagination>
     </div>
-    <router-view></router-view>
   </div>
 </template>
 

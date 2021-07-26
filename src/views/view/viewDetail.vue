@@ -44,7 +44,7 @@
       <div class="work-detail-audit">
         <div class="header">审核结果:</div>
         <div class="content">
-          <div class="info-item" v-if="task.ai">
+          <div class="info-item" v-if="task.ai && task.ai.length > 0">
             <div class="info-label">AI审核:</div>
             <div class="info-content">
               <ai-audit title="视频" :audit="task.ai.frame" :duration="product.duration"></ai-audit>
@@ -79,7 +79,7 @@
         /> -->
         <video v-if="product.media_type === 1" :src="product.url" controls></video>
 
-        <audio v-if="product.media_type === 2" :src="product.url" controls></audio>
+        <audio class="audio"  v-if="product.media_type === 2" :src="product.url" controls></audio>
         <img v-if="product.media_type === 3" :src="product.url">
         <pdf-view :url="product.url" v-if="product.media_type === 4"></pdf-view>
       </div>
@@ -322,7 +322,14 @@ export default {
     .content {
       height: calc(100% - 100px);
       width: 100%;
-      padding: 0 40px;
+      padding-left: 40px;
+      position: relative;
+
+      .audio{
+        width: 100%;
+        height: 50%;
+      }
+
     }
 
     .footer {
