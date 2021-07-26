@@ -48,7 +48,7 @@
       empty-text="无相关数据"
     >
       <el-table-column type="selection" width="55"> </el-table-column>
-      <el-table-column prop="title" label="成品名称"></el-table-column>
+      <el-table-column prop="title" label="作品名称"></el-table-column>
       <el-table-column prop="resolution" label="分辨率" width="120">
         <template slot="header" scope="scope">
           <el-select
