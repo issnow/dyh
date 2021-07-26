@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="view-list">
     <div class="main-wrap">
       <el-form
           :model="form"
@@ -89,36 +89,36 @@
             </el-select>
           </template>
         </el-table-column>
-         <el-table-column prop="view" label="预览" width="120" class-name="td-center">
-           <template slot-scope="scope">
-             <videoPreview
-                 v-if="scope.row.media_type == 1"
-                 :isVideo="true"
-                 :source="scope.row.url"
-                 :bgImage="scope.row.cover_url"
-             />
-             <!-- <m3u8
+        <el-table-column prop="view" label="预览" width="120" class-name="td-center">
+          <template slot-scope="scope">
+            <videoPreview
+                v-if="scope.row.media_type == 1"
+                :isVideo="true"
+                :source="scope.row.url"
                 :bgImage="scope.row.cover_url"
-                v-if="scope.row.media_type == 1 && !!scope.row.trans_url"
-                :src="scope.row.trans_url"
-              /> -->
-             <audioPreview
-                 v-if="scope.row.media_type == 2"
-                 :source="scope.row.url"
-             />
-             <imagePreview
-                 v-if="scope.row.media_type == 3"
-                 :src="scope.row.url"
-                 :list="[scope.row.url]"
-                 :styleObj="{ width: '84px' }"
-             />
-             <i
-                 class="iconfont icon-ziyuan1662"
-                 v-if="scope.row.media_type == 4"
-                 @click="onpdfPre(scope.row.url)"
-             ></i>
-           </template>
-         </el-table-column>
+            />
+            <!-- <m3u8
+               :bgImage="scope.row.cover_url"
+               v-if="scope.row.media_type == 1 && !!scope.row.trans_url"
+               :src="scope.row.trans_url"
+             /> -->
+            <audioPreview
+                v-if="scope.row.media_type == 2"
+                :source="scope.row.url"
+            />
+            <imagePreview
+                v-if="scope.row.media_type == 3"
+                :src="scope.row.url"
+                :list="[scope.row.url]"
+                :styleObj="{ width: '84px' }"
+            />
+            <i
+                class="iconfont icon-ziyuan1662"
+                v-if="scope.row.media_type == 4"
+                @click="onpdfPre(scope.row.url)"
+            ></i>
+          </template>
+        </el-table-column>
         <el-table-column prop="video_size" label="大小（M）" width="120" sortable></el-table-column>
         <el-table-column prop="duration" label="时长（S）" width="120" sortable></el-table-column>
         <el-table-column prop="status_title" label="状态" width="150">
@@ -143,7 +143,8 @@
         <el-table-column prop="created_at" label="合成时间" width="200" sortable></el-table-column>
         <el-table-column fixed="right" label="操作">
           <template slot-scope="scope">
-            <el-button type="text" @click="onWatch(scope.row)">查看</el-button>
+            <el-button type="text" @click="onWatch(scope.row)" v-if="scope.row.status === 6">审核</el-button>
+            <el-button type="text" @click="onWatch(scope.row)" v-else>查看</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -161,6 +162,7 @@
         <span>第{{ page.pageNo }}/{{ page.pageCount }}页</span>
       </el-pagination>
     </div>
+    <router-view></router-view>
   </div>
 </template>
 
@@ -192,7 +194,7 @@ export default {
       loading: false,
       form: {
         title: '',
-        status: '',
+        status: 6,
         wh_ratio: '',
         resolution: '',
         media_type: '',
@@ -216,13 +218,42 @@ export default {
         pageCount: 0,
       },
       tableData: [],
+      test: '',
     };
   },
+  watch: {
+    $route(val, oldValue) {
+      // 为了从详情也回来能带上之前选择的条件
+      sessionStorage.setItem('oldPage', oldValue.path);
+    },
+  },
   created() {
+    // 为了从详情也回来能带上之前选择的条件
+    if (sessionStorage.getItem('oldPage') &&
+        sessionStorage.getItem('oldPage') === '/viewDetail' &&
+        sessionStorage.getItem('viewList')
+    ) {
+      const para = JSON.parse(sessionStorage.getItem('viewList'));
+      this.form = Object.assign(this.form, {
+        title: para.title,
+        status: para.status,
+        wh_ratio: para.wh_ratio,
+        resolution: para.resolution,
+        media_type: para.media_type,
+      });
+      this.page = Object.assign(this.page, {
+        pageNo: para.pageNo,
+        pageSize: para.PageSize,
+      });
+    }
   },
   mounted() {
+    console.log(this);
+    console.log('mounted');
+    console.log('mounted-form', this.form);
     this.getChoicesList();
     this.getList();
+
   },
   methods: {
     // 获取画幅，分辨率，状态列表
@@ -269,7 +300,6 @@ export default {
 
     // 筛选列表
     filterSelect(value, type) {
-      console.log(value, type, '1111');
       switch (type) {
         case "wh_ratio":
           this.form.wh_ratio = value;
@@ -293,6 +323,7 @@ export default {
 
     // 获取审核列表
     getList() {
+      console.log('getList', this);
       this.loading = true;
       const params = {
         pageNo: this.page.pageNo,
@@ -303,6 +334,9 @@ export default {
         status: this.form.status,
         media_type: this.form.media_type,
       };
+
+      sessionStorage.setItem('viewList', JSON.stringify(params));
+
 
       getList(params).then(res => {
         if (res.status == 1) {
@@ -343,22 +377,33 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.main-wrap {
-  padding: 30px;
-  ::v-deep .el-table {
-    tbody .td-center {
-      padding: 0;
-      .cell{
-        padding: 14px 0 12px ;
+.view-list {
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  position: relative;
+
+  .main-wrap {
+    padding: 30px;
+
+    ::v-deep .el-table {
+      tbody .td-center {
+        padding: 0;
+
+        .cell {
+          padding: 14px 0 12px;
+        }
       }
     }
-  }
-  .icon-ziyuan1662 {
-    margin-left: calc(50% - 14px);
-    font-size: 35px;
-    cursor: pointer;
+
+    .icon-ziyuan1662 {
+      margin-left: calc(50% - 14px);
+      font-size: 35px;
+      cursor: pointer;
+    }
   }
 }
+
 
 .work-name {
   display: inline-block;
