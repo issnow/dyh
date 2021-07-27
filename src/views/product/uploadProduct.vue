@@ -111,10 +111,10 @@ export default {
         4: ["PDF"],
       },
       accept: {
-        1: 'video/mp4,video/quicktime,video/x-ms-wmv,video/mpeg',
-        2: 'audio/mpeg,audio/flac,audio/x-m4a,audio/x-hx-aac-adts',
-        3: 'image/jpeg,image/png',
-        4: 'application/pdf'
+        1: "video/mp4,video/quicktime,video/x-ms-wmv,video/mpeg",
+        2: "audio/mpeg,audio/flac,audio/x-m4a,audio/x-hx-aac-adts",
+        3: "image/jpeg,image/png",
+        4: "application/pdf",
       },
       // 取消断点上传
       hook: null,
@@ -130,6 +130,11 @@ export default {
   methods: {
     changeType(v) {
       this.selectVideo = v == 1 ? true : false;
+      this.form = {
+        ...this.form,
+        wh_ratio: "",
+        resolution: "",
+      };
     },
     resetFields() {
       this.file = null;

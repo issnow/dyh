@@ -369,7 +369,6 @@ export default {
       }
     },
     async _productGetList() {
-      console.log(this.params2, "----------p2");
       this.loading = true;
       const params = {
         ...this.form,

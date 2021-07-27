@@ -313,7 +313,6 @@ export default {
       this.pdfVisible = true;
     },
     async _productGetList() {
-      console.log(this.params1, "----------p2");
       this.loading = true;
       const params = {
         ...this.form,
