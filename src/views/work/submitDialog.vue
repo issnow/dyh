@@ -149,7 +149,7 @@ export default {
   watch: {
     title: {
       handler(v) {
-        this.form.title = this.title;
+        this.form.title = v;
       },
       immediate: true,
     },
@@ -198,9 +198,10 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate(async (valid) => {
         if (valid) {
-          console.log(this.form, "form");
+          // console.log(this.form, "form");
           const entity = Object.entries(this.form).filter(
-            ([key, value]) => Array.isArray(value) && value.length && key.includes("thing")
+            ([key, value]) =>
+              Array.isArray(value) && value.length && key.includes("thing")
           );
           for (let e of entity) {
             e.unshift(this.entityMap.get(e[0]));
