@@ -23,7 +23,7 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item v-show="selectVideo" label="画幅:">
+      <el-form-item v-show="selectVideo" label="画幅:" prop="wh_ratio">
         <el-select v-model="form.wh_ratio" placeholder="请选择">
           <el-option
             :label="e.name"
@@ -33,7 +33,7 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item v-show="selectVideo" label="分辨率:">
+      <el-form-item v-show="selectVideo" label="分辨率:" prop="resolution">
         <el-select v-model="form.resolution" placeholder="请选择">
           <el-option
             :label="e.name"
@@ -58,7 +58,7 @@
         ></el-progress>
       </el-form-item>
     </el-form>
-    <form ref="file" style="display:none;">
+    <form ref="file" style="display: none">
       <input
         type="file"
         id="uploadProduct"
@@ -101,6 +101,8 @@ export default {
         media_type: [
           { required: true, message: "请选择类型", trigger: "blur" },
         ],
+        wh_ratio: [{ required: true, message: "请选择", trigger: "change" }],
+        resolution: [{ required: true, message: "请选择", trigger: "change" }],
       },
       percentage: 0,
       loading: false,
@@ -128,6 +130,24 @@ export default {
       return !this.form.url;
     },
   },
+  watch: {
+    selectVideo: {
+      handler(v) {
+        if (v) {
+          this.$set(this.rules, "wh_ratio", [
+            { required: true, message: "请选择", trigger: "blur" },
+          ]);
+          this.$set(this.rules, "resolution", [
+            { required: true, message: "请选择", trigger: "blur" },
+          ]);
+        } else {
+          this.$set(this.rules, "wh_ratio", []);
+          this.$set(this.rules, "resolution", []);
+        }
+      },
+      immediate: true,
+    },
+  },
   methods: {
     changeType(v) {
       this.selectVideo = v == 1 ? true : false;
@@ -142,6 +162,13 @@ export default {
       this.selectVideo = true;
       this.$refs.form.resetFields();
       this.percentage = 0;
+      this.form = {
+        media_type: 1,
+        title: "",
+        wh_ratio: "",
+        resolution: "",
+        url: "",
+      };
     },
     handleClose() {
       this.hook && this.hook.cancel();
@@ -249,7 +276,7 @@ export default {
                 type: "success",
                 message: "上传成功",
               });
-              _this.$refs.file.reset()
+              _this.$refs.file.reset();
             } else {
               console.log("Code-->" + result.CommonMsg.Code);
               console.log("Message-->" + result.CommonMsg.Message);
