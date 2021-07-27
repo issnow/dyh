@@ -94,6 +94,7 @@
             :isVideo="true"
             :source="scope.row.url"
             :bgImage="scope.row.cover_url"
+            controlslist=''
           />
         </template>
       </el-table-column>
