@@ -1,5 +1,6 @@
 <template>
-  <el-image :style="styleObj" :src="src" :preview-src-list="list"> </el-image>
+  <el-image :style="styleObj" :src="src" :preview-src-list="list" fit="scale-down">
+  </el-image>
 </template>
 
 <script>

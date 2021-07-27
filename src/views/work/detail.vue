@@ -187,7 +187,7 @@
           <imagePreview
             :src="viewInfo.url"
             :list="[viewInfo.url]"
-            :styleObj="{ width: '50%', marginLeft: '25%' }"
+            :styleObj="{ height: '500px' }"
           />
           <itemInfo :viewInfo="viewInfo" title="图片信息" />
         </div>
