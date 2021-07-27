@@ -147,14 +147,6 @@
       ></el-table-column>
       <el-table-column fixed="right" label="操作" width="200">
         <template slot-scope="scope">
-          <!-- scope.row.status -->
-          <el-button
-            v-if="[1, 2, 3, 6, 7, 5].includes(scope.row.status)"
-            type="text"
-            @click="onDelete(scope.row.code)"
-            class="del-red"
-            >删除</el-button
-          >
           <el-button
             v-if="[2].includes(scope.row.status)"
             type="text"
@@ -172,6 +164,13 @@
             type="text"
             @click="onWatch(scope.row.code)"
             >查看</el-button
+          >
+          <el-button
+            v-if="[1, 2, 3, 6, 7, 5].includes(scope.row.status)"
+            type="text"
+            @click="onDelete(scope.row.code)"
+            class="del-red"
+            >删除</el-button
           >
         </template>
       </el-table-column>
@@ -256,25 +255,6 @@ export default {
       value: "",
       searchValue: "",
       tableData: [],
-      // tableData: [
-      //   {
-      //     code: "ea2037fe7e6b665380fa942024f2d1a9",
-      //     cover_url:
-      //       "https://yingpu.obs.myhuaweicloud.com/crowdCreation/prod/product/9156be90e947a6d3e8f7e3a14499cf61.jpeg",
-      //     created_at: "2021-05-19 11:02:04",
-      //     duration: 20,
-      //     resolution: "540",
-      //     resolution_id: 1,
-      //     status: 9,
-      //     status_title: "已发布",
-      //     title: "测试1",
-      //     url:
-      //       "http://test.api.videoai.moviebook.cn/files/cutProcessingVideo/20210518/2021051814083938461.mp4",
-      //     video_size: 22809.07,
-      //     wh_ratio: "16:9",
-      //     wh_ratio_id: 1,
-      //   },
-      // ],
       multipleSelection: [],
       filterResolution: [],
       filterWh_ratio: [],
@@ -389,7 +369,6 @@ export default {
       }
     },
     async _productGetList() {
-      console.log(this.params2, "----------p2");
       this.loading = true;
       const params = {
         ...this.form,

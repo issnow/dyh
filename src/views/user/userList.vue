@@ -197,25 +197,56 @@ export default {
         }
       });
     },
-    async disabledRow(row) {
-      const params = {
-        id: row.id,
-        state: row.state == 1 ? 2 : 1,
-      };
-      let { status, msg } = await setUserState(params);
-      this.$message({
-        message: msg,
-      });
-      if (status == 1) {
-        this._getTableData();
-      }
+    disabledRow(row) {
+      this.$confirm(`确定${row.state == 1 ? "禁用" : "启用"}吗?`, "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(async () => {
+          const params = {
+            id: row.id,
+            state: row.state == 1 ? 2 : 1,
+          };
+          let { status, msg } = await setUserState(params);
+
+          if (status == 1) {
+            this._getTableData();
+            this.$message({
+              type: 'success',
+              message: msg,
+            });
+          }
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消",
+          });
+        });
     },
-    async resetPassword(row) {
-      const { status, msg } = await resetUserPassword({ id: row.id });
-      this.$message(msg);
-      if (status == 1) {
-        this._getTableData();
-      }
+    resetPassword(row) {
+      this.$confirm("确定重置密码吗?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(async () => {
+          const { status, msg } = await resetUserPassword({ id: row.id });
+          if (status == 1) {
+            this._getTableData();
+            this.$message({
+              type: 'success',
+              message: msg
+            });
+          }
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消",
+          });
+        });
     },
   },
 };

@@ -81,7 +81,7 @@
             v-if="scope.row.media_type == 3"
             :src="scope.row.url"
             :list="[scope.row.url]"
-            :styleObj="{ width: '84px',height: '100px' }"
+            :styleObj="{ width: '84px', height: '100px' }"
           />
           <i
             class="iconfont icon-ziyuan1662"
@@ -135,13 +135,6 @@
       <el-table-column fixed="right" label="操作" width="300">
         <template slot-scope="scope">
           <el-button
-            v-if="[11, 12, 13, 3, 7, 8].includes(scope.row.status)"
-            type="text"
-            class="del-red"
-            @click="onDelete(scope.row.code)"
-            >删除</el-button
-          >
-          <el-button
             v-if="[13].includes(scope.row.status)"
             type="text"
             @click="onTranscoding(scope.row.code)"
@@ -158,6 +151,13 @@
             type="text"
             @click="onWatch(scope.row.code)"
             >查看</el-button
+          >
+          <el-button
+            v-if="[11, 12, 13, 3, 7, 8].includes(scope.row.status)"
+            type="text"
+            class="del-red"
+            @click="onDelete(scope.row.code)"
+            >删除</el-button
           >
         </template>
       </el-table-column>
@@ -313,7 +313,6 @@ export default {
       this.pdfVisible = true;
     },
     async _productGetList() {
-      console.log(this.params1, "----------p2");
       this.loading = true;
       const params = {
         ...this.form,

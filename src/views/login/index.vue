@@ -188,6 +188,9 @@ export default {
           }
         }
       }
+      ::v-deep .el-input__suffix {
+        right: 1rem;
+      }
     }
   }
   .logo {

@@ -111,7 +111,7 @@
                 v-if="scope.row.media_type == 3"
                 :src="scope.row.url"
                 :list="[scope.row.url]"
-                :styleObj="{ width: '84px' }"
+                :styleObj="{ width: '84px',height: '100px' }"
             />
             <i
                 class="iconfont icon-ziyuan1662"
