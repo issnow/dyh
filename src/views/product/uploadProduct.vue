@@ -58,14 +58,15 @@
         ></el-progress>
       </el-form-item>
     </el-form>
-    <input
-      type="file"
-      id="uploadProduct"
-      ref="uploadProduct"
-      @change="fileChange"
-      style="display: none"
-      :accept="accept[form.media_type]"
-    />
+    <form ref="file" style="display:none;">
+      <input
+        type="file"
+        id="uploadProduct"
+        ref="uploadProduct"
+        @change="fileChange"
+        :accept="accept[form.media_type]"
+      />
+    </form>
     <div slot="footer" class="dialog-footer">
       <el-button
         type="primary"
@@ -175,6 +176,7 @@ export default {
     async onUpload() {
       this.$refs.uploadProduct.click();
     },
+    // 生成文件名字
     guid() {
       return "xxxxxxxxxxxx4xxxyxxxx".replace(/[xy]/g, function (c) {
         var r = (Math.random() * 16) | 0,
@@ -182,6 +184,7 @@ export default {
         return v.toString(16);
       });
     },
+    // 华为云断点续传,具体参考https://support.huaweicloud.com/api-obs_browserjs_sdk_api_zh/obs_34_0503.html
     async fileChange() {
       this.percentage = 0;
       this.upLoading = true;
@@ -246,6 +249,7 @@ export default {
                 type: "success",
                 message: "上传成功",
               });
+              _this.$refs.file.reset()
             } else {
               console.log("Code-->" + result.CommonMsg.Code);
               console.log("Message-->" + result.CommonMsg.Message);
