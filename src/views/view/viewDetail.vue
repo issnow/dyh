@@ -77,7 +77,7 @@
           :bgImage="product.cover_url"
           ref="mPlayer"
         /> -->
-        <video v-if="product.media_type === 1" :src="product.url" controls></video>
+        <video class="video" v-if="product.media_type === 1" :src="product.url" controls></video>
 
         <audio class="audio"  v-if="product.media_type === 2" :src="product.url" controls></audio>
         <img v-if="product.media_type === 3" :src="product.url">
@@ -329,6 +329,15 @@ export default {
         width: 100%;
         height: 50%;
       }
+      .video{
+        width: 100%;
+        height: 100%;
+        display: block;
+
+        &:focus {
+          outline: none;
+        }
+      }
 
     }
 
@@ -340,14 +349,6 @@ export default {
     }
   }
 
-  video {
-    width: 100%;
-    display: block;
-
-    &:focus {
-      outline: none;
-    }
-  }
 
   img {
     width: 100%;

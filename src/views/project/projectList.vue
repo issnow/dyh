@@ -37,25 +37,25 @@
       <el-table-column type="selection" width="50"></el-table-column>
       <el-table-column prop="title" label="项目名称"></el-table-column>
       <!-- <el-table-column prop="name" label="类型" width="100"></el-table-column> -->
-      <el-table-column prop="resolution" label="分辨率" width="150">
-        <template slot="header" scope="scope">
-          <el-select
-              class="select-color"
-              v-model="form.resolution_id"
-              placeholder="分辨率"
-              clearable
-              @change="filterSelect($event, 'resolution')"
-          >
-            <el-option
-                v-for="item in sizeList"
-                :key="item.key"
-                :value="item.key"
-                :label="item.name"
-            >
-            </el-option>
-          </el-select>
-        </template>
-      </el-table-column>
+<!--      <el-table-column prop="resolution" label="分辨率" width="150">-->
+<!--        <template slot="header" scope="scope">-->
+<!--          <el-select-->
+<!--              class="select-color"-->
+<!--              v-model="form.resolution_id"-->
+<!--              placeholder="分辨率"-->
+<!--              clearable-->
+<!--              @change="filterSelect($event, 'resolution')"-->
+<!--          >-->
+<!--            <el-option-->
+<!--                v-for="item in sizeList"-->
+<!--                :key="item.key"-->
+<!--                :value="item.key"-->
+<!--                :label="item.name"-->
+<!--            >-->
+<!--            </el-option>-->
+<!--          </el-select>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
       <el-table-column prop="wh_ratio" label="画幅" width="150">
         <template slot="header" slot-scope="scope">
           <el-select
@@ -129,17 +129,17 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="分辨率" prop="resolution_id">
-          <el-select v-model="creatForm.resolution_id" placeholder="请选择分辨率">
-            <el-option
-                v-for="item in sizeList"
-                :key="item.key"
-                :value="item.key"
-                :label="item.name"
-            >
-            </el-option>
-          </el-select>
-        </el-form-item>
+<!--        <el-form-item label="分辨率" prop="resolution_id">-->
+<!--          <el-select v-model="creatForm.resolution_id" placeholder="请选择分辨率">-->
+<!--            <el-option-->
+<!--                v-for="item in sizeList"-->
+<!--                :key="item.key"-->
+<!--                :value="item.key"-->
+<!--                :label="item.name"-->
+<!--            >-->
+<!--            </el-option>-->
+<!--          </el-select>-->
+<!--        </el-form-item>-->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="handleClose">取 消</el-button>
@@ -239,6 +239,9 @@ export default {
             this.$refs.creatForm.resetFields();
             this.creatForm.resolution_id = 1;
             this.creatForm.wh_ratio_id = 1;
+
+
+            window.open(`https://dyh.videoyi.com/App?projectId=${res.element.id}`);
           }
         }).catch(error => {
           console.log(error);
