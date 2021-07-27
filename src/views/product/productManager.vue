@@ -67,6 +67,7 @@
             :isVideo="true"
             :source="scope.row.url"
             :bgImage="scope.row.cover_url"
+            controlslist=''
           />
           <!-- <m3u8
             :bgImage="scope.row.cover_url"

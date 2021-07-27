@@ -54,7 +54,7 @@
           controls
           ref="player"
           disablePictureInPicture
-          controlslist="nodownload"
+          :controlslist="controlslist"
         ></video>
         <audio
             :src="source"
@@ -127,6 +127,10 @@ export default {
     isFonts: {
         type: Boolean,
         default: false
+    },
+    controlslist: {
+      type: String,
+      default: 'nodownload'
     }
   },
   watch: {
