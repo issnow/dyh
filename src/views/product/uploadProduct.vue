@@ -7,7 +7,11 @@
   >
     <el-form :model="form" :rules="rules" label-width="90px" ref="form">
       <el-form-item label="名称:" prop="title">
-        <el-input v-model="form.title"></el-input>
+        <el-input
+          v-model="form.title"
+          maxlength="50"
+          show-word-limit
+        ></el-input>
       </el-form-item>
       <el-form-item label="上传文件:" prop="media_type">
         <el-select
