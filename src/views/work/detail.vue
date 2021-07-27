@@ -191,9 +191,9 @@
           />
           <itemInfo :viewInfo="viewInfo" title="图片信息" />
         </div>
-        <div class="ma3-area" v-if="viewInfo.media_type == 2">
+        <div class="mp3-area" v-if="viewInfo.media_type == 2">
           <audio
-            :src="viewInfo.trans_url ? viewInfo.trans_url : viewInfo.url"
+            :src="viewInfo.url"
             controls
             preload
             style="margin-left: 30px"
