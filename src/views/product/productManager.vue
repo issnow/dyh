@@ -129,7 +129,7 @@
       </el-table-column>
       <el-table-column
         prop="created_at"
-        label="创作时间"
+        label="创建时间"
         width="200"
         sortable="custom"
       ></el-table-column>
