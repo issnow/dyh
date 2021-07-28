@@ -231,7 +231,6 @@ import {
   productEdit,
   newAllEntity,
   newSearchEntity,
-  productApplyAudit,
 } from "@api/workManager";
 import imagePreview from "@component/imagePreview";
 import pdfView from "@component/pdfView";
@@ -442,34 +441,18 @@ export default {
             type: "warning",
           })
             .then(async () => {
-              // const entity = [];
-              // for (let key in this.form) {
-              //   let v = this.form[key];
-              //   if (key.includes("thing") && Array.isArray(v)) {
-              //     let cur = {
-              //       f_name: this.keyValueMap.get(key),
-              //       s_name: v,
-              //     };
-              //     entity.push(cur);
-              //   }
-              // }
-              // if (entity.every((e) => e.s_name.length == 0)) {
-              //   this.$message({
-              //     type: "error",
-              //     message: "请至少选择一个实体",
-              //   });
-              //   return;
-              // }
-              const entity = Object.entries(this.form).filter(
-                ([key, value]) =>
-                  Array.isArray(value) && value.length && key.includes("thing")
-              );
-              for (let e of entity) {
-                e.unshift(this.keyValueMap.get(e[0]));
-                e.splice(1, 1);
+              const entity = [];
+              for (let key in this.form) {
+                let v = this.form[key];
+                if (key.includes("thing") && Array.isArray(v)) {
+                  let cur = {
+                    f_name: this.keyValueMap.get(key),
+                    s_name: v,
+                  };
+                  entity.push(cur);
+                }
               }
-
-              if (entity.every((e) => e[1].length == 0)) {
+              if (entity.every((e) => e.s_name.length == 0)) {
                 this.$message({
                   type: "error",
                   message: "请至少选择一个实体",
@@ -483,7 +466,7 @@ export default {
                 tag: this.form.tag,
                 entity,
               };
-              let { msg, status } = await productApplyAudit(params);
+              let { msg, status } = await productEdit(params);
               if (status == 1) {
                 this.$message({
                   type: "success",
