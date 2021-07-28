@@ -170,7 +170,7 @@ export default {
       }
 
       let { width, height } = await this.createReader(file);
-      if (width >= 300 || height >= 300) {
+      if (width > 300 || height > 300) {
         this.$message({
           type: "error",
           message: "请上传尺寸小于等于300*300图片",
