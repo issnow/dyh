@@ -141,7 +141,7 @@
             </el-select>
           </template>
         </el-table-column>
-        <el-table-column prop="created_at" label="合成时间" width="200" sortable></el-table-column>
+        <el-table-column prop="created_at" label="创建时间" width="200" sortable></el-table-column>
         <el-table-column fixed="right" label="操作">
           <template slot-scope="scope">
             <el-button type="text" @click="onWatch(scope.row)" v-if="scope.row.status === 6">审核</el-button>

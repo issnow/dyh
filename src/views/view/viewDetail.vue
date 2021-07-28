@@ -14,8 +14,8 @@
           </div>
           <div class="info-item">
             <div class="info-label">精神文明:</div>
-            <div class="info-content" style="display: flex;">
-              <div v-for="item in product.tag" :key="item" type="info" size="mini" style="margin-right: 5px;">
+            <div class="info-content" style="display: grid; grid-template-columns: repeat(7, 1fr);">
+              <div v-for="item in product.tag" :key="item" type="info" size="mini" style="width: 60px;">
                 {{item }}
               </div>
             </div>
@@ -24,9 +24,11 @@
             <div class="info-label">实体:</div>
             <div class="info-content">
               <div class="entity" v-for="item of product.entity" :key="item.f_name" style="margin-top: 10px;">
-                <div class="entity-item">
-                  <el-tag type="info" size="mini">{{ item.f_name }}</el-tag>
-                  <span v-for="name of item.s_name" :key="name" style="margin-left: 10px;">{{ name }}</span>
+                <div class="entity-item" style="display: flex;">
+                  <el-tag type="info" size="mini" style="margin-right: 5px;">{{ item.f_name }}</el-tag>
+                  <div>
+                    <span v-for="name of item.s_name" :key="name" style="margin-right: 5px;">{{ name }}</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -57,7 +59,7 @@
             <div class="info-content">
               <el-input
                   type="textarea"
-                  :rows="3"
+                  :rows="6"
                   placeholder="请输入内容"
                   v-model="audit_note"
                   maxlength="200"
@@ -266,6 +268,8 @@ export default {
         > .info-item {
           margin-top: 10px;
         }
+
+
       }
     }
 
