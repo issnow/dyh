@@ -8,6 +8,8 @@
     <el-form :model="form" :rules="rules" label-width="90px" ref="form">
       <el-form-item label="名称:" prop="title">
         <el-input
+          type="textarea"
+          rows="2"
           v-model="form.title"
           maxlength="50"
           show-word-limit
