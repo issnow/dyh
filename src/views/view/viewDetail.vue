@@ -328,14 +328,15 @@ export default {
       width: 100%;
       padding-left: 40px;
       position: relative;
+      display: flex;
+      align-items: center;
 
       .audio{
         width: 100%;
-        height: 50%;
       }
       .video{
         width: 100%;
-        height: 100%;
+        max-height: 100%;
         display: block;
 
         &:focus {
