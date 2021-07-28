@@ -102,7 +102,7 @@ export default {
       selectVideo: true,
       rules: {
         title: [
-          { required: true, message: "请输入作品名称关键字", trigger: "blur" },
+          { required: true, message: "请输入成品名称关键字", trigger: "blur" },
         ],
         media_type: [
           { required: true, message: "请选择类型", trigger: "blur" },

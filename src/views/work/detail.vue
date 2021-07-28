@@ -643,7 +643,7 @@ export default {
   }
   .foot-btn {
     text-align: right;
-    padding-top: 50px;
+    // padding-top: 50px;
     padding-right: 50px;
   }
 }
