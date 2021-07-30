@@ -28,7 +28,7 @@
           </li>
           <li>
             <div class="label">人工审核意见:</div>
-            <div class="content">{{ task.manual }}</div>
+            <div class="content mannul-res">{{ task.manual }}</div>
           </li>
         </ul>
 
@@ -196,7 +196,6 @@
             :src="viewInfo.url"
             controls
             preload
-            style="margin-left: 30px"
           ></audio>
           <itemInfo :viewInfo="viewInfo" title="音频信息" />
         </div>
@@ -531,6 +530,12 @@ export default {
           height: calc(100vh - 370px);
         }
       }
+      .mp3-area {
+        audio {
+          margin-left: 50%;
+          transform: translateX(-50%);
+        }
+      }
     }
     &-info {
       position: relative;
@@ -581,6 +586,10 @@ export default {
             flex: 1;
             color: $gray;
             margin-left: -30px;
+            &.mannul-res {
+              padding-top: 0;
+              margin-left: 0;
+            }
             .item {
               display: flex;
               align-items: center;
