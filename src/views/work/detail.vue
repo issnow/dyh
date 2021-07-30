@@ -174,14 +174,9 @@
 
       <div class="work-detail-suggest">
         <div class="video-play-area" v-if="viewInfo.media_type == 1">
-          <!-- <player
-            v-if="!!viewInfo.trans_url"
-            :src="viewInfo.trans_url"
-            :bgImage="viewInfo.cover_url"
-            ref="mPlayer"
-          /> -->
-
-          <videoPlay :src="viewInfo.url"></videoPlay>
+          <videoPlay
+            :src="isProductDetail ? viewInfo.trans_url : viewInfo.url"
+          ></videoPlay>
         </div>
         <div class="picture-area" v-if="viewInfo.media_type == 3">
           <imagePreview
@@ -193,7 +188,7 @@
         </div>
         <div class="mp3-area" v-if="viewInfo.media_type == 2">
           <audio
-            :src="viewInfo.url"
+            :src="isProductDetail ? viewInfo.trans_url : viewInfo.url"
             controls
             preload
           ></audio>
