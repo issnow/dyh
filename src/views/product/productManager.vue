@@ -67,7 +67,7 @@
             :isVideo="true"
             :source="scope.row.url"
             :bgImage="scope.row.cover_url"
-            controlslist=''
+            controlslist=""
           />
           <!-- <m3u8
             :bgImage="scope.row.cover_url"
@@ -507,5 +507,11 @@ export default {
     font-size: 35px;
     cursor: pointer;
   }
+}
+</style>
+<style lang="scss">
+.el-image-viewer__wrapper .el-image-viewer__canvas .el-image-viewer__img {
+  max-height: 80% !important;
+  max-width: 80% !important;
 }
 </style>
