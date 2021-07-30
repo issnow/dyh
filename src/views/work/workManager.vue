@@ -161,7 +161,7 @@
             >提交审核</el-button
           >
           <el-button
-            v-if="![1, 2].includes(scope.row.status)"
+            v-if="![1, 2, 3].includes(scope.row.status)"
             type="text"
             @click="onWatch(scope.row.code)"
             >查看</el-button

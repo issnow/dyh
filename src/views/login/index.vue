@@ -21,10 +21,10 @@
         </el-form-item>
         <el-form-item prop="password">
           <el-input
+            type="password"
             v-model="form.password"
             placeholder="请填写密码"
             @keyup.enter.native="onChange"
-            show-password
             prefix-icon="el-icon-lock"
           ></el-input>
         </el-form-item>
@@ -187,9 +187,6 @@ export default {
             font-size: 1.09rem;
           }
         }
-      }
-      ::v-deep .el-input__suffix {
-        right: 1rem;
       }
     }
   }

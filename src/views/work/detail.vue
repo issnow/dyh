@@ -28,7 +28,7 @@
           </li>
           <li>
             <div class="label">人工审核意见:</div>
-            <div class="content">{{ task.manual }}</div>
+            <div class="content mannul-res">{{ task.manual }}</div>
           </li>
         </ul>
 
@@ -120,7 +120,7 @@
                 v-show="!isEdit"
                 v-for="(e, i) in viewInfo.entity"
                 :key="i"
-                :label="e.f_name"
+                :label="e.f_name + ':'"
                 label-width="60px"
               >
                 {{
@@ -132,7 +132,7 @@
             </div>
           </div>
 
-          <el-form-item label="描述:" prop="description">
+          <el-form-item label="描述:" prop="description" class="desc-item">
             <el-input
               v-show="isEdit"
               type="textarea"
@@ -143,7 +143,9 @@
               show-word-limit
             >
             </el-input>
-            <span v-show="!isEdit">{{ viewInfo.description }}</span>
+            <span v-show="!isEdit" class="desc">{{
+              viewInfo.description
+            }}</span>
           </el-form-item>
         </el-form>
         <div
@@ -174,14 +176,9 @@
 
       <div class="work-detail-suggest">
         <div class="video-play-area" v-if="viewInfo.media_type == 1">
-          <!-- <player
-            v-if="!!viewInfo.trans_url"
-            :src="viewInfo.trans_url"
-            :bgImage="viewInfo.cover_url"
-            ref="mPlayer"
-          /> -->
-
-          <videoPlay :src="viewInfo.url"></videoPlay>
+          <videoPlay
+            :src="isProductDetail ? viewInfo.trans_url : viewInfo.url"
+          ></videoPlay>
         </div>
         <div class="picture-area" v-if="viewInfo.media_type == 3">
           <imagePreview
@@ -193,10 +190,9 @@
         </div>
         <div class="mp3-area" v-if="viewInfo.media_type == 2">
           <audio
-            :src="viewInfo.url"
+            :src="isProductDetail ? viewInfo.trans_url : viewInfo.url"
             controls
             preload
-            style="margin-left: 30px"
           ></audio>
           <itemInfo :viewInfo="viewInfo" title="音频信息" />
         </div>
@@ -472,6 +468,7 @@ export default {
                   type: "success",
                   message: msg,
                 });
+                this.onCancel()
               }
             })
             .catch(() => {
@@ -531,6 +528,12 @@ export default {
           height: calc(100vh - 370px);
         }
       }
+      .mp3-area {
+        audio {
+          margin-left: 50%;
+          transform: translateX(-50%);
+        }
+      }
     }
     &-info {
       position: relative;
@@ -538,8 +541,13 @@ export default {
       width: 50%;
       border-right: 1px dashed $dark;
       .info-form {
-        .el-form-item {
-          // margin-bottom: 10px;
+        .el-form-item.desc-item {
+          ::v-deep .el-form-item__content {
+            line-height: 30px;
+            .desc {
+              word-break: break-all;
+            }
+          }
         }
       }
       .info-list {
@@ -581,6 +589,11 @@ export default {
             flex: 1;
             color: $gray;
             margin-left: -30px;
+            &.mannul-res {
+              padding-top: 0;
+              margin-left: 0;
+              word-break: break-all;
+            }
             .item {
               display: flex;
               align-items: center;
@@ -637,6 +650,15 @@ export default {
         }
         .right {
           flex: 1;
+        }
+        ::v-deep .el-form-item__label {
+          margin-right: 12px;
+          padding-right: 0;
+          text-align: center;
+          background-color: #f4f4f5;
+          color: #909399;
+          border-radius: 4px;
+          border: 1px splid #e9e9eb;
         }
       }
     }

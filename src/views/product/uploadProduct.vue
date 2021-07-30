@@ -238,7 +238,7 @@ export default {
       });
       // var cp;
       // var hook;
-      let d = new Date().toLocaleDateString().replace("/", "");
+      let d = new Date().toLocaleDateString().replace(/\//g, "");
       obsClient.uploadFile(
         {
           Bucket: "yingpu",
