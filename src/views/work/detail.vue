@@ -132,7 +132,7 @@
             </div>
           </div>
 
-          <el-form-item label="描述:" prop="description">
+          <el-form-item label="描述:" prop="description" class="desc-item">
             <el-input
               v-show="isEdit"
               type="textarea"
@@ -143,7 +143,9 @@
               show-word-limit
             >
             </el-input>
-            <span v-show="!isEdit">{{ viewInfo.description }}</span>
+            <span v-show="!isEdit" class="desc">{{
+              viewInfo.description
+            }}</span>
           </el-form-item>
         </el-form>
         <div
@@ -538,8 +540,13 @@ export default {
       width: 50%;
       border-right: 1px dashed $dark;
       .info-form {
-        .el-form-item {
-          // margin-bottom: 10px;
+        .el-form-item.desc-item {
+          ::v-deep .el-form-item__content {
+            line-height: 30px;
+            .desc {
+              word-break: break-all;
+            }
+          }
         }
       }
       .info-list {
@@ -584,6 +591,7 @@ export default {
             &.mannul-res {
               padding-top: 0;
               margin-left: 0;
+              word-break: break-all;
             }
             .item {
               display: flex;
