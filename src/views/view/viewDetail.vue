@@ -16,7 +16,7 @@
             <div class="info-label">精神文明:</div>
             <div class="info-content" style="display: grid; grid-template-columns: repeat(7, 1fr);">
               <div v-for="item in product.tag" :key="item" type="info" size="mini" style="width: 60px;">
-                {{item }}
+                {{ item }}
               </div>
             </div>
           </div>
@@ -49,10 +49,10 @@
           <div class="info-item" v-if="product.upload_type === 1">
             <div class="info-label">AI审核:</div>
             <div class="info-content">
-              <ai-audit title="视频" v-if="task.ai.frame" :audit="task.ai.frame" :duration="product.duration"></ai-audit>
-              <ai-audit style="margin-top: 5px;" title="字幕" v-if="task.ai.ocr" :audit="task.ai.ocr"
+              <ai-audit title="视频" :audit="task.ai.frame" :duration="product.duration"></ai-audit>
+              <ai-audit style="margin-top: 5px;" title="字幕" :audit="task.ai.ocr"
                         :duration="product.duration"></ai-audit>
-              <ai-audit style="margin-top: 5px;" title="声音" v-if="task.ai.voice" :audit="task.ai.voice"
+              <ai-audit style="margin-top: 5px;" title="声音" :audit="task.ai.voice"
                         :duration="product.duration"></ai-audit>
             </div>
           </div>
@@ -81,11 +81,15 @@
           :bgImage="product.cover_url"
           ref="mPlayer"
         /> -->
-        <video class="video" v-if="product.media_type === 1" :src="product.url" controls></video>
-
-        <audio class="audio"  v-if="product.media_type === 2" :src="product.url" controls></audio>
-        <img v-if="product.media_type === 3" :src="product.url">
-        <pdf-view :url="product.url" v-if="product.media_type === 4"></pdf-view>
+        <div v-if="product.is_del === 1"
+             style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+          <i class="iconfont icon-file-delete-fill" style="color: #8e8f93; font-size: 120px;"></i>
+          <div style="color: #C0C4CC; margin-top: 30px;">作品违规，文件已被管理员删除！</div>
+        </div>
+        <video class="video" v-else-if="product.media_type === 1" :src="product.url" controls></video>
+        <audio class="audio" v-else-if="product.media_type === 2" :src="product.url" controls></audio>
+        <img v-else-if="product.media_type === 3" :src="product.url">
+        <pdf-view :url="product.url" v-else-if="product.media_type === 4"></pdf-view>
       </div>
       <div class="footer">
         <el-button v-if="task.audit_status === 6" type="primary" @click="submitForm(1)" :loading="loading"
@@ -332,11 +336,13 @@ export default {
       position: relative;
       display: flex;
       align-items: center;
+      justify-content: center;
 
-      .audio{
+      .audio {
         width: 100%;
       }
-      .video{
+
+      .video {
         width: 100%;
         max-height: 100%;
         display: block;

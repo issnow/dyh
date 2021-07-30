@@ -92,30 +92,26 @@
         </el-table-column>
         <el-table-column prop="view" label="预览" width="120" class-name="td-center">
           <template slot-scope="scope">
+            <del-preview v-if="scope.row.is_del === 1"></del-preview>
             <videoPreview
-                v-if="scope.row.media_type == 1"
+                v-else-if="scope.row.media_type == 1"
                 :isVideo="true"
                 :source="scope.row.url"
                 :bgImage="scope.row.cover_url"
             />
-            <!-- <m3u8
-               :bgImage="scope.row.cover_url"
-               v-if="scope.row.media_type == 1 && !!scope.row.trans_url"
-               :src="scope.row.trans_url"
-             /> -->
             <audioPreview
-                v-if="scope.row.media_type == 2"
+                v-else-if="scope.row.media_type == 2"
                 :source="scope.row.url"
             />
             <imagePreview
-                v-if="scope.row.media_type == 3"
+                v-else-if="scope.row.media_type == 3"
                 :src="scope.row.url"
                 :list="[scope.row.url]"
                 :styleObj="{ width: '84px',height: '100px' }"
             />
             <i
                 class="iconfont icon-ziyuan1662"
-                v-if="scope.row.media_type == 4"
+                v-else-if="scope.row.media_type == 4"
                 @click="onpdfPre(scope.row.url)"
             ></i>
           </template>
@@ -142,10 +138,13 @@
           </template>
         </el-table-column>
         <el-table-column prop="created_at" label="创建时间" width="200" sortable></el-table-column>
-        <el-table-column fixed="right" label="操作">
+        <el-table-column fixed="right" label="操作" :width="120">
           <template slot-scope="scope">
             <el-button type="text" @click="onWatch(scope.row)" v-if="scope.row.status === 6">审核</el-button>
             <el-button type="text" @click="onWatch(scope.row)" v-else>查看</el-button>
+            <el-button :underline="false" type="text" v-if="scope.row.status === 7 && scope.row.is_del === 0"
+                       @click="delTask(scope.row)" style="color: #ff7171;">删除文件
+            </el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -172,11 +171,13 @@ import videoPreview from "@component/videoPreview";
 import audioPreview from "@component/audioPreview";
 import imagePreview from "@component/imagePreview";
 import pdfPreview from "@component/pdfPreview";
+import delPreview from '../../components/delPreview';
 // import m3u8 from "@component/m3u8/index";
 
 import {
   getChoicesList,
   getList,
+  delTask,
 } from "@api/project";
 import submitDialog from '../work/submitDialog';
 import uploadProduct from '../product/uploadProduct';
@@ -187,6 +188,7 @@ export default {
     audioPreview,
     imagePreview,
     pdfPreview,
+    delPreview,
     // m3u8
   },
   data() {
@@ -323,7 +325,6 @@ export default {
 
     // 获取审核列表
     getList() {
-      console.log('getList', this);
       this.loading = true;
       const params = {
         pageNo: this.page.pageNo,
@@ -371,6 +372,31 @@ export default {
     handleCurrentChange(val) {
       this.page.pageNo = val;
       this.getList();
+    },
+
+    // 物理删除作品/成品
+    async delTask(row) {
+      const confirm = await this.$confirm('确定要删除此任务的物理文件吗?', '删除文件').catch(() => {
+      });
+      if (!confirm) {
+        return;
+      }
+
+      const result = await delTask({code: row.product_code});
+      if (result.status !== 1) {
+        this.$message({
+          type: "error",
+          message: result.msg,
+        });
+        return;
+      }
+      this.$message({
+        type: 'success',
+        message: '文件删除成功',
+      });
+
+      this.getList();
+
     },
   },
 };

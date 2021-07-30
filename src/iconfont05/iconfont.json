@@ -6,6 +6,13 @@
   "description": "大运河项目",
   "glyphs": [
     {
+      "icon_id": "19912219",
+      "name": "file-delete-fill",
+      "font_class": "file-delete-fill",
+      "unicode": "e97d",
+      "unicode_decimal": 59773
+    },
+    {
       "icon_id": "16049985",
       "name": "PDF文件",
       "font_class": "ziyuan1662",
