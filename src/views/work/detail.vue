@@ -120,7 +120,7 @@
                 v-show="!isEdit"
                 v-for="(e, i) in viewInfo.entity"
                 :key="i"
-                :label="e.f_name"
+                :label="e.f_name + ':'"
                 label-width="60px"
               >
                 {{
@@ -637,6 +637,15 @@ export default {
         }
         .right {
           flex: 1;
+        }
+        ::v-deep .el-form-item__label {
+          margin-right: 12px;
+          padding-right: 0;
+          text-align: center;
+          background-color: #f4f4f5;
+          color: #909399;
+          border-radius: 4px;
+          border: 1px splid #e9e9eb;
         }
       }
     }
