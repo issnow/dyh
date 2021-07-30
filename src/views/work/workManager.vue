@@ -456,7 +456,7 @@ export default {
       }
     },
     onDelete(code) {
-      this.$confirm("请确认是否删除该成品?", "删除确认", {
+      this.$confirm("请确认是否删除该作品?", "删除确认", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",

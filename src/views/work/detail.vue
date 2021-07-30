@@ -187,7 +187,7 @@
           <imagePreview
             :src="viewInfo.url"
             :list="[viewInfo.url]"
-            :styleObj="{ height: '500px' }"
+            :styleObj="{ maxHeight: '400px' }"
           />
           <itemInfo :viewInfo="viewInfo" title="图片信息" />
         </div>
@@ -506,7 +506,7 @@ export default {
   padding-bottom: 30px;
   .work-detail {
     display: flex;
-    padding: 50px 30px;
+    padding: 50px 30px 0px;
     // min-height: 660px;
     .title {
       font-size: 16px;
@@ -643,7 +643,7 @@ export default {
   }
   .foot-btn {
     text-align: right;
-    padding-top: 50px;
+    // padding-top: 50px;
     padding-right: 50px;
   }
 }
