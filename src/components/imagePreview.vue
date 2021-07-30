@@ -1,5 +1,5 @@
 <template>
-  <el-image :style="styleObj" :src="src" :preview-src-list="list" fit="scale-down">
+  <el-image :lazy='true' :style="styleObj" :src="src" :preview-src-list="list" fit="fill">
   </el-image>
 </template>
 
@@ -13,5 +13,8 @@ export default {
 .el-image {
   margin-left: 50%;
   transform: translateX(-50%);
+  ::v-deep img {
+    max-height: inherit;
+  }
 }
 </style>
