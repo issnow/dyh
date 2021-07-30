@@ -468,6 +468,7 @@ export default {
                   type: "success",
                   message: msg,
                 });
+                this.onCancel()
               }
             })
             .catch(() => {
