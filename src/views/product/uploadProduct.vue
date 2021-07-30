@@ -8,6 +8,8 @@
     <el-form :model="form" :rules="rules" label-width="90px" ref="form">
       <el-form-item label="名称:" prop="title">
         <el-input
+          type="textarea"
+          rows="2"
           v-model="form.title"
           maxlength="50"
           show-word-limit
@@ -100,7 +102,7 @@ export default {
       selectVideo: true,
       rules: {
         title: [
-          { required: true, message: "请输入作品名称关键字", trigger: "blur" },
+          { required: true, message: "请输入成品名称关键字", trigger: "blur" },
         ],
         media_type: [
           { required: true, message: "请选择类型", trigger: "blur" },
