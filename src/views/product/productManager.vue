@@ -65,9 +65,9 @@
           <videoPreview
             v-if="scope.row.media_type == 1"
             :isVideo="true"
-            :source="scope.row.url"
+            :source="scope.row.trans_url"
             :bgImage="scope.row.cover_url"
-            controlslist=''
+            controlslist=""
           />
           <!-- <m3u8
             :bgImage="scope.row.cover_url"
@@ -76,7 +76,7 @@
           /> -->
           <audioPreview
             v-if="scope.row.media_type == 2"
-            :source="scope.row.url"
+            :source="scope.row.trans_url"
           />
           <imagePreview
             v-if="scope.row.media_type == 3"
@@ -507,5 +507,11 @@ export default {
     font-size: 35px;
     cursor: pointer;
   }
+}
+</style>
+<style lang="scss">
+.el-image-viewer__wrapper .el-image-viewer__canvas .el-image-viewer__img {
+  max-height: 80% !important;
+  max-width: 80% !important;
 }
 </style>
