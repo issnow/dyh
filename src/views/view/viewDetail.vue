@@ -46,11 +46,13 @@
       <div class="work-detail-audit">
         <div class="header">审核结果:</div>
         <div class="content">
-          <div class="info-item" v-if="task.ai && task.ai.length > 0">
+          <div class="info-item" v-if="product.upload_type === 1">
             <div class="info-label">AI审核:</div>
             <div class="info-content">
-              <ai-audit title="视频" :audit="task.ai.frame" :duration="product.duration"></ai-audit>
-              <ai-audit style="margin-top: 5px;" title="字幕" :audit="task.ai.ocr"
+              <ai-audit title="视频" v-if="task.ai.frame" :audit="task.ai.frame" :duration="product.duration"></ai-audit>
+              <ai-audit style="margin-top: 5px;" title="字幕" v-if="task.ai.ocr" :audit="task.ai.ocr"
+                        :duration="product.duration"></ai-audit>
+              <ai-audit style="margin-top: 5px;" title="声音" v-if="task.ai.voice" :audit="task.ai.voice"
                         :duration="product.duration"></ai-audit>
             </div>
           </div>
