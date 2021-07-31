@@ -32,7 +32,7 @@
           </li>
         </ul>
 
-        <div class="title">成品信息:</div>
+        <div class="title">{{isProductDetail?'成':'作'}}品信息:</div>
         <el-form
           :model="form"
           :rules="rules"
