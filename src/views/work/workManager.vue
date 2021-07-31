@@ -49,6 +49,11 @@
     >
       <el-table-column type="selection" width="55"> </el-table-column>
       <el-table-column prop="title" label="作品名称"></el-table-column>
+      <el-table-column
+        prop="media_type_title"
+        label="类型"
+        width="120"
+      ></el-table-column>
       <el-table-column prop="resolution" label="分辨率" width="120">
         <template slot="header" scope="scope">
           <el-select
@@ -94,7 +99,7 @@
             :isVideo="true"
             :source="scope.row.url"
             :bgImage="scope.row.cover_url"
-            controlslist=''
+            controlslist=""
           />
         </template>
       </el-table-column>
