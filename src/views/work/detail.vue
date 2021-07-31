@@ -32,7 +32,7 @@
           </li>
         </ul>
 
-        <div class="title">{{isProductDetail?'成':'作'}}品信息:</div>
+        <div class="title">{{ isProductDetail ? "成" : "作" }}品信息:</div>
         <el-form
           :model="form"
           :rules="rules"
@@ -468,7 +468,7 @@ export default {
                   type: "success",
                   message: msg,
                 });
-                this.onCancel()
+                this.onCancel();
               }
             })
             .catch(() => {
@@ -541,8 +541,9 @@ export default {
       width: 50%;
       border-right: 1px dashed $dark;
       .info-form {
-        .el-form-item.desc-item {
-          ::v-deep .el-form-item__content {
+        ::v-deep .el-form-item.desc-item {
+          .el-form-item__content,
+          .el-form-item__label {
             line-height: 30px;
             .desc {
               word-break: break-all;
