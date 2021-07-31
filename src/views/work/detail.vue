@@ -175,12 +175,17 @@
       </div>
 
       <div class="work-detail-suggest">
-        <div class="video-play-area" v-if="viewInfo.media_type == 1">
+        <div v-if="viewInfo.is_del === 1"
+             style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+          <i class="iconfont icon-file-delete-fill" style="color: #8e8f93; font-size: 120px;"></i>
+          <div style="color: #C0C4CC; margin-top: 30px;">作品违规，文件已被管理员删除！</div>
+        </div>
+        <div class="video-play-area" v-else-if="viewInfo.media_type == 1">
           <videoPlay
             :src="isProductDetail ? viewInfo.trans_url : viewInfo.url"
           ></videoPlay>
         </div>
-        <div class="picture-area" v-if="viewInfo.media_type == 3">
+        <div class="picture-area" v-else-if="viewInfo.media_type == 3">
           <imagePreview
             :src="viewInfo.url"
             :list="[viewInfo.url]"
@@ -188,7 +193,7 @@
           />
           <itemInfo :viewInfo="viewInfo" title="图片信息" />
         </div>
-        <div class="mp3-area" v-if="viewInfo.media_type == 2">
+        <div class="mp3-area" v-else-if="viewInfo.media_type == 2">
           <audio
             :src="isProductDetail ? viewInfo.trans_url : viewInfo.url"
             controls
@@ -196,7 +201,7 @@
           ></audio>
           <itemInfo :viewInfo="viewInfo" title="音频信息" />
         </div>
-        <div class="pdf-area" v-if="viewInfo.media_type == 4">
+        <div class="pdf-area" v-else-if="viewInfo.media_type == 4">
           <div class="pdf-wrap">
             <pdfView :url="viewInfo.url" />
           </div>

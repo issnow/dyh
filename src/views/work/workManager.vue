@@ -95,7 +95,9 @@
       </el-table-column>
       <el-table-column label="预览" width="160">
         <template slot-scope="scope">
+          <del-preview v-if="scope.row.is_del === 1"></del-preview>
           <videoPreview
+            v-else
             :isVideo="true"
             :source="scope.row.url"
             :bgImage="scope.row.cover_url"
@@ -217,11 +219,13 @@ import videoPreview from "@component/videoPreview";
 // import submitDialog from "./submitDialog";
 import _ from "lodash";
 import { mapGetters, mapMutations } from "vuex";
+import delPreview from "@component/delPreview";
 
 export default {
   components: {
     submitDialog: () => import("./submitDialog.vue"),
     videoPreview,
+    delPreview,
   },
   computed: {
     ...mapGetters(["params2", "page2"]),
