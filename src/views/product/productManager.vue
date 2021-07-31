@@ -62,8 +62,9 @@
       ></el-table-column>
       <el-table-column label="预览" width="160" class-name="td-center">
         <template slot-scope="scope">
+          <del-preview v-if="scope.row.is_del === 1"></del-preview>
           <videoPreview
-            v-if="scope.row.media_type == 1"
+            v-else-if="scope.row.media_type == 1"
             :isVideo="true"
             :source="scope.row.trans_url"
             :bgImage="scope.row.cover_url"
@@ -71,22 +72,22 @@
           />
           <!-- <m3u8
             :bgImage="scope.row.cover_url"
-            v-if="scope.row.media_type == 1 && !!scope.row.trans_url"
+            v-else-if="scope.row.media_type == 1 && !!scope.row.trans_url"
             :src="scope.row.trans_url"
           /> -->
           <audioPreview
-            v-if="scope.row.media_type == 2"
+            v-else-if="scope.row.media_type == 2"
             :source="scope.row.trans_url"
           />
           <imagePreview
-            v-if="scope.row.media_type == 3"
+            v-else-if="scope.row.media_type == 3"
             :src="scope.row.url"
             :list="[scope.row.url]"
             :styleObj="{ height: '48px' }"
           />
           <i
             class="iconfont icon-ziyuan1662"
-            v-if="scope.row.media_type == 4"
+            v-else-if="scope.row.media_type == 4"
             @click="onpdfPre(scope.row.url)"
           ></i>
         </template>
@@ -213,6 +214,7 @@ import uploadProduct from "./uploadProduct.vue";
 import { getList, del, applyAudit, reTranscode } from "@api/product";
 import { productChoicesList } from "@api/workManager";
 import { mapGetters, mapMutations } from "vuex";
+import delPreview from "@component/delPreview";
 // import m3u8 from "@component/m3u8/index";
 export default {
   components: {
@@ -223,6 +225,7 @@ export default {
     imagePreview,
     pdfPreview,
     // m3u8,
+    delPreview,
   },
   computed: {
     ...mapGetters(["params1", "page1"]),
