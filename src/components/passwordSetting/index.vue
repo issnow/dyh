@@ -15,14 +15,14 @@
       class="change-pwd-form"
     >
       <el-form-item label="当前密码:" prop="oldpassword">
-        <el-input v-model="pwdform.oldpassword" show-password></el-input>
+        <el-input v-model="pwdform.oldpassword" type='password'></el-input>
       </el-form-item>
       <el-form-item label="新密码:" prop="newpassword">
-        <el-input v-model="pwdform.newpassword" show-password></el-input>
+        <el-input v-model="pwdform.newpassword" type='password'></el-input>
         <span>输入提示：请输入包含数字、字母8-16位密码</span>
       </el-form-item>
       <el-form-item label="确认新密码:" prop="confirmPassword">
-        <el-input v-model="pwdform.confirmPassword" show-password></el-input>
+        <el-input v-model="pwdform.confirmPassword" type='password'></el-input>
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">

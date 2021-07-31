@@ -82,7 +82,7 @@
             v-if="scope.row.media_type == 3"
             :src="scope.row.url"
             :list="[scope.row.url]"
-            :styleObj="{ width: '84px', height: '100px' }"
+            :styleObj="{ height: '48px' }"
           />
           <i
             class="iconfont icon-ziyuan1662"
@@ -496,14 +496,15 @@ export default {
       color: #f56c6c;
     }
     tbody .td-center {
-      padding: 0;
       .cell {
-        padding: 14px 0 12px;
+        line-height: 0;
+        height: 48px;
       }
     }
   }
   .icon-ziyuan1662 {
     margin-left: calc(50% - 14px);
+    line-height: 48px;
     font-size: 35px;
     cursor: pointer;
   }

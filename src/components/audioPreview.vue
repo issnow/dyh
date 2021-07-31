@@ -32,6 +32,7 @@ export default {
 
 <style lang="scss" scoped>
 .audio-preview {
+  height: 100%;
   ::v-deep .el-dialog.is-fullscreen {
     background-color: rgba(0, 0, 0, 0.5);
     .el-dialog__close {
@@ -75,6 +76,7 @@ export default {
     margin-left: calc(50% - 14px);
     font-size: 35px;
     cursor: pointer;
+    line-height: 48px;
   }
 }
 </style>
