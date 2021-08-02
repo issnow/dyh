@@ -156,6 +156,9 @@ export default {
   },
   methods: {
     changeType(v) {
+      this.file = null;
+      this.$refs.file.reset();
+      this.percentage = 0;
       this.selectVideo = v == 1 ? true : false;
       this.form = {
         ...this.form,
@@ -217,15 +220,37 @@ export default {
         return v.toString(16);
       });
     },
+    checkFileType(ext) {
+      // : ["MP4", "MOV", "WMV", "M2V", "MPG"],
+      //   2: ["MP3", "FLAC", "AAC", "M4A"],
+      //   3: ["JPG", "PNG"],
+      //   4: ["PDF"],
+      let reg = {
+        1: /(mp4|mov|wmv|m2v|mpg)$/gi,
+        2: /(MP3|FLAC|AAC|M4A|)$/gi,
+        3: /(JPE?G|PNG)$/gi,
+        4: /PDF$/gi,
+      };
+      return reg[this.form.media_type].test(ext);
+    },
     // 华为云断点续传,具体参考https://support.huaweicloud.com/api-obs_browserjs_sdk_api_zh/obs_34_0503.html
     async fileChange() {
       this.percentage = 0;
       this.upLoading = true;
       let _this = this;
       let file = this.$refs.uploadProduct.files[0];
-      this.file = file;
       let ext = file.name.slice(file.name.lastIndexOf(".") + 1).toLowerCase();
       console.log(file, ext);
+      if (!this.checkFileType(ext)) {
+        this.$message({
+          type: "error",
+          message: "请上传对应格式文件",
+        });
+        this.upLoading = false;
+        this.$refs.file.reset();
+        return;
+      }
+      this.file = file;
 
       let { element } = await temporaryKey();
 
