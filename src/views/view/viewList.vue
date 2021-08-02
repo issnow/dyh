@@ -9,7 +9,8 @@
         <el-row>
           <el-col :span="6">
             <el-form-item label="搜索" prop="title">
-              <el-input v-model="form.title" placeholder="请输入关键字" @keydown.enter.native="searchProject" :autofocus="true">
+              <el-input v-model="form.title" placeholder="请输入关键字" @keydown.enter.native="searchProject"
+                        :autofocus="true">
                 <el-button slot="append" icon="el-icon-search" @click="searchProject"></el-button>
               </el-input>
             </el-form-item>
@@ -96,12 +97,12 @@
             <videoPreview
                 v-else-if="scope.row.media_type == 1"
                 :isVideo="true"
-                :source="scope.row.url"
+                :source="scope.row.trans_url || scope.row.url"
                 :bgImage="scope.row.cover_url"
             />
             <audioPreview
                 v-else-if="scope.row.media_type == 2"
-                :source="scope.row.url"
+                :source="scope.row.trans_url || scope.row.url"
             />
             <imagePreview
                 v-else-if="scope.row.media_type == 3"
@@ -142,6 +143,8 @@
           <template slot-scope="scope">
             <el-button type="text" @click="onWatch(scope.row)" v-if="scope.row.status === 6">审核</el-button>
             <el-button type="text" @click="onWatch(scope.row)" v-else>查看</el-button>
+            <!--            <el-link target="_blank" :href="scope.row.url" download="download">下载</el-link>-->
+            <el-button type="text" @click="download(scope.row)">下载</el-button>
             <el-button :underline="false" type="text" v-if="scope.row.status === 7 && scope.row.is_del === 0"
                        @click="delTask(scope.row)" style="color: #ff7171;">删除文件
             </el-button>
@@ -397,6 +400,11 @@ export default {
 
       this.getList();
 
+    },
+
+    // 下载文件
+    download(row) {
+      window.open(row.url);
     },
   },
 };

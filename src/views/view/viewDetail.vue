@@ -87,10 +87,12 @@
           <i class="iconfont icon-file-delete-fill" style="color: #8e8f93; font-size: 120px;"></i>
           <div style="color: #C0C4CC; margin-top: 30px;">作品违规，文件已被管理员删除！</div>
         </div>
-        <video class="video" v-else-if="product.media_type === 1" :src="product.url" controls></video>
-        <audio class="audio" v-else-if="product.media_type === 2" :src="product.url" controls></audio>
-        <img v-else-if="product.media_type === 3" :src="product.url">
-        <pdf-view :url="product.url" v-else-if="product.media_type === 4"></pdf-view>
+        <video class="video" v-else-if="product.media_type === 1" :src="product.trans_url || product.url"
+               controls controlslist="nodownload"></video>
+        <audio class="audio" v-else-if="product.media_type === 2" :src="product.trans_url || product.url"
+               controls controlslist="nodownload"></audio>
+        <img v-else-if="product.media_type === 3" :src="product.trans_url || product.url">
+        <pdf-view :url="product.trans_url || product.url" v-else-if="product.media_type === 4"></pdf-view>
       </div>
       <div class="footer">
         <el-button v-if="task.audit_status === 6" type="primary" @click="submitForm(1)" :loading="loading"
