@@ -188,6 +188,10 @@
             @click="onWatch(scope.row.code)"
             >查看</el-button
           >
+          <el-button type="text" @click="click(scope.row.url)">
+            下载
+          </el-button>
+
           <el-button
             v-if="[1, 2, 3, 6, 7, 5].includes(scope.row.status)"
             type="text"
@@ -334,6 +338,9 @@ export default {
       "workManager/resetP2",
       "workManager/setPage2",
     ]),
+    click(url) {
+      window.open(url);
+    },
     init() {
       this.form = {
         title: this.params2.title,

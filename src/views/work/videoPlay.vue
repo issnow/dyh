@@ -1,17 +1,11 @@
 <template>
-  <video
-    :src="src"
-    controls
-    preload
-  >
-
-  </video>
+  <video :src="src" controls preload controlslist="nodownload"></video>
 </template>
 
 <script>
 export default {
-  props: ['src']
-}
+  props: ["src"],
+};
 </script>
 
 <style lang="scss" scoped>

@@ -54,7 +54,7 @@
           controls
           ref="player"
           disablePictureInPicture
-          :controlslist="controlslist"
+          controlslist="nodownload"
         ></video>
         <audio
             :src="source"

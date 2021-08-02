@@ -175,10 +175,22 @@
       </div>
 
       <div class="work-detail-suggest">
-        <div v-if="viewInfo.is_del === 1"
-             style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
-          <i class="iconfont icon-file-delete-fill" style="color: #8e8f93; font-size: 120px;"></i>
-          <div style="color: #C0C4CC; margin-top: 30px;">作品违规，文件已被管理员删除！</div>
+        <div
+          v-if="viewInfo.is_del === 1"
+          style="
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+          "
+        >
+          <i
+            class="iconfont icon-file-delete-fill"
+            style="color: #8e8f93; font-size: 120px"
+          ></i>
+          <div style="color: #c0c4cc; margin-top: 30px">
+            作品违规，文件已被管理员删除！
+          </div>
         </div>
         <div class="video-play-area" v-else-if="viewInfo.media_type == 1">
           <videoPlay
@@ -198,6 +210,7 @@
             :src="isProductDetail ? viewInfo.trans_url : viewInfo.url"
             controls
             preload
+            controlslist="nodownload"
           ></audio>
           <itemInfo :viewInfo="viewInfo" title="音频信息" />
         </div>

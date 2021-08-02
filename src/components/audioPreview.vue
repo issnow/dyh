@@ -1,14 +1,21 @@
 <template>
   <div class="audio-preview">
     <!-- <div class="flotStyle" @click="dialogVisible=true"></div> -->
-    <i class="iconfont icon-Musicfiles" @click="dialogVisible=true"></i>
+    <i class="iconfont icon-Musicfiles" @click="dialogVisible = true"></i>
 
     <el-dialog
       :visible.sync="dialogVisible"
       :before-close="handleClose"
       fullscreen
     >
-      <audio class="audio-play" :src="source" controls preload ref="audio"></audio>
+      <audio
+        class="audio-play"
+        :src="source"
+        controls
+        preload
+        ref="audio"
+        controlslist="nodownload"
+      ></audio>
     </el-dialog>
   </div>
 </template>
@@ -24,7 +31,7 @@ export default {
   methods: {
     handleClose() {
       this.dialogVisible = false;
-      this.$refs.audio.pause()
+      this.$refs.audio.pause();
     },
   },
 };
