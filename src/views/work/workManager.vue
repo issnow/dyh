@@ -93,16 +93,31 @@
           </el-select>
         </template>
       </el-table-column>
-      <el-table-column label="预览" width="160">
+      <el-table-column label="预览" width="160" class-name="td-center">
         <template slot-scope="scope">
           <del-preview v-if="scope.row.is_del === 1"></del-preview>
           <videoPreview
-            v-else
+            v-else-if="scope.row.media_type == 1"
             :isVideo="true"
             :source="scope.row.url"
             :bgImage="scope.row.cover_url"
             controlslist=""
           />
+          <audioPreview
+            v-else-if="scope.row.media_type == 2"
+            :source="scope.row.url"
+          />
+          <imagePreview
+            v-else-if="scope.row.media_type == 3"
+            :src="scope.row.url"
+            :list="[scope.row.url]"
+            :styleObj="{ height: '48px' }"
+          />
+          <i
+            class="iconfont icon-ziyuan1662"
+            v-else-if="scope.row.media_type == 4"
+            @click="onpdfPre(scope.row.url)"
+          ></i>
         </template>
       </el-table-column>
       <el-table-column
@@ -205,6 +220,12 @@
       @hideDialog="submitDialogVisible = false"
       @_productGetList="_productGetList"
     />
+
+    <pdfPreview
+      :src="pdfsrc"
+      :visible="pdfVisible"
+      @handleClose="pdfVisible = false"
+    />
   </div>
 </template>
 
@@ -216,6 +237,10 @@ import {
   againExportProduct,
 } from "@api/workManager";
 import videoPreview from "@component/videoPreview";
+import audioPreview from "@component/audioPreview";
+import imagePreview from "@component/imagePreview";
+import pdfPreview from "@component/pdfPreview";
+
 // import submitDialog from "./submitDialog";
 import _ from "lodash";
 import { mapGetters, mapMutations } from "vuex";
@@ -226,12 +251,17 @@ export default {
     submitDialog: () => import("./submitDialog.vue"),
     videoPreview,
     delPreview,
+    audioPreview,
+    imagePreview,
+    pdfPreview,
   },
   computed: {
     ...mapGetters(["params2", "page2"]),
   },
   data() {
     return {
+      pdfVisible: false,
+      pdfsrc: "",
       submitDialogVisible: false,
       page: {
         pageNo: 1,
@@ -319,6 +349,10 @@ export default {
     clear() {
       this.$refs.form.resetFields();
       this._productGetList();
+    },
+    onpdfPre(url) {
+      this.pdfsrc = url;
+      this.pdfVisible = true;
     },
     // 筛选列表
     filterSelect(value, type) {
@@ -530,10 +564,24 @@ export default {
     .del-red span {
       color: #f56c6c;
     }
+    tbody .td-center {
+      .cell {
+        line-height: 0;
+        height: 48px;
+      }
+    }
+  }
+  .icon-ziyuan1662 {
+    margin-left: calc(50% - 14px);
+    line-height: 48px;
+    font-size: 35px;
+    cursor: pointer;
   }
 }
-.work-name {
-  display: inline-block;
-  width: 220px;
+</style>
+<style lang="scss">
+.el-image-viewer__wrapper .el-image-viewer__canvas .el-image-viewer__img {
+  max-height: 80% !important;
+  max-width: 80% !important;
 }
 </style>
