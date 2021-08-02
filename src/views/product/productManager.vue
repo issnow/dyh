@@ -41,7 +41,6 @@
         </el-col>
       </el-row>
     </el-form>
-
     <el-table
       v-loading="loading"
       class="mb20"
@@ -160,6 +159,12 @@
             >查看</el-button
           >
           <el-button
+            type="text"
+            @click="downloadFile(scope.row)"
+            :loading="scope.row.downloadLoading"
+            >下载</el-button
+          >
+          <el-button
             v-if="[11, 12, 13, 3, 7, 8].includes(scope.row.status)"
             type="text"
             class="del-red"
@@ -216,11 +221,18 @@ import imagePreview from "@component/imagePreview";
 import pdfPreview from "@component/pdfPreview";
 import submitDialog from "../work/submitDialog.vue";
 import uploadProduct from "./uploadProduct.vue";
-import { getList, del, applyAudit, reTranscode } from "@api/product";
+import {
+  getList,
+  del,
+  applyAudit,
+  reTranscode,
+  temporaryKey,
+  download,
+} from "@api/product";
 import { productChoicesList } from "@api/workManager";
 import { mapGetters, mapMutations } from "vuex";
 import delPreview from "@component/delPreview";
-// import m3u8 from "@component/m3u8/index";
+
 export default {
   components: {
     videoPreview,
@@ -273,6 +285,7 @@ export default {
       resolution: [],
       media_type: [],
       copyParams: {},
+      downloadLoading: false,
     };
   },
   watch: {
@@ -294,6 +307,10 @@ export default {
       "workManager/resetP1",
       "workManager/setPage1",
     ]),
+    downloadFile(row) {
+      row.downloadLoading = true;
+      download(row.url,row);
+    },
     init() {
       this.form = {
         title: this.params1.title,
@@ -337,6 +354,7 @@ export default {
       this["workManager/resetP1"]();
       this.loading = false;
       if (status == 1) {
+        datas.forEach(e=>e.downloadLoading = false)
         this.tableData = datas;
         this.page = {
           pageNo: fsp.pageNo,
@@ -509,6 +527,10 @@ export default {
         height: 48px;
       }
     }
+    .el-progress-circle {
+      height: 10px;
+      width: 10px;
+    }
   }
   .icon-ziyuan1662 {
     margin-left: calc(50% - 14px);
@@ -522,5 +544,9 @@ export default {
 .el-image-viewer__wrapper .el-image-viewer__canvas .el-image-viewer__img {
   max-height: 80% !important;
   max-width: 80% !important;
+}
+.el-progress-circle {
+  height: 50px !important;
+  width: 50px !important;
 }
 </style>

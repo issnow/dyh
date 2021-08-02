@@ -8,7 +8,7 @@
       :before-close="handleClose"
       fullscreen
     >
-      <audio class="audio-play" :src="source" controls preload ref="audio"></audio>
+      <audio class="audio-play" :src="source" controls preload ref="audio" controlslist="nodownload"></audio>
     </el-dialog>
   </div>
 </template>
