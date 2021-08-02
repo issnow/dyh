@@ -44,6 +44,13 @@ export default {
     window.addEventListener("beforeunload", () => {
       sessionStorage.setItem("store", JSON.stringify(this.$store.state));
     });
+
+    window.addEventListener("offline", () => {
+      this.$message({
+        type: "error",
+        message: "网络连接已断开",
+      });
+    });
   },
 };
 </script>
