@@ -62,34 +62,39 @@
       ></el-table-column>
       <el-table-column label="预览" width="160" class-name="td-center">
         <template slot-scope="scope">
-          <del-preview v-if="scope.row.is_del === 1"></del-preview>
-          <videoPreview
-            v-else-if="scope.row.media_type == 1"
-            :isVideo="true"
-            :source="scope.row.trans_url"
-            :bgImage="scope.row.cover_url"
-            controlslist=""
-          />
-          <!-- <m3u8
-            :bgImage="scope.row.cover_url"
-            v-else-if="scope.row.media_type == 1 && !!scope.row.trans_url"
-            :src="scope.row.trans_url"
-          /> -->
-          <audioPreview
-            v-else-if="scope.row.media_type == 2"
-            :source="scope.row.trans_url"
-          />
-          <imagePreview
-            v-else-if="scope.row.media_type == 3"
-            :src="scope.row.url"
-            :list="[scope.row.url]"
-            :styleObj="{ height: '48px' }"
-          />
-          <i
-            class="iconfont icon-ziyuan1662"
-            v-else-if="scope.row.media_type == 4"
-            @click="onpdfPre(scope.row.url)"
-          ></i>
+          <template
+            v-if="
+              [1, 2].includes(scope.row.media_type) &&
+              [11, 12, 13].includes(scope.row.status)
+            "
+          >
+            <span style="line-height: 48px">无法预览</span>
+          </template>
+          <template v-else>
+            <del-preview v-if="scope.row.is_del === 1"></del-preview>
+            <videoPreview
+              v-else-if="scope.row.media_type == 1"
+              :isVideo="true"
+              :source="scope.row.trans_url"
+              :bgImage="scope.row.cover_url"
+              controlslist=""
+            />
+            <audioPreview
+              v-else-if="scope.row.media_type == 2"
+              :source="scope.row.trans_url"
+            />
+            <imagePreview
+              v-else-if="scope.row.media_type == 3"
+              :src="scope.row.url"
+              :list="[scope.row.url]"
+              :styleObj="{ height: '48px' }"
+            />
+            <i
+              class="iconfont icon-ziyuan1662"
+              v-else-if="scope.row.media_type == 4"
+              @click="onpdfPre(scope.row.url)"
+            ></i>
+          </template>
         </template>
       </el-table-column>
       <el-table-column
