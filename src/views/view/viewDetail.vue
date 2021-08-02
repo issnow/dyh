@@ -66,6 +66,7 @@
                   v-model="audit_note"
                   maxlength="200"
                   show-word-limit
+                  :readonly="task.audit_status !== 6"
               >
               </el-input>
             </div>

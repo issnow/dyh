@@ -9,7 +9,7 @@
         <el-row>
           <el-col :span="6">
             <el-form-item label="搜索" prop="title">
-              <el-input v-model="form.title" placeholder="请输入关键字">
+              <el-input v-model="form.title" placeholder="请输入关键字" @keydown.enter.native="searchProject" :autofocus="true">
                 <el-button slot="append" icon="el-icon-search" @click="searchProject"></el-button>
               </el-input>
             </el-form-item>
