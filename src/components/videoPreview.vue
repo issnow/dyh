@@ -142,7 +142,7 @@ export default {
         this.$refs.previewComponents.style.backgroundImage = src;
         this.$refs.previewComponents.style.backgroundRepeat = "no-repeat";
         this.$refs.previewComponents.style.backgroundPosition = "center";
-        this.$refs.previewComponents.style.backgroundSize = "cover";
+        this.$refs.previewComponents.style.backgroundSize = "100% 100%";
       } else {
         this.$refs.previewComponents.style.backgroundImage = "";
         this.$refs.previewComponents.style.backgroundSize = "";
@@ -155,7 +155,7 @@ export default {
       let src = "url(" + this.bgImage + ")";
       this.$refs.previewComponents.style.backgroundImage = src;
       this.$refs.previewComponents.style.backgroundRepeat = "no-repeat";
-      this.$refs.previewComponents.style.backgroundSize = "cover";
+      this.$refs.previewComponents.style.backgroundSize = "100% 100%";
     }
 
     window.addEventListener("resize", this.winResize);
