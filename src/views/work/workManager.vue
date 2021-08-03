@@ -188,10 +188,11 @@
             @click="onWatch(scope.row.code)"
             >查看</el-button
           >
-          <el-button type="text" @click="click(scope.row.url)">
-            下载
-          </el-button>
-
+          <el-button
+            type="text"
+            @click="downloadFile(scope.row)"
+            >下载</el-button
+          >
           <el-button
             v-if="[1, 2, 3, 6, 7, 5].includes(scope.row.status)"
             type="text"
@@ -249,6 +250,7 @@ import pdfPreview from "@component/pdfPreview";
 import _ from "lodash";
 import { mapGetters, mapMutations } from "vuex";
 import delPreview from "@component/delPreview";
+import { download } from "@api/product";
 
 export default {
   components: {
@@ -338,8 +340,12 @@ export default {
       "workManager/resetP2",
       "workManager/setPage2",
     ]),
-    click(url) {
-      window.open(url);
+    downloadFile(row) {
+      this.$message({
+        message: "开始下载",
+        type: "success",
+      });
+      download(row.url, row);
     },
     init() {
       this.form = {

@@ -2,7 +2,7 @@
   <div class="login-container">
     <div class="logo">
       <img :src="getImg('logo/登录页/logo02.png')" alt="" />
-      <h1>欢迎登录大运河文化短视频智能剪辑平台</h1>
+      <h1>欢迎登录大运河国家文化公园智能影像应用系统</h1>
     </div>
     <div class="login-form-wrap">
       <img
@@ -10,13 +10,14 @@
         :src="getImg('logo/登录页/登录页logo.svg')"
         alt=""
       />
-      <div class="title">大运河文化短视频智能剪辑平台</div>
+      <div class="title">大运河国家文化公园智能影像应用系统</div>
       <el-form :model="form" :rules="rules" ref="form" class="login-form">
         <el-form-item prop="email">
           <el-input
             v-model="form.email"
             placeholder="请填写邮箱"
             prefix-icon="el-icon-user"
+            class="te"
           ></el-input>
         </el-form-item>
         <el-form-item prop="password">
@@ -37,11 +38,7 @@
           >登 录</el-button
         >
       </el-form>
-      <img
-        class="footer-img"
-        :src="getImg('logo/登录页/support2.svg')"
-        alt=""
-      />
+      <img class="footer-img" :src="getImg('logo/登录页/sup.png')" alt="" />
     </div>
   </div>
 </template>
@@ -143,7 +140,8 @@ export default {
     right: 13%;
     width: 27.13rem;
     padding: 3.43rem 2.91rem 0;
-    background-color: #fff;
+    background-color: transparent;
+    box-shadow: 1px 1px 2px #a1d5dc, -1px -1px 2px #a1d5dc;
     z-index: 99;
     overflow: hidden;
     .form-login-img {
@@ -156,13 +154,16 @@ export default {
       width: 50%;
     }
     .title {
-      font-size: 1.35rem;
+      font-size: 1.15rem;
+      color: #fff;
     }
     .login-form {
       margin-top: 5.1rem;
       width: 100%;
       .deep-blue {
-        background-color: $deepBlue;
+        background-color: #4B7378;
+        border-width: 0;
+        line-height: 0;
         margin-bottom: 7.34rem;
         height: 2.81rem;
         font-size: 1.354rem;
@@ -181,7 +182,8 @@ export default {
           }
           .el-input__inner {
             padding-left: 3.333rem;
-            background: #fff;
+            background-color: rgba(75, 115, 120, 0.2);
+            color: #a1d5dc;
             border: 0.104rem solid #b2bccf;
             height: 2.96rem;
             font-size: 1.09rem;
@@ -200,7 +202,7 @@ export default {
       width: 17.55rem;
     }
     h1 {
-      font-size: 2.18rem;
+      font-size: 2rem;
       font-family: Source Han Sans CN;
       font-weight: 500;
       line-height: 58px;

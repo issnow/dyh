@@ -41,7 +41,6 @@
         </el-col>
       </el-row>
     </el-form>
-
     <el-table
       v-loading="loading"
       class="mb20"
@@ -68,9 +67,7 @@
               [11, 12, 13].includes(scope.row.status)
             "
           >
-            <i
-              class="iconfont icon-file-delete-fill"
-            ></i>
+            <i class="iconfont icon-file-delete-fill"></i>
           </template>
           <template v-else>
             <del-preview v-if="scope.row.is_del === 1"></del-preview>
@@ -161,9 +158,11 @@
             @click="onWatch(scope.row.code)"
             >查看</el-button
           >
-          <el-button type="text" @click="click(scope.row.url)">
-            下载
-          </el-button>
+          <el-button
+            type="text"
+            @click="downloadFile(scope.row)"
+            >下载</el-button
+          >
           <el-button
             v-if="[11, 12, 13, 3, 7, 8].includes(scope.row.status)"
             type="text"
@@ -221,11 +220,11 @@ import imagePreview from "@component/imagePreview";
 import pdfPreview from "@component/pdfPreview";
 import submitDialog from "../work/submitDialog.vue";
 import uploadProduct from "./uploadProduct.vue";
-import { getList, del, applyAudit, reTranscode } from "@api/product";
+import { getList, del, reTranscode, download } from "@api/product";
 import { productChoicesList } from "@api/workManager";
 import { mapGetters, mapMutations } from "vuex";
 import delPreview from "@component/delPreview";
-// import m3u8 from "@component/m3u8/index";
+
 export default {
   components: {
     videoPreview,
@@ -299,8 +298,12 @@ export default {
       "workManager/resetP1",
       "workManager/setPage1",
     ]),
-    click(url) {
-      window.open(url);
+    downloadFile(row) {
+      this.$message({
+        message: "开始下载",
+        type: "success",
+      });
+      download(row.url, row, );
     },
     init() {
       this.form = {
@@ -517,8 +520,13 @@ export default {
         height: 48px;
       }
     }
+    .el-progress-circle {
+      height: 10px;
+      width: 10px;
+    }
   }
-  .icon-ziyuan1662,.icon-file-delete-fill {
+  .icon-ziyuan1662,
+  .icon-file-delete-fill {
     margin-left: calc(50% - 14px);
     line-height: 48px;
     font-size: 35px;
@@ -530,5 +538,9 @@ export default {
 .el-image-viewer__wrapper .el-image-viewer__canvas .el-image-viewer__img {
   max-height: 80% !important;
   max-width: 80% !important;
+}
+.el-progress-circle {
+  height: 50px !important;
+  width: 50px !important;
 }
 </style>
