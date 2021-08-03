@@ -68,9 +68,7 @@
               [11, 12, 13].includes(scope.row.status)
             "
           >
-            <i
-              class="iconfont icon-file-delete-fill"
-            ></i>
+            <i class="iconfont icon-file-delete-fill"></i>
           </template>
           <template v-else>
             <del-preview v-if="scope.row.is_del === 1"></del-preview>
@@ -221,7 +219,13 @@ import imagePreview from "@component/imagePreview";
 import pdfPreview from "@component/pdfPreview";
 import submitDialog from "../work/submitDialog.vue";
 import uploadProduct from "./uploadProduct.vue";
-import { getList, del, applyAudit, reTranscode } from "@api/product";
+import {
+  getList,
+  del,
+  applyAudit,
+  reTranscode,
+  temporaryKey,
+} from "@api/product";
 import { productChoicesList } from "@api/workManager";
 import { mapGetters, mapMutations } from "vuex";
 import delPreview from "@component/delPreview";
@@ -299,8 +303,54 @@ export default {
       "workManager/resetP1",
       "workManager/setPage1",
     ]),
-    click(url) {
-      window.open(url);
+    async click(url) {
+      // window.open(url);
+      let { element } = await temporaryKey();
+
+      // 创建ObsClient实例
+      var obsClient = new ObsClient({
+        security_token: element.data.securitytoken,
+        access_key_id: element.data.access,
+        secret_access_key: element.data.secret,
+        server: "https://obs.cn-east-3.myhuaweicloud.com",
+      });
+      // obsClient.getObject(
+      //   {
+      //     Bucket: "yingpu",
+      //     Key: "objectname",
+      //   },
+      //   function (err, result) {
+      //     if (err) {
+      //       console.error("Error-->" + err);
+      //     } else {
+      //       console.log("Status-->" + result.CommonMsg.Status);
+      //       if (result.CommonMsg.Status < 300 && result.InterfaceResult) {
+      //         console.log(result.InterfaceResult.Content);
+      //       }
+      //     }
+      //   }
+      // );
+
+      obsClient.getObject(
+        {
+          Bucket: "yingpu",
+          Key: /(crowdCreation.*)$/.exec(url)[1],
+          SaveByType: "file",
+        },
+        function (err, result) {
+          if (err) {
+            console.error("Error-->" + err);
+          } else {
+            console.log("Status-->" + result.CommonMsg.Status);
+            if (result.CommonMsg.Status < 300 && result.InterfaceResult) {
+              // 获取下载对象的路径
+              console.log("Download Path:");
+              console.log(result.InterfaceResult.Content.SignedUrl);
+              window.open(result.InterfaceResult.Content.SignedUrl)
+            }
+          }
+        }
+      );
     },
     init() {
       this.form = {
@@ -518,7 +568,8 @@ export default {
       }
     }
   }
-  .icon-ziyuan1662,.icon-file-delete-fill {
+  .icon-ziyuan1662,
+  .icon-file-delete-fill {
     margin-left: calc(50% - 14px);
     line-height: 48px;
     font-size: 35px;
