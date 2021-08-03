@@ -41,7 +41,6 @@
         </el-col>
       </el-row>
     </el-form>
-
     <el-table
       v-loading="loading"
       class="mb20"
@@ -159,12 +158,12 @@
             @click="onWatch(scope.row.code)"
             >查看</el-button
           >
-          <el-button type="text" @click="click(scope.row.url, scope.row.title)">
-            下载
-          </el-button>
-          <!-- <a href="" :download="scope.row.url">
-            下载
-          </a> -->
+          <el-button
+            type="text"
+            @click="downloadFile(scope.row)"
+            :loading="scope.row.downloadLoading"
+            >下载</el-button
+          >
           <el-button
             v-if="[11, 12, 13, 3, 7, 8].includes(scope.row.status)"
             type="text"
@@ -228,11 +227,12 @@ import {
   applyAudit,
   reTranscode,
   temporaryKey,
+  download,
 } from "@api/product";
 import { productChoicesList } from "@api/workManager";
 import { mapGetters, mapMutations } from "vuex";
 import delPreview from "@component/delPreview";
-// import m3u8 from "@component/m3u8/index";
+
 export default {
   components: {
     videoPreview,
@@ -285,6 +285,7 @@ export default {
       resolution: [],
       media_type: [],
       copyParams: {},
+      downloadLoading: false,
     };
   },
   watch: {
@@ -306,74 +307,9 @@ export default {
       "workManager/resetP1",
       "workManager/setPage1",
     ]),
-    async click(url, title) {
-      // window.open(url);
-      let { element } = await temporaryKey();
-
-      // 创建ObsClient实例
-      var obsClient = new ObsClient({
-        security_token: element.data.securitytoken,
-        access_key_id: element.data.access,
-        secret_access_key: element.data.secret,
-        server: "https://obs.cn-east-3.myhuaweicloud.com",
-      });
-  
-      // obsClient.getObject(
-      //   {
-      //     Bucket: "yingpu",
-      //     Key: "objectname",
-      //   },
-      //   function (err, result) {
-      //     if (err) {
-      //       console.error("Error-->" + err);
-      //     } else {
-      //       console.log("Status-->" + result.CommonMsg.Status);
-      //       if (result.CommonMsg.Status < 300 && result.InterfaceResult) {
-      //         console.log(result.InterfaceResult.Content);
-      //       }
-      //     }
-      //   }
-      // );
-      let objKey = url.split("obs.cn-east-3.myhuaweicloud.com/")[1]
-      console.log(objKey)
-      var fileExtension = objKey.substring(objKey.lastIndexOf('.') + 1);
-      console.log(fileExtension)
-
-      var objCallback = function(transferredAmount, totalAmount, totalSeconds){
-          // 获取下载平均速率（KB/S）
-          console.log(transferredAmount * 1.0 / totalSeconds / 1024);
-          // 获取下载进度百分比
-          console.log(transferredAmount * 100.0 / totalAmount);
-      };
-
-      obsClient.getObject(
-        {
-          Bucket: "yingpu",
-          Key:objKey,
-          SaveByType:"blob",
-          ProgressCallback:objCallback
-        },
-        function (err, result) {
-          if (err) {
-            console.error("Error-->" + err);
-          } else {
-            console.log('Status-->' + result.CommonMsg.Status);
-            if(result.CommonMsg.Status < 300 && result.InterfaceResult){
-                  // 读取对象内容 
-                  var blob = result.InterfaceResult.Content
-                  var url = window.URL.createObjectURL(blob);
-                  var filename = title + "."+fileExtension;
-                  var a = document.createElement("a");
-                  console.log(filename)
-                  a.href = url;
-                  a.download = filename;
-                  a.click();
-                  console.log(a);
-                  window.URL.revokeObjectURL(url);
-            }
-          }
-        }
-      );
+    downloadFile(row) {
+      row.downloadLoading = true;
+      download(row.url,row);
     },
     init() {
       this.form = {
@@ -418,6 +354,7 @@ export default {
       this["workManager/resetP1"]();
       this.loading = false;
       if (status == 1) {
+        datas.forEach(e=>e.downloadLoading = false)
         this.tableData = datas;
         this.page = {
           pageNo: fsp.pageNo,
@@ -590,6 +527,10 @@ export default {
         height: 48px;
       }
     }
+    .el-progress-circle {
+      height: 10px;
+      width: 10px;
+    }
   }
   .icon-ziyuan1662,
   .icon-file-delete-fill {
@@ -604,5 +545,9 @@ export default {
 .el-image-viewer__wrapper .el-image-viewer__canvas .el-image-viewer__img {
   max-height: 80% !important;
   max-width: 80% !important;
+}
+.el-progress-circle {
+  height: 50px !important;
+  width: 50px !important;
 }
 </style>
