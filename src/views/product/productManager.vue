@@ -221,14 +221,7 @@ import imagePreview from "@component/imagePreview";
 import pdfPreview from "@component/pdfPreview";
 import submitDialog from "../work/submitDialog.vue";
 import uploadProduct from "./uploadProduct.vue";
-import {
-  getList,
-  del,
-  applyAudit,
-  reTranscode,
-  temporaryKey,
-  download,
-} from "@api/product";
+import { getList, del, reTranscode, download } from "@api/product";
 import { productChoicesList } from "@api/workManager";
 import { mapGetters, mapMutations } from "vuex";
 import delPreview from "@component/delPreview";
@@ -285,7 +278,6 @@ export default {
       resolution: [],
       media_type: [],
       copyParams: {},
-      downloadLoading: false,
     };
   },
   watch: {
@@ -309,7 +301,7 @@ export default {
     ]),
     downloadFile(row) {
       row.downloadLoading = true;
-      download(row.url,row);
+      download(row.url, row);
     },
     init() {
       this.form = {
@@ -354,7 +346,7 @@ export default {
       this["workManager/resetP1"]();
       this.loading = false;
       if (status == 1) {
-        datas.forEach(e=>e.downloadLoading = false)
+        datas.forEach((e) => (e.downloadLoading = false));
         this.tableData = datas;
         this.page = {
           pageNo: fsp.pageNo,
