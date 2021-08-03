@@ -159,9 +159,12 @@
             @click="onWatch(scope.row.code)"
             >查看</el-button
           >
-          <el-button type="text" @click="click(scope.row.url)">
+          <el-button type="text" @click="click(scope.row.url, scope.row.title)">
             下载
           </el-button>
+          <!-- <a href="" :download="scope.row.url">
+            下载
+          </a> -->
           <el-button
             v-if="[11, 12, 13, 3, 7, 8].includes(scope.row.status)"
             type="text"
@@ -303,7 +306,7 @@ export default {
       "workManager/resetP1",
       "workManager/setPage1",
     ]),
-    async click(url) {
+    async click(url, title) {
       // window.open(url);
       let { element } = await temporaryKey();
 
@@ -314,6 +317,7 @@ export default {
         secret_access_key: element.data.secret,
         server: "https://obs.cn-east-3.myhuaweicloud.com",
       });
+  
       // obsClient.getObject(
       //   {
       //     Bucket: "yingpu",
@@ -330,23 +334,42 @@ export default {
       //     }
       //   }
       // );
+      let objKey = url.split("obs.cn-east-3.myhuaweicloud.com/")[1]
+      console.log(objKey)
+      var fileExtension = objKey.substring(objKey.lastIndexOf('.') + 1);
+      console.log(fileExtension)
+
+      var objCallback = function(transferredAmount, totalAmount, totalSeconds){
+          // 获取下载平均速率（KB/S）
+          console.log(transferredAmount * 1.0 / totalSeconds / 1024);
+          // 获取下载进度百分比
+          console.log(transferredAmount * 100.0 / totalAmount);
+      };
 
       obsClient.getObject(
         {
           Bucket: "yingpu",
-          Key: /(crowdCreation.*)$/.exec(url)[1],
-          SaveByType: "file",
+          Key:objKey,
+          SaveByType:"blob",
+          ProgressCallback:objCallback
         },
         function (err, result) {
           if (err) {
             console.error("Error-->" + err);
           } else {
-            console.log("Status-->" + result.CommonMsg.Status);
-            if (result.CommonMsg.Status < 300 && result.InterfaceResult) {
-              // 获取下载对象的路径
-              console.log("Download Path:");
-              console.log(result.InterfaceResult.Content.SignedUrl);
-              window.open(result.InterfaceResult.Content.SignedUrl)
+            console.log('Status-->' + result.CommonMsg.Status);
+            if(result.CommonMsg.Status < 300 && result.InterfaceResult){
+                  // 读取对象内容 
+                  var blob = result.InterfaceResult.Content
+                  var url = window.URL.createObjectURL(blob);
+                  var filename = title + "."+fileExtension;
+                  var a = document.createElement("a");
+                  console.log(filename)
+                  a.href = url;
+                  a.download = filename;
+                  a.click();
+                  console.log(a);
+                  window.URL.revokeObjectURL(url);
             }
           }
         }
