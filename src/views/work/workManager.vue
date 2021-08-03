@@ -191,7 +191,6 @@
           <el-button
             type="text"
             @click="downloadFile(scope.row)"
-            :loading="scope.row.downloadLoading"
             >下载</el-button
           >
           <el-button
@@ -342,7 +341,10 @@ export default {
       "workManager/setPage2",
     ]),
     downloadFile(row) {
-      row.downloadLoading = true;
+      this.$message({
+        message: "开始下载",
+        type: "success",
+      });
       download(row.url, row);
     },
     init() {
@@ -439,7 +441,6 @@ export default {
       this["workManager/resetP2"]();
       this.loading = false;
       if (status == 1) {
-        datas.forEach((e) => (e.downloadLoading = false));
         this.tableData = datas;
         this.page = {
           pageNo: fsp.pageNo,
