@@ -2,7 +2,7 @@
   <div class="login-container">
     <div class="logo">
       <img :src="getImg('logo/登录页/logo02.png')" alt="" />
-      <h1>欢迎登录大运河文化短视频智能剪辑平台</h1>
+      <h1>欢迎登录大运河国家文化公园智能影像应用系统</h1>
     </div>
     <div class="login-form-wrap">
       <img
@@ -10,13 +10,14 @@
         :src="getImg('logo/登录页/登录页logo.svg')"
         alt=""
       />
-      <div class="title">大运河文化短视频智能剪辑平台</div>
+      <div class="title">大运河国家文化公园智能影像应用系统</div>
       <el-form :model="form" :rules="rules" ref="form" class="login-form">
         <el-form-item prop="email">
           <el-input
             v-model="form.email"
             placeholder="请填写邮箱"
             prefix-icon="el-icon-user"
+            class="te"
           ></el-input>
         </el-form-item>
         <el-form-item prop="password">
@@ -39,7 +40,7 @@
       </el-form>
       <img
         class="footer-img"
-        :src="getImg('logo/登录页/support2.svg')"
+        :src="getImg('logo/登录页/sup.png')"
         alt=""
       />
     </div>
@@ -143,7 +144,8 @@ export default {
     right: 13%;
     width: 27.13rem;
     padding: 3.43rem 2.91rem 0;
-    background-color: #fff;
+    background-color: transparent;
+    box-shadow: 1px 1px 2px #A1D5DC, -1px -1px 2px #A1D5DC;
     z-index: 99;
     overflow: hidden;
     .form-login-img {
@@ -156,7 +158,8 @@ export default {
       width: 50%;
     }
     .title {
-      font-size: 1.35rem;
+      font-size: 1.15rem;
+      color: #fff;
     }
     .login-form {
       margin-top: 5.1rem;
@@ -172,6 +175,9 @@ export default {
         margin-bottom: 2.4vh;
         .el-input {
           vertical-align: middle;
+          background: #4B7378;
+          // opacity: 0.2;
+          color: #A1D5DC;
           .el-input__prefix {
             width: 2.5rem;
           }
@@ -200,7 +206,7 @@ export default {
       width: 17.55rem;
     }
     h1 {
-      font-size: 2.18rem;
+      font-size: 2rem;
       font-family: Source Han Sans CN;
       font-weight: 500;
       line-height: 58px;
