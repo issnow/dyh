@@ -38,11 +38,7 @@
           >登 录</el-button
         >
       </el-form>
-      <img
-        class="footer-img"
-        :src="getImg('logo/登录页/sup.png')"
-        alt=""
-      />
+      <img class="footer-img" :src="getImg('logo/登录页/sup.png')" alt="" />
     </div>
   </div>
 </template>
@@ -145,7 +141,7 @@ export default {
     width: 27.13rem;
     padding: 3.43rem 2.91rem 0;
     background-color: transparent;
-    box-shadow: 1px 1px 2px #A1D5DC, -1px -1px 2px #A1D5DC;
+    box-shadow: 1px 1px 2px #a1d5dc, -1px -1px 2px #a1d5dc;
     z-index: 99;
     overflow: hidden;
     .form-login-img {
@@ -165,7 +161,9 @@ export default {
       margin-top: 5.1rem;
       width: 100%;
       .deep-blue {
-        background-color: $deepBlue;
+        background-color: #4B7378;
+        border-width: 0;
+        line-height: 0;
         margin-bottom: 7.34rem;
         height: 2.81rem;
         font-size: 1.354rem;
@@ -175,9 +173,6 @@ export default {
         margin-bottom: 2.4vh;
         .el-input {
           vertical-align: middle;
-          background: #4B7378;
-          // opacity: 0.2;
-          color: #A1D5DC;
           .el-input__prefix {
             width: 2.5rem;
           }
@@ -187,7 +182,8 @@ export default {
           }
           .el-input__inner {
             padding-left: 3.333rem;
-            background: #fff;
+            background-color: rgba(75, 115, 120, 0.2);
+            color: #a1d5dc;
             border: 0.104rem solid #b2bccf;
             height: 2.96rem;
             font-size: 1.09rem;
