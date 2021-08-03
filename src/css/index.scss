@@ -31,6 +31,10 @@ li {
   word-break: break-all;
 }
 
+.el-table thead .el-select .el-input__inner {
+  border-width: 0;
+}
+
 .el-message {
   z-index: 99999 !important;
 }

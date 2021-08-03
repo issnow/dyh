@@ -8,9 +8,15 @@
       class="user-list-search"
     >
       <el-row>
-        <el-col :span="6">
+        <el-col :span="14">
           <el-form-item label="搜索" prop="email">
-            <el-input v-model.trim="form.email" placeholder="请输入关键字"@keydown.enter.native="submitForm('form')" :autofocus="true" >
+            <el-input
+              v-model.trim="form.email"
+              placeholder="请输入关键字"
+              @keydown.enter.native="submitForm('form')"
+              :autofocus="true"
+              clearable
+            >
               <el-button
                 slot="append"
                 icon="el-icon-search"
@@ -19,11 +25,6 @@
               ></el-button>
             </el-input>
           </el-form-item>
-        </el-col>
-        <el-col :span="2" class="text-center">
-          <el-button type="primary" @click="clear" :loading="loading"
-            >重置</el-button
-          >
         </el-col>
       </el-row>
     </el-form>
@@ -35,18 +36,22 @@
       :data="tableData"
       style="width: 100%"
     >
-      <el-table-column prop="id" label="用户ID"> </el-table-column>
-      <el-table-column prop="nickname" label="昵称"> </el-table-column>
-      <el-table-column prop="email" label="邮箱"> </el-table-column>
-      <el-table-column prop="role" label="角色">
+      <el-table-column :resizable="false" prop="id" label="用户ID">
+      </el-table-column>
+      <el-table-column :resizable="false" prop="nickname" label="昵称">
+      </el-table-column>
+      <el-table-column :resizable="false" prop="email" label="邮箱">
+      </el-table-column>
+      <el-table-column :resizable="false" prop="role" label="角色">
         <template slot-scope="scope">
           <span>
             {{ scope.row.type == 1 ? "创作者" : "管理员" }}
           </span>
         </template>
       </el-table-column>
-      <el-table-column prop="phone" label="联系电话"> </el-table-column>
-      <el-table-column prop="state" label="状态" width="120">
+      <el-table-column :resizable="false" prop="phone" label="联系电话">
+      </el-table-column>
+      <el-table-column :resizable="false" prop="state" label="状态" width="120">
         <template slot="header" scope="scope">
           <el-select
             class="select-color"
@@ -71,9 +76,10 @@
           >
         </template>
       </el-table-column>
-      <el-table-column prop="institutions" label="所属机构"> </el-table-column>
+      <el-table-column :resizable="false" prop="institutions" label="所属机构">
+      </el-table-column>
 
-      <el-table-column label="操作" min-width="130">
+      <el-table-column :resizable="false" label="操作" min-width="130">
         <template slot-scope="scope">
           <el-button @click="disabledRow(scope.row)" type="text" size="small">{{
             scope.row.state == 1 ? "禁用" : "启用"
@@ -213,7 +219,7 @@ export default {
           if (status == 1) {
             this._getTableData();
             this.$message({
-              type: 'success',
+              type: "success",
               message: msg,
             });
           }
@@ -236,8 +242,8 @@ export default {
           if (status == 1) {
             this._getTableData();
             this.$message({
-              type: 'success',
-              message: msg
+              type: "success",
+              message: msg,
             });
           }
         })

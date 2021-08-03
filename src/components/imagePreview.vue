@@ -1,11 +1,34 @@
 <template>
-  <el-image :lazy='true' :style="styleObj" :src="src" :preview-src-list="list" fit="fill">
+  <el-image
+    :lazy="true"
+    :style="styleObj"
+    :src="src"
+    :preview-src-list="list"
+    :fit="fit"
+  >
   </el-image>
 </template>
 
 <script>
 export default {
-  props: ["src", "list", "styleObj"],
+  props: {
+    src: {
+      type: String,
+      default: "",
+    },
+    list: {
+      type: Array,
+      default: [],
+    },
+    styleObj: {
+      type: Object,
+      default: {},
+    },
+    fit: {
+      type: String,
+      default: "fill",
+    },
+  },
 };
 </script>
 
