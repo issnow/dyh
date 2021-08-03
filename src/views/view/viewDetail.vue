@@ -348,6 +348,10 @@ export default {
       .video {
         width: 100%;
         max-height: 100%;
+        background: #000000;
+
+        //width: 44vw;
+        //height: 24.75vw;
         display: block;
 
         &:focus {
