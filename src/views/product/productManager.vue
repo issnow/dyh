@@ -1,13 +1,27 @@
 <template>
   <div class="main-wrap">
-    <el-form :model="form" :rules="rules" ref="form" label-width="60px">
+    <el-form :model="form" :rules="rules" ref="form">
       <el-row>
-        <el-col :span="6">
-          <el-form-item label="搜索" prop="title">
+        <el-col :span="5">
+          <el-form-item>
+            <el-button
+              icon="el-icon-upload2"
+              type="primary"
+              @click="uploadProducVisible = true"
+              >上传成品</el-button
+            >
+            <el-button icon="el-icon-delete" type="text" @click="selectDelete"
+              >批量删除</el-button
+            >
+          </el-form-item>
+        </el-col>
+        <el-col :span="14">
+          <el-form-item label="搜索" prop="title" label-width="60px">
             <el-input
               v-model.trim="form.title"
               placeholder="请输入关键字"
               @keyup.enter.native="handleSubmitForm('form')"
+              clearable
             >
               <el-button
                 slot="append"
@@ -16,27 +30,6 @@
                 :loading="loading"
               ></el-button>
             </el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="2" class="text-center">
-          <el-button type="primary" @click="clear" :loading="loading"
-            >重置</el-button
-          >
-        </el-col>
-        <el-col :span="14" class="text-right">
-          <el-form-item>
-            <el-button
-              icon="el-icon-delete"
-              type="primary"
-              @click="selectDelete"
-              >批量删除</el-button
-            >
-            <el-button
-              icon="el-icon-upload2"
-              type="primary"
-              @click="uploadProducVisible = true"
-              >上传成品</el-button
-            >
           </el-form-item>
         </el-col>
       </el-row>
@@ -52,14 +45,25 @@
       @sort-change="sortChange"
       empty-text="无相关数据"
     >
-      <el-table-column type="selection" width="55"> </el-table-column>
-      <el-table-column prop="title" label="成品名称"></el-table-column>
+      <el-table-column type="selection" width="35" :resizable="false">
+      </el-table-column>
+      <el-table-column
+        prop="title"
+        label="成品名称"
+        :resizable="false"
+      ></el-table-column>
       <el-table-column
         prop="media_type_title"
         label="类型"
-        width="120"
+        width="100"
+        :resizable="false"
       ></el-table-column>
-      <el-table-column label="预览" width="160" class-name="td-center">
+      <el-table-column
+        :resizable="false"
+        label="预览"
+        width="100"
+        class-name="td-center"
+      >
         <template slot-scope="scope">
           <template
             v-if="
@@ -86,7 +90,8 @@
               v-else-if="scope.row.media_type == 3"
               :src="scope.row.url"
               :list="[scope.row.url]"
-              :styleObj="{ height: '48px' }"
+              :styleObj="{ height: '48px', width: '86px' }"
+              fit="cover"
             />
             <i
               class="iconfont icon-ziyuan1662"
@@ -97,12 +102,20 @@
         </template>
       </el-table-column>
       <el-table-column
+        :resizable="false"
         prop="video_size"
-        label="大小（M）"
-        width="120"
+        label="大小"
+        width="100"
         sortable="custom"
+        align="right"
+        header-align="left"
       ></el-table-column>
-      <el-table-column label="状态" prop="status" width="130" class="td">
+      <el-table-column
+        :resizable="false"
+        label="状态"
+        prop="status"
+        width="100"
+      >
         <template slot="header" scope="scope">
           <el-select
             class="select-color"
@@ -134,11 +147,19 @@
       </el-table-column>
       <el-table-column
         prop="created_at"
+        :resizable="false"
         label="创建时间"
-        width="200"
+        width="180"
         sortable="custom"
+        align="right"
+        header-align="left"
       ></el-table-column>
-      <el-table-column fixed="right" label="操作" width="300">
+      <el-table-column
+        fixed="right"
+        label="操作"
+        width="200"
+        :resizable="false"
+      >
         <template slot-scope="scope">
           <el-button
             v-if="[13].includes(scope.row.status)"
@@ -158,9 +179,7 @@
             @click="onWatch(scope.row.code)"
             >查看</el-button
           >
-          <el-button
-            type="text"
-            @click="downloadFile(scope.row)"
+          <el-button type="text" @click="downloadFile(scope.row)"
             >下载</el-button
           >
           <el-button
@@ -303,7 +322,7 @@ export default {
         message: "开始下载",
         type: "success",
       });
-      download(row.url, row, );
+      download(row.url, row);
     },
     init() {
       this.form = {
