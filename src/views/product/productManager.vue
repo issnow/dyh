@@ -15,7 +15,7 @@
             >
           </el-form-item>
         </el-col>
-        <el-col :span="6" offset="13">
+        <el-col :span="6" :offset="13">
           <el-form-item prop="title" label-width="60px">
             <el-input
               v-model.trim="form.title"
