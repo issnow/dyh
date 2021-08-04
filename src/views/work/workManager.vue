@@ -2,14 +2,14 @@
   <div class="main-wrap">
     <el-form :model="form" :rules="rules" ref="form">
       <el-row>
-        <el-col :span="5">
+        <el-col :span="6">
           <el-form-item>
             <el-button icon="el-icon-delete" @click="selectDelete"
               >批量删除</el-button
             >
           </el-form-item>
         </el-col>
-        <el-col :span="6" :offset="13">
+        <el-col :span="6" :offset="12">
           <el-form-item prop="title" label-width="60px">
             <el-input
               v-model.trim="form.title"

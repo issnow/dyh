@@ -7,7 +7,7 @@
     <div class="login-form-wrap">
       <img
         class="form-login-img"
-        :src="getImg('logo/登录页/登录页logo.svg')"
+        :src="getImg('logo/登录页/图层 3@2x.png')"
         alt=""
       />
       <div class="title">大运河国家文化公园智能影像应用系统</div>
@@ -141,7 +141,7 @@ export default {
     width: 27.13rem;
     padding: 3.43rem 2.91rem 0;
     background-color: transparent;
-    box-shadow: 1px 1px 2px #a1d5dc, -1px -1px 2px #a1d5dc;
+    box-shadow: 1px 1px 30px rgba(161,213,220, .5), -1px -1px 30px rgba(161,213,220, .5);
     z-index: 99;
     overflow: hidden;
     .form-login-img {
