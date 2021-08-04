@@ -143,6 +143,12 @@
               </el-option>
             </el-select>
           </template>
+          <template scope="scope" slot="">
+            <el-tooltip v-if="scope.row.status === 7" :content="scope.row.audit_note" placement="top">
+              <span>{{scope.row.status_title}}</span>
+            </el-tooltip>
+            <span v-else>{{scope.row.status_title}}</span>
+          </template>
         </el-table-column>
         <el-table-column prop="created_at" label="创建时间" width="180" align="right" sortable></el-table-column>
         <el-table-column fixed="right" label="操作" :width="160">

@@ -28,16 +28,6 @@
                   <span v-for="name of item.s_name" :key="name" style="margin-right: 5px;">{{ name }}</span>
                 </el-tab-pane>
               </el-tabs>
-              <!--              <div class="entity" v-for="item of product.entity" :key="item.f_name" style="margin-top: 10px;">-->
-              <!--                <div class="entity-item" style="display: flex;">-->
-              <!--                  <el-tag type="info" size="mini" style="margin-right: 5px;">{{ item.f_name
-              }}</el-tag>-->
-              <!--                  <div>-->
-              <!--                    <span v-for="name of item.s_name" :key="name" style="margin-right: 5px;">{{ name
-              }}</span>-->
-              <!--                  </div>-->
-              <!--                </div>-->
-              <!--              </div>-->
             </div>
           </div>
           <div class="info-item">
@@ -61,6 +51,24 @@
                         :duration="product.duration"></ai-audit>
               <ai-audit style="margin-top: 5px;" title="声音" :audit="task.ai.voice"
                         :duration="product.duration"></ai-audit>
+              <div class="ai-legend">
+                <div class="ai-legend-item">
+                  <i style="background: #facd91"></i>
+                  <span>涉政</span>
+                </div>
+                <div class="ai-legend-item">
+                  <i style="background: #ffff80"></i>
+                  <span>涉黄</span>
+                </div>
+                <div class="ai-legend-item">
+                  <i style="background: #ec808d"></i>
+                  <span>涉暴</span>
+                </div>
+                <div class="ai-legend-item">
+                  <i style="background: #c280ff"></i>
+                  <span>其他</span>
+                </div>
+              </div>
             </div>
           </div>
           <div class="info-item">
@@ -90,23 +98,27 @@
           :bgImage="product.cover_url"
           ref="mPlayer"
         /> -->
-        <div class="file-none" v-if="product.is_del === 1">
-          <img class="icon" src="../../assets/file-none.png">
-          <div style="color: #C0C4CC; margin-top: 30px;">作品违规，文件已被管理员删除！</div>
+        <div class="preview-content">
+          <div class="file-none" v-if="product.is_del === 1">
+            <img class="icon" src="../../assets/file-none.png">
+            <div style="color: #C0C4CC; margin-top: 30px;">作品违规，文件已被管理员删除！</div>
+          </div>
+          <video class="video" v-else-if="product.media_type === 1" :src="product.trans_url || product.url"
+                 controls controlslist="nodownload"></video>
+          <audio class="audio" v-else-if="product.media_type === 2" :src="product.trans_url || product.url"
+                 controls controlslist="nodownload"></audio>
+          <img v-else-if="product.media_type === 3" :src="product.trans_url || product.url">
+          <pdf-view :url="product.trans_url || product.url" v-else-if="product.media_type === 4"></pdf-view>
         </div>
-        <video class="video" v-else-if="product.media_type === 1" :src="product.trans_url || product.url"
-               controls controlslist="nodownload"></video>
-        <audio class="audio" v-else-if="product.media_type === 2" :src="product.trans_url || product.url"
-               controls controlslist="nodownload"></audio>
-        <img v-else-if="product.media_type === 3" :src="product.trans_url || product.url">
-        <pdf-view :url="product.trans_url || product.url" v-else-if="product.media_type === 4"></pdf-view>
+
+
       </div>
       <div class="footer">
         <el-button v-if="task.audit_status === 6" type="primary" @click="submitForm(1)" :loading="loading"
         >审核通过
         </el-button>
         <el-button v-if="task.audit_status === 6" type="danger" @click="submitForm(2)">审核驳回</el-button>
-        <el-button @click="back">取 消</el-button>
+        <el-button @click="back">返 回</el-button>
       </div>
     </div>
   </div>
@@ -312,7 +324,30 @@ export default {
           margin-top: 20px;
           width: 100%;
         }
+
+        .ai-legend{
+          display: flex;
+          align-items: center;
+          width: 100%;
+          height: 40px;
+          font-size: 12px;
+
+          .ai-legend-item{
+            margin-right: 20px;
+            i{
+              display: inline-block;
+              width: 10px;
+              height: 10px;
+              border-radius: 50%;
+              border: 1px solid #ccc;
+              margin-right: 5px;
+
+            }
+          }
+
+        }
       }
+
 
 
     }
@@ -345,7 +380,8 @@ export default {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    .header{
+
+    .header {
       font-size: 20px;
       font-weight: 600;
       width: 100%;
@@ -359,6 +395,8 @@ export default {
       height: calc(100% - 80px);
       width: 100%;
       padding-left: 40px;
+      padding-top: 20px;
+      padding-bottom: 20px;
       position: relative;
       display: flex;
       align-items: center;
@@ -382,17 +420,31 @@ export default {
         }
       }
 
-      .file-none {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
+      .preview-content {
         background: #F4F7FA;
         border: 1px solid #C1C1C1;
         width: 44vw;
         height: 24.75vw;
         border-radius: 8px;
-        .icon{
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .file-none {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        //background: #F4F7FA;
+        //border: 1px solid #C1C1C1;
+        //width: 44vw;
+        //height: 24.75vw;
+        //border-radius: 8px;
+
+        .icon {
           width: 100px;
           height: auto;
 
