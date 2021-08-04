@@ -130,7 +130,7 @@ export default {
         //   // { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" },
         // ],
         label: [
-          { required: true, message: "请输入", trigger: "blur" },
+          { required: false, message: "请输入", trigger: "blur" },
           // { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" },
         ],
         // ...tempRule,
