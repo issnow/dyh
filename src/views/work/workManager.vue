@@ -4,16 +4,16 @@
       <el-row>
         <el-col :span="5">
           <el-form-item>
-            <el-button icon="el-icon-delete" type="text" @click="selectDelete"
+            <el-button icon="el-icon-delete" @click="selectDelete"
               >批量删除</el-button
             >
           </el-form-item>
         </el-col>
-        <el-col :span="14">
-          <el-form-item label="搜索" prop="title" label-width="60px">
+        <el-col :span="6" :offset="13">
+          <el-form-item prop="title" label-width="60px">
             <el-input
               v-model.trim="form.title"
-              placeholder="请输入关键字"
+              placeholder="请输入关键字搜索"
               @keyup.enter.native="handleSubmitForm('form')"
               clearable
             >
@@ -225,7 +225,10 @@
             @click="onWatch(scope.row.code)"
             >查看</el-button
           >
-          <el-button type="text" @click="downloadFile(scope.row)"
+          <el-button
+            v-if="![1, 2].includes(scope.row.status)"
+            type="text"
+            @click="downloadFile(scope.row)"
             >下载</el-button
           >
           <el-button

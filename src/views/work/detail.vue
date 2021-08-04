@@ -7,28 +7,33 @@
           <li v-if="!isProductDetail">
             <div class="label">AI审核:</div>
             <div class="content">
-              <div class="item" v-for="(e, i) in checkList" :key="i">
-                <div class="label">{{ e.title }}:</div>
-                <bar :item="e.list"></bar>
-              </div>
-              <div class="item circel">
-                <div class="label">说明:</div>
-                <div style="font-size: 13px" class="btn-group">
-                  <i></i>
-                  <el-button type="text" size="mini">涉政</el-button>
-                  <i></i>
-                  <el-button type="text" size="mini">涉黄</el-button>
-                  <i></i>
-                  <el-button type="text" size="mini">涉暴</el-button>
-                  <i></i>
-                  <el-button type="text" size="mini">其他</el-button>
+              <template class="ai_note" v-if="!task.ai">
+                {{ task.ai_note }}
+              </template>
+              <template v-else>
+                <div class="item" v-for="(e, i) in checkList" :key="i">
+                  <div class="label">{{ e.title }}:</div>
+                  <bar :item="e.list"></bar>
                 </div>
-              </div>
+                <div class="item circel">
+                  <div class="label">说明:</div>
+                  <div style="font-size: 13px" class="btn-group">
+                    <i></i>
+                    <el-button type="text" size="mini">涉政</el-button>
+                    <i></i>
+                    <el-button type="text" size="mini">涉黄</el-button>
+                    <i></i>
+                    <el-button type="text" size="mini">涉暴</el-button>
+                    <i></i>
+                    <el-button type="text" size="mini">其他</el-button>
+                  </div>
+                </div>
+              </template>
             </div>
           </li>
           <li>
             <div class="label">人工审核意见:</div>
-            <div class="content mannul-res">{{ task.manual }}</div>
+            <div class="content">{{ task.manual }}</div>
           </li>
         </ul>
 
@@ -76,7 +81,11 @@
           </el-form-item>
 
           <div class="shiti">
-            <div class="label" style="font-size: 14px; color: #606266">
+            <div
+              class="label"
+              :class="{ require: isEdit }"
+              style="font-size: 14px; color: #606266"
+            >
               实体:
             </div>
             <div class="right">
@@ -291,7 +300,7 @@ export default {
         this.$route.params.isEdit === "1"
           ? {
               title: [{ required: true, message: "请输入", trigger: "blur" }],
-              tag: [{ required: true, message: "请输入", trigger: "blur" }],
+              tag: [{ required: false, message: "请输入", trigger: "blur" }],
               ...tempRule,
             }
           : {},
@@ -301,9 +310,7 @@ export default {
       isEdit: this.$route.params.isEdit === "1",
       entityList: [],
       // task审核
-      task: {
-        manual: "",
-      },
+      task: {},
       loading: false,
       // 一级实体select框的id
       selectID: "",
@@ -334,7 +341,7 @@ export default {
       }
       this.rules = {
         title: [{ required: true, message: "请输入", trigger: "blur" }],
-        tag: [{ required: true, message: "请输入", trigger: "blur" }],
+        tag: [{ required: false, message: "请输入", trigger: "blur" }],
         // ...tempRule,
       };
       let obj = {};
@@ -431,6 +438,7 @@ export default {
         this.task = {
           manual: element?.task?.manual,
           ai: element?.task?.ai,
+          ai_note: element?.task?.ai_note,
         };
         if (element?.task?.ai) {
           this.checkList = this.formatList(element?.task?.ai, duration);
@@ -604,15 +612,9 @@ export default {
             font-size: 13px;
           }
           .content {
-            padding-top: 40px;
             flex: 1;
             color: $gray;
-            margin-left: -30px;
-            &.mannul-res {
-              padding-top: 0;
-              margin-left: 0;
-              word-break: break-all;
-            }
+            word-break: break-all;
             .item {
               display: flex;
               align-items: center;
@@ -666,6 +668,11 @@ export default {
           width: 100px;
           padding-right: 12px;
           text-align: right;
+          &.require::before {
+            content: "*";
+            color: #f56c6c;
+            margin-right: 4px;
+          }
         }
         .right {
           flex: 1;
