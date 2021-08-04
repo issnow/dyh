@@ -8,11 +8,11 @@
       class="user-list-search"
     >
       <el-row>
-        <el-col :span="14">
-          <el-form-item label="搜索" prop="email">
+        <el-col :span="6" :offset='18'>
+          <el-form-item prop="email">
             <el-input
               v-model.trim="form.email"
-              placeholder="请输入关键字"
+              placeholder="请输入关键字搜索"
               @keydown.enter.native="submitForm('form')"
               :autofocus="true"
               clearable
