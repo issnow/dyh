@@ -57,11 +57,7 @@
       </el-form-item>
       <el-form-item>
         <div>{{ file && file.name }}</div>
-        <el-progress
-          :text-inside="true"
-          :stroke-width="26"
-          :percentage="percentage"
-        ></el-progress>
+        <el-progress :percentage="percentage"></el-progress>
       </el-form-item>
     </el-form>
     <form ref="file" style="display: none">
