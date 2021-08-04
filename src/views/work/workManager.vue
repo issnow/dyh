@@ -225,7 +225,10 @@
             @click="onWatch(scope.row.code)"
             >查看</el-button
           >
-          <el-button type="text" @click="downloadFile(scope.row)"
+          <el-button
+            v-if="![1, 2].includes(scope.row.status)"
+            type="text"
+            @click="downloadFile(scope.row)"
             >下载</el-button
           >
           <el-button
