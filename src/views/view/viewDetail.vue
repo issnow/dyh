@@ -14,7 +14,7 @@
           </div>
           <div class="info-item">
             <div class="info-label">精神文明:</div>
-            <div class="info-content" style="display: grid; grid-template-columns: repeat(7, 1fr);">
+            <div class="info-content" style="display: grid; grid-template-columns: repeat(7, 60px);">
               <div v-for="item in product.tag" :key="item" type="info" size="mini" style="width: 60px;">
                 {{ item }}
               </div>
