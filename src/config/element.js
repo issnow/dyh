@@ -46,7 +46,9 @@ import {
     Tag,
     Image,
     Progress,
-    Link
+    Link,
+    Tabs,
+    TabPane,
 } from 'element-ui';
 
 Vue.use(Button);
@@ -94,6 +96,8 @@ Vue.use(Tag);
 Vue.use(Image);
 Vue.use(Progress);
 Vue.use(Link);
+Vue.use(Tabs);
+Vue.use(TabPane);
 
 
 Vue.prototype.$loading = Loading.service;

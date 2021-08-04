@@ -6,20 +6,19 @@
         ref="form"
         label-width="60px">
       <el-row>
-        <el-col :span="6">
-          <el-form-item label="搜索" prop="title">
-            <el-input v-model="form.title" placeholder="请输入项目名称或简称" @keyup.enter.native="searchProject">
+
+
+        <el-col :span="18">
+          <el-button type="primary" icon="el-icon-plus" @click="isShow = true">创建项目</el-button>
+          <el-button icon="el-icon-delete" @click="omDeletes">批量删除</el-button>
+        </el-col>
+
+        <el-col :span="6" class="text-right">
+          <el-form-item label="" prop="title">
+            <el-input v-model="form.title" placeholder="请输入项目名称或简称进行搜索" @keyup.enter.native="searchProject">
               <el-button slot="append" icon="el-icon-search" @click="searchProject"></el-button>
             </el-input>
           </el-form-item>
-        </el-col>
-        <el-col :span="2" class="text-center">
-          <el-button type="primary" @click="resetSearch">重置</el-button>
-        </el-col>
-
-        <el-col :span="14" class="text-right">
-          <el-button type="primary" icon="el-icon-plus" @click="isShow = true">创建项目</el-button>
-          <el-button type="primary" icon="el-icon-delete" @click="omDeletes">批量删除</el-button>
         </el-col>
       </el-row>
     </el-form>
@@ -32,6 +31,7 @@
         border
         style="width: 100%"
         :default-sort="{prop: 'zip', order: 'descending'}"
+        :draggable="false"
         empty-text="无相关数据"
     >
       <el-table-column type="selection" width="50"></el-table-column>
@@ -56,13 +56,14 @@
       <!--          </el-select>-->
       <!--        </template>-->
       <!--      </el-table-column>-->
-      <el-table-column prop="wh_ratio" label="画幅" width="150">
+      <el-table-column prop="wh_ratio" label="画幅" width="100" align="right">
         <template slot="header" slot-scope="scope">
           <el-select
               class="select-color"
               v-model="form.wh_ratio_id"
-              placeholder="画幅比例"
+              placeholder="画幅"
               clearable
+
               @change="filterSelect($event, 'wh_ratio')"
           >
             <el-option
@@ -77,9 +78,9 @@
       </el-table-column>
       <!-- <el-table-column prop="address" label="大小（M）" width="120"></el-table-column> -->
       <!-- <el-table-column prop="zip" label="时长（S）" width="200" sortable></el-table-column> -->
-      <el-table-column prop="created_at" label="创建时间" width="200" sortable></el-table-column>
-      <el-table-column prop="updated_at" label="更新时间" width="200" sortable></el-table-column>
-      <el-table-column fixed="right" label="操作">
+      <el-table-column prop="created_at" label="创建时间" width="200" align="right" sortable></el-table-column>
+      <el-table-column prop="updated_at" label="更新时间" width="200" align="right" sortable></el-table-column>
+      <el-table-column fixed="right" label="操作" width="200">
         <template slot-scope="scope">
           <el-button type="text" @click="onEdit(scope.row.id)">去创作</el-button>
           <el-button type="text" @click="omDelete(scope.row)" class="del-red">删除</el-button>

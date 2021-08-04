@@ -7,18 +7,19 @@
           ref="form"
           label-width="60px">
         <el-row>
+          <el-col :span="18" style="height: 20px;"></el-col>
           <el-col :span="6">
-            <el-form-item label="搜索" prop="title">
-              <el-input v-model="form.title" placeholder="请输入关键字" @keydown.enter.native="searchProject"
+            <el-form-item label="" prop="title">
+              <el-input v-model="form.title" placeholder="请输入关键字进行搜索" @keydown.enter.native="searchProject"
                         :autofocus="true">
                 <el-button slot="append" icon="el-icon-search" @click="searchProject"></el-button>
               </el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="2" class="text-center">
-            <!-- <el-button type="primary" @click="searchProject">查询</el-button> -->
-            <el-button type="primary" @click="resetSearch">重置</el-button>
-          </el-col>
+          <!--          <el-col :span="2" class="text-center">-->
+          <!--            &lt;!&ndash; <el-button type="primary" @click="searchProject">查询</el-button> &ndash;&gt;-->
+          <!--&lt;!&ndash;            <el-button type="primary" @click="resetSearch">重置</el-button>&ndash;&gt;-->
+          <!--          </el-col>-->
         </el-row>
       </el-form>
 
@@ -31,8 +32,12 @@
           empty-text="无相关数据"
           :default-sort="{prop: 'time', order: 'descending'}"
       >
-        <el-table-column prop="title" label="成品名称"></el-table-column>
-        <el-table-column prop="media_type_title">
+        <el-table-column prop="title" label="成品名称" min-width="200">
+          <template slot-scope="scope">
+            <span class="table-column-text" :title="scope.row.title">{{ scope.row.title }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="media_type_title" width="100">
           <template slot="header" scope="scope">
             <el-select
                 class="select-color"
@@ -51,9 +56,9 @@
             </el-select>
           </template>
         </el-table-column>
-        <el-table-column prop="upload_type" label="来源"></el-table-column>
-        <el-table-column prop="name" label="创作人" width="200"></el-table-column>
-        <el-table-column prop="resolution" label="分辨率" width="120">
+        <el-table-column prop="upload_type" label="来源" width="80"></el-table-column>
+        <el-table-column prop="name" label="创作人" width="100"></el-table-column>
+        <el-table-column prop="resolution" label="分辨率" width="120" align="right">
           <template slot="header" scope="scope">
             <el-select
                 class="select-color"
@@ -72,12 +77,12 @@
             </el-select>
           </template>
         </el-table-column>
-        <el-table-column prop="wh_ratio" label="画幅" width="140">
+        <el-table-column prop="wh_ratio" label="画幅" width="100" align="right">
           <template slot="header" scope="scope">
             <el-select
                 class="select-color"
                 v-model="form.wh_ratio"
-                placeholder="画幅比例"
+                placeholder="画幅"
                 clearable
                 @change="filterSelect($event, 'wh_ratio')"
             >
@@ -91,7 +96,7 @@
             </el-select>
           </template>
         </el-table-column>
-        <el-table-column prop="view" label="预览" width="120" class-name="td-center">
+        <el-table-column prop="view" label="预览" width="100" class-name="td-center">
           <template slot-scope="scope">
             <del-preview v-if="scope.row.is_del === 1"></del-preview>
             <videoPreview
@@ -108,7 +113,8 @@
                 v-else-if="scope.row.media_type == 3"
                 :src="scope.row.url"
                 :list="[scope.row.url]"
-                :styleObj="{ width: '84px',height: '100px' }"
+                :styleObj="{  height: '48px', width: '86px' }"
+                fit="cover"
             />
             <i
                 class="iconfont icon-ziyuan1662"
@@ -117,9 +123,9 @@
             ></i>
           </template>
         </el-table-column>
-        <el-table-column prop="video_size" label="大小（M）" width="120" sortable></el-table-column>
-        <el-table-column prop="duration" label="时长（S）" width="120" sortable></el-table-column>
-        <el-table-column prop="status_title" label="状态" width="150">
+        <el-table-column prop="video_size" label="大小" width="100" align="right" sortable></el-table-column>
+        <el-table-column prop="duration" label="时长（S）" width="120" align="right" sortable></el-table-column>
+        <el-table-column prop="status_title" label="状态" width="140">
           <template slot="header" scope="scope">
             <el-select
                 class="select-color"
@@ -138,12 +144,11 @@
             </el-select>
           </template>
         </el-table-column>
-        <el-table-column prop="created_at" label="创建时间" width="200" sortable></el-table-column>
-        <el-table-column fixed="right" label="操作" :width="120">
+        <el-table-column prop="created_at" label="创建时间" width="180" align="right" sortable></el-table-column>
+        <el-table-column fixed="right" label="操作" :width="160">
           <template slot-scope="scope">
             <el-button type="text" @click="onWatch(scope.row)" v-if="scope.row.status === 6">审核</el-button>
             <el-button type="text" @click="onWatch(scope.row)" v-else>查看</el-button>
-            <!--            <el-link target="_blank" :href="scope.row.url" download="download">下载</el-link>-->
             <el-button type="text" @click="download(scope.row)">下载</el-button>
             <el-button :underline="false" type="text" v-if="scope.row.status === 7 && scope.row.is_del === 0"
                        @click="delTask(scope.row)" style="color: #ff7171;">删除文件
@@ -182,8 +187,8 @@ import {
   getList,
   delTask,
 } from "@api/project";
-import submitDialog from '../work/submitDialog';
-import uploadProduct from '../product/uploadProduct';
+import {download} from '../../api/main';
+
 
 export default {
   components: {
@@ -379,7 +384,7 @@ export default {
 
     // 物理删除作品/成品
     async delTask(row) {
-      const confirm = await this.$confirm('确定要删除此任务的物理文件吗?', '删除文件').catch(() => {
+      const confirm = await this.$confirm('请确认是否删除本任务物理文件？?', '删除文件').catch(() => {
       });
       if (!confirm) {
         return;
@@ -404,7 +409,12 @@ export default {
 
     // 下载文件
     download(row) {
-      window.open(row.url);
+      this.$message({
+        type: 'success',
+        message: '文件正在下载,请稍候...',
+      });
+      download(row.url, row.title);
+      // window.open(row.url);
     },
   },
 };

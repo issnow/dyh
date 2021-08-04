@@ -8,17 +8,15 @@
         <div class="info-content">{{ product.video_format }}</div>
       </div>
       <div class="info-item">
-        <div class="info-label">大小:</div>
-        <div class="info-content">{{ product.video_size }}</div>
-      </div>
-    </div>
-    <div class="content-line">
-      <div class="info-item">
         <div class="info-label">创建时间:</div>
         <div class="info-content">{{ product.created_at }}</div>
       </div>
     </div>
     <div class="content-line">
+      <div class="info-item">
+        <div class="info-label">大小:</div>
+        <div class="info-content">{{ product.video_size }}</div>
+      </div>
       <div class="info-item">
         <div class="info-label">更新时间:</div>
         <div class="info-content">{{ product.updated_at }}</div>
@@ -40,8 +38,10 @@ export default {
   .header {
     font-size: 14px;
     font-weight: 600;
-    width: 60px;
-    text-align: right;
+    width: 100%;
+    //text-align: right;
+    border-bottom: 1px solid #E4E7ED;
+    padding-bottom: 10px;
   }
 
   .content {
@@ -57,7 +57,7 @@ export default {
   }
 
   .info-item {
-    min-width: 140px;
+    min-width: 240px;
     font-size: 14px;
     display: flex;
     align-items: center;

@@ -23,14 +23,21 @@
           <div class="info-item">
             <div class="info-label">实体:</div>
             <div class="info-content">
-              <div class="entity" v-for="item of product.entity" :key="item.f_name" style="margin-top: 10px;">
-                <div class="entity-item" style="display: flex;">
-                  <el-tag type="info" size="mini" style="margin-right: 5px;">{{ item.f_name }}</el-tag>
-                  <div>
-                    <span v-for="name of item.s_name" :key="name" style="margin-right: 5px;">{{ name }}</span>
-                  </div>
-                </div>
-              </div>
+              <el-tabs type="border-card" v-model="tabActive">
+                <el-tab-pane v-for="item of product.entity" :key="item.f_name" :label="item.f_name" :name="item.f_name">
+                  <span v-for="name of item.s_name" :key="name" style="margin-right: 5px;">{{ name }}</span>
+                </el-tab-pane>
+              </el-tabs>
+              <!--              <div class="entity" v-for="item of product.entity" :key="item.f_name" style="margin-top: 10px;">-->
+              <!--                <div class="entity-item" style="display: flex;">-->
+              <!--                  <el-tag type="info" size="mini" style="margin-right: 5px;">{{ item.f_name
+              }}</el-tag>-->
+              <!--                  <div>-->
+              <!--                    <span v-for="name of item.s_name" :key="name" style="margin-right: 5px;">{{ name
+              }}</span>-->
+              <!--                  </div>-->
+              <!--                </div>-->
+              <!--              </div>-->
             </div>
           </div>
           <div class="info-item">
@@ -39,10 +46,10 @@
           </div>
         </div>
       </div>
-      <video-info v-if="product.media_type === 1" style="margin-top: 20px;" :product="product"></video-info>
-      <audio-info v-if="product.media_type === 2" style="margin-top: 20px" :product="product"></audio-info>
-      <pic-info v-if="product.media_type === 3" style="margin-top: 20px;" :product="product"></pic-info>
-      <text-info v-if="product.media_type === 4" style="margin-top: 20px" :product="product"></text-info>
+      <video-info v-if="product.media_type === 1" style="margin-top: 30px;" :product="product"></video-info>
+      <audio-info v-if="product.media_type === 2" style="margin-top: 30px" :product="product"></audio-info>
+      <pic-info v-if="product.media_type === 3" style="margin-top: 30px;" :product="product"></pic-info>
+      <text-info v-if="product.media_type === 4" style="margin-top: 30px" :product="product"></text-info>
       <div class="work-detail-audit">
         <div class="header">审核结果:</div>
         <div class="content">
@@ -61,7 +68,7 @@
             <div class="info-content">
               <el-input
                   type="textarea"
-                  :rows="6"
+                  :rows="4"
                   placeholder="请输入内容"
                   v-model="audit_note"
                   maxlength="200"
@@ -144,6 +151,9 @@ export default {
 
       entityList: [],
       tagName: '',
+
+      // 实体Tabs Action
+      tabActive: '',
     };
   },
   created() {
@@ -220,8 +230,8 @@ export default {
           this.tagName = this.product.tag_names_str;
           this.entityList = this.product.entities;
           this.audit_note = this.task.audit_note;
+          this.tabActive = (this.product.entity.length > 0) ? this.product.entity[0].f_name : '';
 
-          console.log('task', this.task);
         } else {
           this.$message({
             type: "error",
@@ -267,36 +277,39 @@ export default {
       .header {
         font-size: 14px;
         font-weight: 600;
-        width: 60px;
-        text-align: right;
+        width: 100%;
+        border-bottom: 1px solid #E4E7ED;
+        padding-bottom: 10px;
       }
 
       .content {
-        margin-top: 10px;
+        margin-top: 20px;
 
         > .info-item {
-          margin-top: 10px;
+          margin-top: 20px;
         }
 
 
       }
     }
 
+    // 审核信息
     .work-detail-audit {
-      margin-top: 20px;
+      margin-top: 30px;
 
       .header {
         font-size: 14px;
         font-weight: 600;
-        width: 60px;
-        text-align: right;
+        width: 100%;
+        border-bottom: 1px solid #E4E7ED;
+        padding-bottom: 10px;
       }
 
       .content {
-        margin-top: 10px;
+        margin-top: 20px;
 
         > .info-item {
-          margin-top: 10px;
+          margin-top: 20px;
           width: 100%;
         }
       }
@@ -308,7 +321,7 @@ export default {
       width: 100%;
       font-size: 14px;
       display: flex;
-      align-items: center;
+      align-items: first;
 
       .info-label {
         width: 60px;
