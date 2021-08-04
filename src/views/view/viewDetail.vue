@@ -82,6 +82,7 @@
       </div>
     </div>
     <div class="work-detail-info">
+      <div class="header">预览</div>
       <div class="content">
         <!-- <player
           v-if="!!product.trans_url && product.media_type === 1"
@@ -89,9 +90,8 @@
           :bgImage="product.cover_url"
           ref="mPlayer"
         /> -->
-        <div v-if="product.is_del === 1"
-             style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
-          <i class="iconfont icon-file-delete-fill" style="color: #8e8f93; font-size: 120px;"></i>
+        <div class="file-none" v-if="product.is_del === 1">
+          <img class="icon" src="../../assets/file-none.png">
           <div style="color: #C0C4CC; margin-top: 30px;">作品违规，文件已被管理员删除！</div>
         </div>
         <video class="video" v-else-if="product.media_type === 1" :src="product.trans_url || product.url"
@@ -106,7 +106,7 @@
         >审核通过
         </el-button>
         <el-button v-if="task.audit_status === 6" type="danger" @click="submitForm(2)">审核驳回</el-button>
-        <el-button @click="back">返 回</el-button>
+        <el-button @click="back">取 消</el-button>
       </div>
     </div>
   </div>
@@ -265,7 +265,7 @@ export default {
   display: flex;
   padding: 20px 30px;
 
-
+  // 左边信息
   .work-detail-suggest {
     width: 50%;
     height: 100%;
@@ -336,6 +336,7 @@ export default {
 
   }
 
+  // 右边预览
   .work-detail-info {
     position: relative;
     //padding-left: 40px;
@@ -344,9 +345,18 @@ export default {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    .header{
+      font-size: 20px;
+      font-weight: 600;
+      width: 100%;
+      height: 40px;
+      padding-left: 40px;
+
+
+    }
 
     .content {
-      height: calc(100% - 100px);
+      height: calc(100% - 80px);
       width: 100%;
       padding-left: 40px;
       position: relative;
@@ -370,6 +380,24 @@ export default {
         &:focus {
           outline: none;
         }
+      }
+
+      .file-none {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: #F4F7FA;
+        border: 1px solid #C1C1C1;
+        width: 44vw;
+        height: 24.75vw;
+        border-radius: 8px;
+        .icon{
+          width: 100px;
+          height: auto;
+
+        }
+
       }
 
     }
