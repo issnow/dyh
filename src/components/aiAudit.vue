@@ -46,7 +46,7 @@ export default {
   }
 
   .ai-audit-content {
-    width: 360px;
+    width: 100%;
     height: 6px;
     background: #ebeef5;
     margin-top: 10px;

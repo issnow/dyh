@@ -133,7 +133,7 @@ import videoInfo from './viewDetailVideoInfo';
 import picInfo from './viewDetailPicInfo';
 import audioInfo from './viewDetailAudioInfo';
 import textInfo from './viewDetailTextInfo';
-import aiAudit from './aiAudit';
+import aiAudit from '@/components/aiAudit';
 import pdfView from '@/components/pdfView';
 // import player from "@component/m3u8/player";
 
@@ -328,16 +328,17 @@ export default {
           width: 100%;
         }
 
-        .ai-legend{
+        .ai-legend {
           display: flex;
           align-items: center;
           width: 100%;
           height: 40px;
           font-size: 12px;
 
-          .ai-legend-item{
+          .ai-legend-item {
             margin-right: 20px;
-            i{
+
+            i {
               display: inline-block;
               width: 10px;
               height: 10px;
@@ -350,7 +351,6 @@ export default {
 
         }
       }
-
 
 
     }
