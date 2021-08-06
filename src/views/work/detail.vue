@@ -194,7 +194,7 @@
                       </el-option>
                     </el-select>
                   </el-form-item>
-                  <span v-show="!isEdit">
+                  <span v-show="!isEdit" style="font-size: 14px">
                     {{
                       viewInfo.entity[i] && viewInfo.entity[i].s_name.length
                         ? viewInfo.entity[i].s_name.reduce(
@@ -226,28 +226,27 @@
         </el-form>
 
         <!-- 视频信息 -->
-        <div
-          class="info-list"
-          :class="{ product: isProductDetail }"
-          v-if="viewInfo.media_type == 1"
-        >
+        <div class="info-list" v-if="viewInfo.media_type == 1">
           <div class="title">视频信息:</div>
-          <div><span>格式:</span>{{ viewInfo.video_format }}</div>
-          <div><span>大小:</span>{{ viewInfo.video_size }}</div>
-          <div v-if="isProductDetail">
-            <span>创建时间:</span>{{ viewInfo.created_at }}
-          </div>
-          <div v-if="isProductDetail">
-            <span>更新时间:</span>{{ viewInfo.updated_at }}
-          </div>
-          <div v-if="!isProductDetail">
-            <span>画幅:</span>{{ viewInfo.wh_ratio }}
-          </div>
-          <div v-if="!isProductDetail">
-            <span>时长:</span>{{ viewInfo.duration }}
-          </div>
-          <div v-if="!isProductDetail">
-            <span>分辨率:</span>{{ viewInfo.resolution }}
+          <div class="wrap">
+            <div class="left">
+              <div><span>格式:</span>{{ viewInfo.video_format }}</div>
+              <div><span>大小:</span>{{ viewInfo.video_size }}</div>
+              <div>
+                <span>画幅:</span>{{ viewInfo.wh_ratio }}
+              </div>
+              <div>
+                <span>时长:</span>{{ viewInfo.duration }}
+              </div>
+              <div>
+                <span>分辨率:</span>{{ viewInfo.resolution }}
+              </div>
+            </div>
+
+            <div class="right">
+              <div><span>创建时间:</span>{{ viewInfo.created_at }}</div>
+              <div><span>更新时间:</span>{{ viewInfo.updated_at }}</div>
+            </div>
           </div>
         </div>
 
@@ -274,7 +273,7 @@
       </div>
 
       <div class="work-detail-suggest">
-        <div class="tit">预览</div>
+        <div class="tit">预览:</div>
         <div class="content">
           <div class="preview-content">
             <div
@@ -305,11 +304,10 @@
               preload
               controlslist="nodownload"
             ></audio>
-            <imagePreview
+            <img
               v-else-if="viewInfo.media_type == 3"
               :src="viewInfo.url"
-              :list="[viewInfo.url]"
-              :styleObj="{ maxHeight: '100%' }"
+              alt=""
             />
 
             <div class="pdf-wrap" v-else-if="viewInfo.media_type == 4">
@@ -344,7 +342,6 @@ import {
   newAllEntity,
   newSearchEntity,
 } from "@api/workManager";
-import imagePreview from "@component/imagePreview";
 import pdfView from "@component/pdfView";
 import _ from "lodash";
 import videoPlay from "./videoPlay";
@@ -354,7 +351,6 @@ import aiAudit from "@component/aiAudit";
 export default {
   components: {
     videoPlay,
-    imagePreview,
     itemInfo,
     pdfView,
     aiAudit,
@@ -586,9 +582,9 @@ export default {
       border-bottom: 1px solid #e4e7ed;
     }
     &-suggest {
-      width: 55%;
+      width: 50%;
       & > .tit {
-        font-size: 20px;
+        font-size: 16px;
         font-weight: 600;
         height: 40px;
         padding-left: 40px;
@@ -617,13 +613,18 @@ export default {
           audio {
             width: 100%;
           }
+          img {
+            width: 100%;
+            height: 100%;
+            object-fit: scale-down;
+          }
         }
       }
     }
     &-info {
       position: relative;
       padding-right: 40px;
-      width: 45%;
+      width: 50%;
       border-right: 1px dashed $dark;
       .info-form {
         padding-top: 20px;
@@ -645,22 +646,32 @@ export default {
             }
           }
         }
+        .el-select {
+          width: 100%;
+        }
       }
       .info-list {
         margin-bottom: 10px;
-        div:not(.title) {
-          margin-top: 20px;
-          font-size: 14px;
-          span {
-            color: $gray;
-            display: inline-block;
-            width: 100px;
-            text-align: right;
-            padding-right: 12px;
+        .wrap {
+          width: 100%;
+          display: flex;
+          .left {
+            width: 50%;
           }
-        }
-        &.product div:not(.title) {
-          width: 50%;
+          .right {
+            width: 50%;
+          }
+          div:not(.title) {
+            margin-top: 20px;
+            font-size: 14px;
+            span {
+              color: $gray;
+              display: inline-block;
+              width: 100px;
+              text-align: right;
+              padding-right: 12px;
+            }
+          }
         }
       }
       .list {
@@ -694,6 +705,7 @@ export default {
               .label {
                 text-align: left;
                 width: 50px;
+                font-size: 14px;
               }
               .btn-group {
                 height: 40px;
@@ -719,6 +731,9 @@ export default {
                   &:nth-of-type(4) {
                     background-color: #c280ff;
                   }
+                }
+                span {
+                  font-size: 14px;
                 }
               }
             }
