@@ -53,6 +53,9 @@
                         :duration="product.duration"></ai-audit>
               <div class="ai-legend">
                 <div class="ai-legend-item">
+                  <span>说明:</span>
+                </div>
+                <div class="ai-legend-item">
                   <i style="background: #facd91"></i>
                   <span>涉政</span>
                 </div>
