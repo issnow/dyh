@@ -39,21 +39,22 @@ export default {
 @import "@css/var.scss";
 
 .image-info {
-  padding: 30px;
   .title {
-    margin-bottom: 18px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e4e7ed;
     font-size: 16px;
     color: $deepDark;
     font-weight: 600;
   }
   .item {
-    margin-bottom: 14px;
+    margin-top: 20px;
     font-size: 14px;
     .label {
+      color: $gray;
       display: inline-block;
       width: 100px;
       text-align: right;
-      margin-right: 12px;
+      padding-right: 12px;
     }
   }
 }
