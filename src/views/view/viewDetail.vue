@@ -14,7 +14,7 @@
           </div>
           <div class="info-item">
             <div class="info-label">精神文明:</div>
-            <div class="info-content" style="display: grid; grid-template-columns: repeat(7, 1fr);">
+            <div class="info-content" style="display: grid; grid-template-columns: repeat(7, 60px);">
               <div v-for="item in product.tag" :key="item" type="info" size="mini" style="width: 60px;">
                 {{ item }}
               </div>
@@ -23,14 +23,11 @@
           <div class="info-item">
             <div class="info-label">实体:</div>
             <div class="info-content">
-              <div class="entity" v-for="item of product.entity" :key="item.f_name" style="margin-top: 10px;">
-                <div class="entity-item" style="display: flex;">
-                  <el-tag type="info" size="mini" style="margin-right: 5px;">{{ item.f_name }}</el-tag>
-                  <div>
-                    <span v-for="name of item.s_name" :key="name" style="margin-right: 5px;">{{ name }}</span>
-                  </div>
-                </div>
-              </div>
+              <el-tabs type="border-card" v-model="tabActive">
+                <el-tab-pane v-for="item of product.entity" :key="item.f_name" :label="item.f_name" :name="item.f_name">
+                  <span v-for="name of item.s_name" :key="name" style="margin-right: 5px;">{{ name }}</span>
+                </el-tab-pane>
+              </el-tabs>
             </div>
           </div>
           <div class="info-item">
@@ -39,10 +36,10 @@
           </div>
         </div>
       </div>
-      <video-info v-if="product.media_type === 1" style="margin-top: 20px;" :product="product"></video-info>
-      <audio-info v-if="product.media_type === 2" style="margin-top: 20px" :product="product"></audio-info>
-      <pic-info v-if="product.media_type === 3" style="margin-top: 20px;" :product="product"></pic-info>
-      <text-info v-if="product.media_type === 4" style="margin-top: 20px" :product="product"></text-info>
+      <video-info v-if="product.media_type === 1" style="margin-top: 30px;" :product="product"></video-info>
+      <audio-info v-if="product.media_type === 2" style="margin-top: 30px" :product="product"></audio-info>
+      <pic-info v-if="product.media_type === 3" style="margin-top: 30px;" :product="product"></pic-info>
+      <text-info v-if="product.media_type === 4" style="margin-top: 30px" :product="product"></text-info>
       <div class="work-detail-audit">
         <div class="header">审核结果:</div>
         <div class="content">
@@ -54,6 +51,24 @@
                         :duration="product.duration"></ai-audit>
               <ai-audit style="margin-top: 5px;" title="声音" :audit="task.ai.voice"
                         :duration="product.duration"></ai-audit>
+              <div class="ai-legend">
+                <div class="ai-legend-item">
+                  <i style="background: #facd91"></i>
+                  <span>涉政</span>
+                </div>
+                <div class="ai-legend-item">
+                  <i style="background: #ffff80"></i>
+                  <span>涉黄</span>
+                </div>
+                <div class="ai-legend-item">
+                  <i style="background: #ec808d"></i>
+                  <span>涉暴</span>
+                </div>
+                <div class="ai-legend-item">
+                  <i style="background: #c280ff"></i>
+                  <span>其他</span>
+                </div>
+              </div>
             </div>
           </div>
           <div class="info-item">
@@ -61,7 +76,7 @@
             <div class="info-content">
               <el-input
                   type="textarea"
-                  :rows="6"
+                  :rows="4"
                   placeholder="请输入内容"
                   v-model="audit_note"
                   maxlength="200"
@@ -75,6 +90,7 @@
       </div>
     </div>
     <div class="work-detail-info">
+      <div class="header">预览</div>
       <div class="content">
         <!-- <player
           v-if="!!product.trans_url && product.media_type === 1"
@@ -82,17 +98,20 @@
           :bgImage="product.cover_url"
           ref="mPlayer"
         /> -->
-        <div v-if="product.is_del === 1"
-             style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
-          <i class="iconfont icon-file-delete-fill" style="color: #8e8f93; font-size: 120px;"></i>
-          <div style="color: #C0C4CC; margin-top: 30px;">作品违规，文件已被管理员删除！</div>
+        <div class="preview-content">
+          <div class="file-none" v-if="product.is_del === 1">
+            <img class="icon" src="../../assets/file-none.png">
+            <div style="color: #C0C4CC; margin-top: 30px;">作品违规，文件已被管理员删除！</div>
+          </div>
+          <video class="video" v-else-if="product.media_type === 1" :src="product.trans_url || product.url"
+                 controls controlslist="nodownload"></video>
+          <audio class="audio" v-else-if="product.media_type === 2" :src="product.trans_url || product.url"
+                 controls controlslist="nodownload"></audio>
+          <img v-else-if="product.media_type === 3" :src="product.trans_url || product.url">
+          <pdf-view :url="product.trans_url || product.url" v-else-if="product.media_type === 4"></pdf-view>
         </div>
-        <video class="video" v-else-if="product.media_type === 1" :src="product.trans_url || product.url"
-               controls controlslist="nodownload"></video>
-        <audio class="audio" v-else-if="product.media_type === 2" :src="product.trans_url || product.url"
-               controls controlslist="nodownload"></audio>
-        <img v-else-if="product.media_type === 3" :src="product.trans_url || product.url">
-        <pdf-view :url="product.trans_url || product.url" v-else-if="product.media_type === 4"></pdf-view>
+
+
       </div>
       <div class="footer">
         <el-button v-if="task.audit_status === 6" type="primary" @click="submitForm(1)" :loading="loading"
@@ -144,6 +163,9 @@ export default {
 
       entityList: [],
       tagName: '',
+
+      // 实体Tabs Action
+      tabActive: '',
     };
   },
   created() {
@@ -220,8 +242,8 @@ export default {
           this.tagName = this.product.tag_names_str;
           this.entityList = this.product.entities;
           this.audit_note = this.task.audit_note;
+          this.tabActive = (this.product.entity.length > 0) ? this.product.entity[0].f_name : '';
 
-          console.log('task', this.task);
         } else {
           this.$message({
             type: "error",
@@ -255,7 +277,7 @@ export default {
   display: flex;
   padding: 20px 30px;
 
-
+  // 左边信息
   .work-detail-suggest {
     width: 50%;
     height: 100%;
@@ -267,39 +289,65 @@ export default {
       .header {
         font-size: 14px;
         font-weight: 600;
-        width: 60px;
-        text-align: right;
+        width: 100%;
+        border-bottom: 1px solid #E4E7ED;
+        padding-bottom: 10px;
       }
 
       .content {
-        margin-top: 10px;
+        margin-top: 20px;
 
         > .info-item {
-          margin-top: 10px;
+          margin-top: 20px;
         }
 
 
       }
     }
 
+    // 审核信息
     .work-detail-audit {
-      margin-top: 20px;
+      margin-top: 30px;
 
       .header {
         font-size: 14px;
         font-weight: 600;
-        width: 60px;
-        text-align: right;
+        width: 100%;
+        border-bottom: 1px solid #E4E7ED;
+        padding-bottom: 10px;
       }
 
       .content {
-        margin-top: 10px;
+        margin-top: 20px;
 
         > .info-item {
-          margin-top: 10px;
+          margin-top: 20px;
           width: 100%;
         }
+
+        .ai-legend{
+          display: flex;
+          align-items: center;
+          width: 100%;
+          height: 40px;
+          font-size: 12px;
+
+          .ai-legend-item{
+            margin-right: 20px;
+            i{
+              display: inline-block;
+              width: 10px;
+              height: 10px;
+              border-radius: 50%;
+              border: 1px solid #ccc;
+              margin-right: 5px;
+
+            }
+          }
+
+        }
       }
+
 
 
     }
@@ -308,7 +356,7 @@ export default {
       width: 100%;
       font-size: 14px;
       display: flex;
-      align-items: center;
+      align-items: first;
 
       .info-label {
         width: 60px;
@@ -323,6 +371,7 @@ export default {
 
   }
 
+  // 右边预览
   .work-detail-info {
     position: relative;
     //padding-left: 40px;
@@ -332,10 +381,22 @@ export default {
     flex-direction: column;
     justify-content: space-between;
 
+    .header {
+      font-size: 20px;
+      font-weight: 600;
+      width: 100%;
+      height: 40px;
+      padding-left: 40px;
+
+
+    }
+
     .content {
-      height: calc(100% - 100px);
+      height: calc(100% - 80px);
       width: 100%;
       padding-left: 40px;
+      padding-top: 20px;
+      padding-bottom: 20px;
       position: relative;
       display: flex;
       align-items: center;
@@ -357,6 +418,38 @@ export default {
         &:focus {
           outline: none;
         }
+      }
+
+      .preview-content {
+        background: #F4F7FA;
+        border: 1px solid #C1C1C1;
+        width: 44vw;
+        height: 24.75vw;
+        border-radius: 8px;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .file-none {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        //background: #F4F7FA;
+        //border: 1px solid #C1C1C1;
+        //width: 44vw;
+        //height: 24.75vw;
+        //border-radius: 8px;
+
+        .icon {
+          width: 100px;
+          height: auto;
+
+        }
+
       }
 
     }

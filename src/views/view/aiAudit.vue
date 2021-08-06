@@ -1,6 +1,6 @@
 <template>
   <div class="ai-audit">
-    <div class="ai-audit-title">{{ title }}:</div>
+    <div class="ai-audit-title">{{ title }}:{{ (!audit) ? '已通过' : '' }}</div>
     <div class="ai-audit-content">
       <el-tooltip placement="top" v-for="item of audit" :key="item.frame_begin">
         <div slot="content">
@@ -20,7 +20,7 @@
         </div>
         <div class="ai-audit-value"
              :key="item.frame_begin"
-             :style="{width: (500 / duration) + '%', left: (item.frame_begin * 100 / duration) + '%'}"
+             :style="{width: (500 / duration) + '%', left: (item.frame_begin * 100 / duration) + '%', background: `#${item.suspects[0].color}`}"
         >
         </div>
       </el-tooltip>
@@ -59,7 +59,7 @@ export default {
       left: 0;
       width: 10%;
       height: 6px;
-      background: $supRed;
+      //background: $supRed;
       cursor: pointer;
 
       &:first-child {

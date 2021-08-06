@@ -89,3 +89,12 @@ li {
     color: #909399;
   }
 }
+
+// table 超出...
+.table-column-text {
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
