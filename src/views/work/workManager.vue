@@ -53,7 +53,24 @@
         prop="media_type_title"
         label="类型"
         width="100"
-      ></el-table-column>
+      >
+        <template slot="header" scope="scope">
+          <el-select
+            class="select-color"
+            v-model="form.media_type"
+            placeholder="类型"
+            clearable
+            @change="filterSelect($event, 'media_type')"
+          >
+            <el-option
+              v-for="item in media_type"
+              :key="item.key"
+              :label="item.name"
+              :value="item.key"
+            ></el-option>
+          </el-select>
+        </template>
+      </el-table-column>
       <el-table-column
         :resizable="false"
         prop="resolution"
@@ -326,6 +343,7 @@ export default {
         status: "",
         wh_ratio: "",
         resolution: "",
+        media_type: "",
       },
       rules: {
         title: [
@@ -342,6 +360,7 @@ export default {
       multipleSelection: [],
       filterResolution: [],
       filterWh_ratio: [],
+      media_type: [],
       // 提交审核code
       code: "",
       title: "",
@@ -407,16 +426,7 @@ export default {
     },
     // 筛选列表
     filterSelect(value, type) {
-      switch (type) {
-        case "wh_ratio":
-          this.form.wh_ratio = value;
-          break;
-        case "resolution":
-          this.form.resolution = value;
-        case "status":
-          this.form.status = value;
-          break;
-      }
+      this.form[type] = value;
       this.page.pageNo = 1;
       this.page.pageSize = 10;
       this._productGetList();
@@ -457,10 +467,7 @@ export default {
         this.selectData = element.status;
         this.filterResolution = element.resolution;
         this.filterWh_ratio = element.wh_ratio;
-
-        // console.log(this.selectData, "selectData");
-        // console.log(this.filterResolution, "filterResolution");
-        // console.log(this.filterWh_ratio, "filterWh_ratio");
+        this.media_type = element.media_type;
       }
     },
     async _productGetList() {

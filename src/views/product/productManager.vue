@@ -57,7 +57,24 @@
         label="类型"
         width="100"
         :resizable="false"
-      ></el-table-column>
+      >
+        <template slot="header" scope="scope">
+          <el-select
+            class="select-color"
+            v-model="form.media_type"
+            placeholder="类型"
+            clearable
+            @change="filterSelect($event, 'media_type')"
+          >
+            <el-option
+              v-for="item in media_type"
+              :key="item.key"
+              :label="item.name"
+              :value="item.key"
+            ></el-option>
+          </el-select>
+        </template>
+      </el-table-column>
       <el-table-column
         :resizable="false"
         label="预览"
@@ -122,7 +139,7 @@
             v-model="form.status"
             placeholder="状态"
             clearable
-            @change="filterSelect"
+            @change="filterSelect($event, 'status')"
           >
             <el-option
               v-for="item in selectData"
@@ -179,7 +196,10 @@
             @click="onWatch(scope.row.code)"
             >查看</el-button
           >
-          <el-button v-if="![11,12,13].includes(scope.row.status)" type="text" @click="downloadFile(scope.row)"
+          <el-button
+            v-if="![11, 12, 13].includes(scope.row.status)"
+            type="text"
+            @click="downloadFile(scope.row)"
             >下载</el-button
           >
           <el-button
@@ -266,6 +286,7 @@ export default {
       form: {
         title: "",
         status: "",
+        media_type: "",
       },
       listParams: {
         order: "1",
@@ -341,8 +362,8 @@ export default {
       }
     },
     // 筛选列表
-    filterSelect(value) {
-      this.form.status = value;
+    filterSelect(v, type) {
+      this.form[type] = v
       this.page.pageNo = 1;
       this.page.pageSize = 10;
       this._productGetList();

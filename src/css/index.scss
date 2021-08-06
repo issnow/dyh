@@ -34,6 +34,9 @@ li {
 .el-table thead .el-select .el-input__inner {
   border-width: 0;
 }
+.el-table .el-select .el-input__inner {
+  background-color: transparent;
+}
 
 .el-message {
   z-index: 99999 !important;
