@@ -6,33 +6,35 @@
           <router-view :key="key"></router-view>
         </keep-alive>
       </transition>
-    </section>
-    <div class="footer">
+      <div class="footer">
         <div class="desc">
           <span>帮助</span><span>隐私</span><span>条款</span>
         </div>
         <p>copyright @ 2021 江苏文投大运河文化传播</p>
-    </div>
+      </div>
+    </section>
   </div>
 </template>
 
 <script>
-  export default {
-    name: 'appMain',
-    computed: {
-      key() {
-        // return this.$route.path
-        return this.$route.name !== undefined? this.$route.name +new Date(): this.$route +new Date()
-      }
-    }
-  }
+export default {
+  name: "appMain",
+  computed: {
+    key() {
+      // return this.$route.path
+      return this.$route.name !== undefined
+        ? this.$route.name + new Date()
+        : this.$route + new Date();
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
 /* fade-transform */
 .fade-transform-leave-active,
 .fade-transform-enter-active {
-  transition: all .5s;
+  transition: all 0.5s;
 }
 
 .fade-transform-enter {
@@ -51,25 +53,23 @@
   .app-main {
     flex: 1;
     position: relative;
-    // min-height: calc(100vh - 120px);
     overflow: scroll;
     background-color: #fff;
     overflow: auto;
-  }
-  .footer {
-    height: 70px;
-    padding: 10px 0;
-    text-align: center;
-    font-size: 12px;
-    z-index: 100;
-    color: #6B7277;
-    opacity: .5;
-  
-    .desc span{
-      display: inline-block;
-      padding: 0 20px;
+    .footer {
+      height: 70px;
+      padding: 10px 0;
+      text-align: center;
+      font-size: 12px;
+      z-index: 100;
+      color: #6b7277;
+      opacity: 0.5;
+
+      .desc span {
+        display: inline-block;
+        padding: 0 20px;
+      }
     }
   }
-
 }
 </style>

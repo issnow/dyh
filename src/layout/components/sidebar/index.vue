@@ -1,48 +1,15 @@
 <template>
   <div class="has-logo">
-    <!-- <el-menu
-      :default-active="activeMenu"
-      :collapse="isCollapse"
-      :background-color="variables.dark"
-      :text-color="variables.gray"
-      :unique-opened="false"
-      :active-text-color="variables.white"
-      :collapse-transition="false"
-      mode="vertical"
-    >
-      <sidebar-item v-for="route in permission_routes" :key="route.path" :item="route" :base-path="route.path" />
-    </el-menu> -->
-
-    <!-- <logo
-      :collapse="isCollapse"
-    /> -->
     <el-menu
       :default-active="activeIndex"
       class="el-menu-demo"
       router
       background-color="#E4EBF2"
       text-color="#6B7277"
-      active-text-color="#f0f0f0"
+      active-text-color="#4B7378"
       :collapse="isCollapse"
       :collapse-transition="false"
     >
-
-      <!-- <el-submenu index='/work'>
-        <template slot="title">
-          <i class="el-icon-location"></i>
-          <span>作品管理</span>
-        </template>
-        <el-menu-item index="/work/manager">作品管理</el-menu-item>
-        <el-menu-item index="/work/detail">作品详情</el-menu-item>
-      </el-submenu>
-
-      <el-submenu index='/project'>
-        <template slot="title">
-          <i class="el-icon-location"></i>
-          <span>项目管理</span>
-        </template>
-        <el-menu-item index="/project/projectList">项目列表</el-menu-item>
-      </el-submenu> -->
 
       <!-- <el-menu-item index="/workManager">
         <i class="el-icon-setting"></i>
@@ -138,8 +105,7 @@ export default {
   border-right-width: 0;
   .el-menu-item {
     ::v-deep &.is-active {
-      background-color: #1890FF !important;
-      color: $white !important;
+      background-color: #fff !important;
     }
     &:not(.is-active):hover{
       background-color: #DBE2E8 !important;
