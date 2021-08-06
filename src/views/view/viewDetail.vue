@@ -2,7 +2,7 @@
   <div class="work-detail">
     <div class="work-detail-suggest">
       <div class="work-detail-base">
-        <div class="header">成品信息:</div>
+        <div class="header">基本信息:</div>
         <div class="content">
           <div class="info-item">
             <div class="info-label">名称:</div>
@@ -14,10 +14,8 @@
           </div>
           <div class="info-item">
             <div class="info-label">精神文明:</div>
-            <div class="info-content" style="display: grid; grid-template-columns: repeat(7, 60px);">
-              <div v-for="item in product.tag" :key="item" type="info" size="mini" style="width: 60px;">
-                {{ item }}
-              </div>
+            <div class="info-content">
+                {{ product.tag.toString() }}
             </div>
           </div>
           <div class="info-item">
@@ -25,7 +23,7 @@
             <div class="info-content">
               <el-tabs type="border-card" v-model="tabActive">
                 <el-tab-pane v-for="item of product.entity" :key="item.f_name" :label="item.f_name" :name="item.f_name">
-                  <span v-for="name of item.s_name" :key="name" style="margin-right: 5px;">{{ name }}</span>
+                  {{item.s_name.toString()}}
                 </el-tab-pane>
               </el-tabs>
             </div>
@@ -290,7 +288,7 @@ export default {
 
     .work-detail-base {
       .header {
-        font-size: 14px;
+        font-size: 16px;
         font-weight: 600;
         width: 100%;
         border-bottom: 1px solid #E4E7ED;
@@ -313,7 +311,7 @@ export default {
       margin-top: 30px;
 
       .header {
-        font-size: 14px;
+        font-size: 16px;
         font-weight: 600;
         width: 100%;
         border-bottom: 1px solid #E4E7ED;
@@ -385,7 +383,7 @@ export default {
     justify-content: space-between;
 
     .header {
-      font-size: 20px;
+      font-size: 16px;
       font-weight: 600;
       width: 100%;
       height: 40px;
