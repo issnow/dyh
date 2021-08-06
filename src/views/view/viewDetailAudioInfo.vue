@@ -49,7 +49,7 @@ export default {
 <style scoped lang="scss">
 .view-detail-video-info{
   .header {
-    font-size: 14px;
+    font-size: 16px;
     font-weight: 600;
     width: 100%;
     //text-align: right;

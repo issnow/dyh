@@ -39,17 +39,17 @@ export default {
 @import "@css/var.scss";
 
 .ai-audit {
-  font-size: 12px;
+  font-size: 14px;
 
   .ai-audit-title {
 
   }
 
   .ai-audit-content {
-    width: 360px;
+    width: 100%;
     height: 6px;
     background: #ebeef5;
-    margin-top: 5px;
+    margin-top: 10px;
     border-radius: 4px;
     position: relative;
 
