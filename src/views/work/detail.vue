@@ -349,7 +349,7 @@ import pdfView from "@component/pdfView";
 import _ from "lodash";
 import videoPlay from "./videoPlay";
 import itemInfo from "./itemInfo.vue";
-import aiAudit from "../view/aiAudit";
+import aiAudit from "@component/aiAudit";
 
 export default {
   components: {
