@@ -1,35 +1,46 @@
-import axios from './request';
+import axios from 'axios';
+import {nanoid} from 'nanoid';
 
 
 // 下载
-export const download = (url, title) => {
-    return new Promise((resolve, reject) => {
-        url = url.replace(/\\/g, "/");
-        const xhr = new XMLHttpRequest();
-        xhr.open("GET", url, true);
-        xhr.responseType = "blob";
-        // xhr.onprogress = res => {
-        //   let percent = ((res.loaded / res.total) * 100).toFixed(0);
-        // }
-        xhr.onload = () => {
-            if (xhr.status === 200) {
-                // 获取文件blob数据并保存
-                // var num = url.lastIndexOf("/") + 1;
-                //把参数和文件名分割开
-                // var fileName = url.substring(num).split("?")[0];
-                var ext = url.slice(url.lastIndexOf('.'));
-                var export_blob = new Blob([xhr.response]);
-                var save_link = document.createElementNS(
-                    "http://www.w3.org/1999/xhtml",
-                    "a",
-                );
-                save_link.href = URL.createObjectURL(export_blob);
-                save_link.download = title + ext;
-                save_link.click();
-                resolve();
-            }
-        };
-        xhr.send();
+export const download = async (url, title) => {
+    const id = nanoid();
+
+    const num = url.lastIndexOf("/") + 1;
+    const ext = url.slice(url.lastIndexOf('.'));
+    const fileName = title + ext;
+
+    onfire.fire('download:begin', {id, fileName});
+
+
+    url = url.replace(/\\/g, "/");
+    const result = await axios.get(url, {
+        withCredentials: false,
+        headers: {
+            "Content-Type": 'application/octet-stream',
+        },
+        responseType: 'blob',
+        onDownloadProgress: (progressEvent) => {
+            const progress = Math.floor((progressEvent.loaded / progressEvent.total) * 100);
+            onfire.fire('download:progress', {id, fileName, progress});
+        },
+
+    }).catch(() => {
+        onfire.fire('download:error', {id, fileName});
     });
+
+    if (result && result.data) {
+        const blob = new Blob([result.data]);
+        const href = window.webkitURL.createObjectURL(blob);
+        const downloadElement = document.createElement('a');
+        downloadElement.href = href;
+        downloadElement.download = `${fileName}`;
+        document.body.appendChild(downloadElement);
+        downloadElement.click();
+        document.body.removeChild(downloadElement);
+        window.URL.revokeObjectURL(href);
+        onfire.fire('download:success', {id, fileName});
+
+    }
 
 };

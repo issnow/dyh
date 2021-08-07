@@ -3,6 +3,7 @@ import App from './App.vue'
 import router from './router'
 import store from './store/index'
 import VueLazyload from 'vue-lazyload'
+import OnFire from 'onfire.js';
 
 import 'normalize.css/normalize.css' // a modern alternative to CSS resets
 
@@ -26,10 +27,15 @@ Vue.use(VueLazyload)
 
 Vue.prototype.$api = api
 
+// 发布-订阅者
+window.onfire = new OnFire();
+
 
 Vue.config.productionTip = false
 
 console.log('env', process.env.NODE_ENV);
+
+
 
 
 

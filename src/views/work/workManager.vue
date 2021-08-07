@@ -305,7 +305,7 @@ import pdfPreview from "@component/pdfPreview";
 import _ from "lodash";
 import { mapGetters, mapMutations } from "vuex";
 import delPreview from "@component/delPreview";
-import { download } from "@api/product";
+import { download } from "@api/main";
 
 export default {
   components: {
@@ -398,11 +398,7 @@ export default {
       "workManager/setPage2",
     ]),
     downloadFile(row) {
-      this.$message({
-        message: "开始下载",
-        type: "success",
-      });
-      download(row.url, row);
+      download(row.url, row.title);
     },
     init() {
       this.form = {

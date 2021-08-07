@@ -5406,6 +5406,11 @@ nan@^2.12.1:
   resolved "https://registry.nlark.com/nan/download/nan-2.14.2.tgz#f5376400695168f4cc694ac9393d0c9585eeea19"
   integrity sha1-9TdkAGlRaPTMaUrJOT0MlYXu6hk=
 
+nanoid@^3.1.23:
+  version "3.1.23"
+  resolved "https://registry.nlark.com/nanoid/download/nanoid-3.1.23.tgz#f744086ce7c2bc47ee0a8472574d5c78e4183a81"
+  integrity sha1-90QIbOfCvEfuCoRyV01ceOQYOoE=
+
 nanomatch@^1.2.9:
   version "1.2.13"
   resolved "https://registry.nlark.com/nanomatch/download/nanomatch-1.2.13.tgz#b87a8aa4fc0de8fe6be88895b38983ff265bd119"
@@ -5694,6 +5699,11 @@ onetime@^5.1.0:
   integrity sha1-0Oluu1awdHbfHdnEgG5SN5hcpF4=
   dependencies:
     mimic-fn "^2.1.0"
+
+onfire.js@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.npm.taobao.org/onfire.js/download/onfire.js-2.0.1.tgz#76ac5a440e17ecd81aa4c287df02af368576dad8"
+  integrity sha1-dqxaRA4X7NgapMKH3wKvNoV22tg=
 
 open@^6.3.0:
   version "6.4.0"

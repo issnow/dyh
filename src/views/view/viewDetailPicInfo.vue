@@ -59,6 +59,7 @@ export default {
 
   .info-item {
     min-width: 240px;
+    width: 50%;
     font-size: 14px;
     display: flex;
     align-items: center;

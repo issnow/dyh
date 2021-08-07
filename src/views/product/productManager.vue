@@ -5,29 +5,31 @@
         <el-col :span="6">
           <el-form-item>
             <el-button
-              icon="el-icon-upload2"
-              type="primary"
-              @click="uploadProducVisible = true"
-              >上传成品</el-button
+                icon="el-icon-upload2"
+                type="primary"
+                @click="uploadProducVisible = true"
+            >上传成品
+            </el-button
             >
             <el-button icon="el-icon-delete" @click="selectDelete"
-              >批量删除</el-button
+            >批量删除
+            </el-button
             >
           </el-form-item>
         </el-col>
         <el-col :span="6" :offset="12">
           <el-form-item prop="title" label-width="60px">
             <el-input
-              v-model.trim="form.title"
-              placeholder="请输入关键字搜索"
-              @keyup.enter.native="handleSubmitForm('form')"
-              clearable
+                v-model.trim="form.title"
+                placeholder="请输入关键字搜索"
+                @keyup.enter.native="handleSubmitForm('form')"
+                clearable
             >
               <el-button
-                slot="append"
-                icon="el-icon-search"
-                @click="handleSubmitForm('form')"
-                :loading="loading"
+                  slot="append"
+                  icon="el-icon-search"
+                  @click="handleSubmitForm('form')"
+                  :loading="loading"
               ></el-button>
             </el-input>
           </el-form-item>
@@ -35,55 +37,55 @@
       </el-row>
     </el-form>
     <el-table
-      v-loading="loading"
-      class="mb20"
-      :data="tableData"
-      border
-      style="width: 100%"
-      :default-sort="{ prop: 'time', order: 'descending' }"
-      @selection-change="handleSelectionChange"
-      @sort-change="sortChange"
-      empty-text="无相关数据"
+        v-loading="loading"
+        class="mb20"
+        :data="tableData"
+        border
+        style="width: 100%"
+        :default-sort="{ prop: 'time', order: 'descending' }"
+        @selection-change="handleSelectionChange"
+        @sort-change="sortChange"
+        empty-text="无相关数据"
     >
       <el-table-column type="selection" width="35" :resizable="false">
       </el-table-column>
       <el-table-column
-        prop="title"
-        label="成品名称"
-        :resizable="false"
+          prop="title"
+          label="成品名称"
+          :resizable="false"
       ></el-table-column>
       <el-table-column
-        prop="media_type_title"
-        label="类型"
-        width="100"
-        :resizable="false"
+          prop="media_type_title"
+          label="类型"
+          width="100"
+          :resizable="false"
       >
         <template slot="header" scope="scope">
           <el-select
-            class="select-color"
-            v-model="form.media_type"
-            placeholder="类型"
-            clearable
-            @change="filterSelect($event, 'media_type')"
+              class="select-color"
+              v-model="form.media_type"
+              placeholder="类型"
+              clearable
+              @change="filterSelect($event, 'media_type')"
           >
             <el-option
-              v-for="item in media_type"
-              :key="item.key"
-              :label="item.name"
-              :value="item.key"
+                v-for="item in media_type"
+                :key="item.key"
+                :label="item.name"
+                :value="item.key"
             ></el-option>
           </el-select>
         </template>
       </el-table-column>
       <el-table-column
-        :resizable="false"
-        label="预览"
-        width="100"
-        class-name="td-center"
+          :resizable="false"
+          label="预览"
+          width="100"
+          class-name="td-center"
       >
         <template slot-scope="scope">
           <template
-            v-if="
+              v-if="
               [1, 2].includes(scope.row.media_type) &&
               [11, 12, 13].includes(scope.row.status)
             "
@@ -93,69 +95,69 @@
           <template v-else>
             <del-preview v-if="scope.row.is_del === 1"></del-preview>
             <videoPreview
-              v-else-if="scope.row.media_type == 1"
-              :isVideo="true"
-              :source="scope.row.trans_url"
-              :bgImage="scope.row.cover_url"
-              controlslist=""
+                v-else-if="scope.row.media_type == 1"
+                :isVideo="true"
+                :source="scope.row.trans_url"
+                :bgImage="scope.row.cover_url"
+                controlslist=""
             />
             <audioPreview
-              v-else-if="scope.row.media_type == 2"
-              :source="scope.row.trans_url"
+                v-else-if="scope.row.media_type == 2"
+                :source="scope.row.trans_url"
             />
             <imagePreview
-              v-else-if="scope.row.media_type == 3"
-              :src="scope.row.url"
-              :list="[scope.row.url]"
-              :styleObj="{ height: '48px', width: '86px' }"
-              fit="cover"
+                v-else-if="scope.row.media_type == 3"
+                :src="scope.row.url"
+                :list="[scope.row.url]"
+                :styleObj="{ height: '48px', width: '86px' }"
+                fit="cover"
             />
             <i
-              class="iconfont icon-ziyuan1662"
-              v-else-if="scope.row.media_type == 4"
-              @click="onpdfPre(scope.row.url)"
+                class="iconfont icon-ziyuan1662"
+                v-else-if="scope.row.media_type == 4"
+                @click="onpdfPre(scope.row.url)"
             ></i>
           </template>
         </template>
       </el-table-column>
       <el-table-column
-        :resizable="false"
-        prop="video_size"
-        label="大小"
-        width="100"
-        sortable="custom"
-        align="right"
-        header-align="left"
+          :resizable="false"
+          prop="video_size"
+          label="大小"
+          width="100"
+          sortable="custom"
+          align="right"
+          header-align="left"
       ></el-table-column>
       <el-table-column
-        :resizable="false"
-        label="状态"
-        prop="status"
-        width="100"
+          :resizable="false"
+          label="状态"
+          prop="status"
+          width="100"
       >
         <template slot="header" scope="scope">
           <el-select
-            class="select-color"
-            v-model="form.status"
-            placeholder="状态"
-            clearable
-            @change="filterSelect($event, 'status')"
+              class="select-color"
+              v-model="form.status"
+              placeholder="状态"
+              clearable
+              @change="filterSelect($event, 'status')"
           >
             <el-option
-              v-for="item in selectData"
-              :key="item.key"
-              :label="item.name"
-              :value="item.key"
+                v-for="item in selectData"
+                :key="item.key"
+                :label="item.name"
+                :value="item.key"
             ></el-option>
           </el-select>
         </template>
         <template slot-scope="scope">
           <el-tooltip
-            v-if="scope.row.status == 7"
-            class="item"
-            effect="dark"
-            :content="scope.row.audit_note"
-            placement="top"
+              v-if="scope.row.status == 7"
+              class="item"
+              effect="dark"
+              :content="scope.row.audit_note"
+              placement="top"
           >
             <span>{{ scope.row.status_title }}</span>
           </el-tooltip>
@@ -163,91 +165,96 @@
         </template>
       </el-table-column>
       <el-table-column
-        prop="created_at"
-        :resizable="false"
-        label="创建时间"
-        width="180"
-        sortable="custom"
-        align="right"
-        header-align="left"
+          prop="created_at"
+          :resizable="false"
+          label="创建时间"
+          width="180"
+          sortable="custom"
+          align="right"
+          header-align="left"
       ></el-table-column>
       <el-table-column
-        fixed="right"
-        label="操作"
-        width="200"
-        :resizable="false"
+          fixed="right"
+          label="操作"
+          width="200"
+          :resizable="false"
       >
         <template slot-scope="scope">
           <el-button
-            v-if="[13].includes(scope.row.status)"
-            type="text"
-            @click="onTranscoding(scope.row.code)"
-            >重新转码</el-button
+              v-if="[13].includes(scope.row.status)"
+              type="text"
+              @click="onTranscoding(scope.row.code)"
+          >重新转码
+          </el-button
           >
           <el-button
-            v-if="[3].includes(scope.row.status)"
-            type="text"
-            @click="onReview(scope.row)"
-            >提交审核</el-button
+              v-if="[3].includes(scope.row.status)"
+              type="text"
+              @click="onReview(scope.row)"
+          >提交审核
+          </el-button
           >
           <el-button
-            v-if="[4, 7, 8].includes(scope.row.status)"
-            type="text"
-            @click="onWatch(scope.row.code)"
-            >查看</el-button
+              v-if="[4, 7, 8].includes(scope.row.status)"
+              type="text"
+              @click="onWatch(scope.row.code)"
+          >查看
+          </el-button
           >
           <el-button
-            v-if="![11, 12, 13].includes(scope.row.status)"
-            type="text"
-            @click="downloadFile(scope.row)"
-            >下载</el-button
+              v-if="![11, 12, 13].includes(scope.row.status)"
+              type="text"
+              @click="downloadFile(scope.row)"
+          >下载
+          </el-button
           >
           <el-button
-            v-if="[11, 12, 13, 3, 7, 8].includes(scope.row.status)"
-            type="text"
-            class="del-red"
-            @click="onDelete(scope.row.code)"
-            >删除</el-button
+              v-if="[11, 12, 13, 3, 7, 8].includes(scope.row.status)"
+              type="text"
+              class="del-red"
+              @click="onDelete(scope.row.code)"
+          >删除
+          </el-button
           >
         </template>
       </el-table-column>
     </el-table>
 
     <el-pagination
-      background
-      :hide-on-single-page="true"
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
-      :current-page="page.pageNo"
-      :page-sizes="[5, 10, 15, 20]"
-      :page-size="page.pageSize"
-      layout="total, slot, prev, pager, next, sizes, jumper"
-      :total="page.recordCount"
+        background
+        :hide-on-single-page="true"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="page.pageNo"
+        :page-sizes="[5, 10, 15, 20]"
+        :page-size="page.pageSize"
+        layout="total, slot, prev, pager, next, sizes, jumper"
+        :total="page.recordCount"
     >
       <span>第{{ page.pageNo }}/{{ page.pageCount }}页</span>
     </el-pagination>
 
     <submitDialog
-      :code="code"
-      :visible="submitDialogVisible"
-      :title="title"
-      @hideDialog="submitDialogVisible = false"
-      @_productGetList="_productGetList"
+        :code="code"
+        :visible="submitDialogVisible"
+        :title="title"
+        @hideDialog="submitDialogVisible = false"
+        @_productGetList="_productGetList"
     />
 
     <uploadProduct
-      :visible="uploadProducVisible"
-      @hideDialog="uploadProducVisible = false"
-      :wh_ratio="wh_ratio"
-      :resolution="resolution"
-      :media_type="media_type"
-      @_productGetList="_productGetList"
+        :visible="uploadProducVisible"
+        @hideDialog="uploadProducVisible = false"
+        :wh_ratio="wh_ratio"
+        :resolution="resolution"
+        :media_type="media_type"
+        @_productGetList="_productGetList"
     />
 
     <pdfPreview
-      :src="pdfsrc"
-      :visible="pdfVisible"
-      @handleClose="pdfVisible = false"
+        :src="pdfsrc"
+        :visible="pdfVisible"
+        @handleClose="pdfVisible = false"
     />
   </div>
 </template>
@@ -259,9 +266,10 @@ import imagePreview from "@component/imagePreview";
 import pdfPreview from "@component/pdfPreview";
 import submitDialog from "../work/submitDialog.vue";
 import uploadProduct from "./uploadProduct.vue";
-import { getList, del, reTranscode, download } from "@api/product";
-import { productChoicesList } from "@api/workManager";
-import { mapGetters, mapMutations } from "vuex";
+import {download} from '@api/main';
+import {getList, del, reTranscode} from "@api/product";
+import {productChoicesList} from "@api/workManager";
+import {mapGetters, mapMutations} from "vuex";
 import delPreview from "@component/delPreview";
 
 export default {
@@ -293,9 +301,9 @@ export default {
       },
       rules: {
         title: [
-          { required: false, message: "请输入作品名称关键字", trigger: "blur" },
+          {required: false, message: "请输入作品名称关键字", trigger: "blur"},
         ],
-        status: [{ required: true, message: "请选择状态", trigger: "change" }],
+        status: [{required: true, message: "请选择状态", trigger: "change"}],
       },
       multipleSelection: [],
       tableData: [],
@@ -339,11 +347,7 @@ export default {
       "workManager/setPage1",
     ]),
     downloadFile(row) {
-      this.$message({
-        message: "开始下载",
-        type: "success",
-      });
-      download(row.url, row);
+      download(row.url, row.title);
     },
     init() {
       this.form = {
@@ -353,7 +357,7 @@ export default {
       this.page = this.page1;
     },
     async _productChoicesList() {
-      const { status, element, msg } = await productChoicesList({ type: 6 });
+      const {status, element, msg} = await productChoicesList({type: 6});
       if (status == 1) {
         this.selectData = element.status;
         this.wh_ratio = element.wh_ratio;
@@ -363,7 +367,7 @@ export default {
     },
     // 筛选列表
     filterSelect(v, type) {
-      this.form[type] = v
+      this.form[type] = v;
       this.page.pageNo = 1;
       this.page.pageSize = 10;
       this._productGetList();
@@ -382,8 +386,8 @@ export default {
       };
       this.copyParams = params;
       // console.log(params, "params");
-      let { status, datas, fsp, msg } = await getList(
-        this.params1 ? this.params1 : params
+      let {status, datas, fsp, msg} = await getList(
+          this.params1 ? this.params1 : params,
       );
       this["workManager/resetP1"]();
       this.loading = false;
@@ -421,28 +425,28 @@ export default {
           cancelButtonText: "取消",
           type: "warning",
         })
-          .then(async () => {
-            let len = this.tableData.length;
-            let { status, msg } = await del({
-              code: this.multipleSelection.map((e) => e.code),
-            });
-            if (status == 1) {
-              if (len == 1 && this.page.pageNo > 1) {
-                this.page.pageNo--;
-              }
-              this.$message({
-                type: "success",
-                message: msg,
+            .then(async () => {
+              let len = this.tableData.length;
+              let {status, msg} = await del({
+                code: this.multipleSelection.map((e) => e.code),
               });
-              this._productGetList();
-            }
-          })
-          .catch(() => {
-            this.$message({
-              type: "info",
-              message: "已取消删除",
+              if (status == 1) {
+                if (len == 1 && this.page.pageNo > 1) {
+                  this.page.pageNo--;
+                }
+                this.$message({
+                  type: "success",
+                  message: msg,
+                });
+                this._productGetList();
+              }
+            })
+            .catch(() => {
+              this.$message({
+                type: "info",
+                message: "已取消删除",
+              });
             });
-          });
       } else {
         this.$message({
           type: "info",
@@ -453,7 +457,7 @@ export default {
     handleSelectionChange(val) {
       this.multipleSelection = val;
     },
-    sortChange({ order, prop }) {
+    sortChange({order, prop}) {
       console.log(arguments, "arguments");
       if (order == "ascending") {
         switch (prop) {
@@ -483,34 +487,34 @@ export default {
         cancelButtonText: "取消",
         type: "warning",
       })
-        .then(async () => {
-          let len = this.tableData.length;
-          let { status, msg } = await del({
-            code: [code],
-          });
-          if (status == 1) {
-            if (len == 1 && this.page.pageNo > 1) {
-              this.page.pageNo--;
-            }
-            this.$message({
-              type: "success",
-              message: msg,
+          .then(async () => {
+            let len = this.tableData.length;
+            let {status, msg} = await del({
+              code: [code],
             });
-            this._productGetList();
-          }
-        })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消删除",
+            if (status == 1) {
+              if (len == 1 && this.page.pageNo > 1) {
+                this.page.pageNo--;
+              }
+              this.$message({
+                type: "success",
+                message: msg,
+              });
+              this._productGetList();
+            }
+          })
+          .catch(() => {
+            this.$message({
+              type: "info",
+              message: "已取消删除",
+            });
           });
-        });
     },
     async onTranscoding(code) {
       let p = {
         code,
       };
-      let { status, msg } = await reTranscode(p);
+      let {status, msg} = await reTranscode(p);
       if (status == 1) {
         this.$message({
           type: "success",
@@ -519,20 +523,20 @@ export default {
         this._productGetList();
       }
     },
-    onReview({ code, title }) {
+    onReview({code, title}) {
       this.code = code;
       this.submitDialogVisible = true;
       this.title = title;
     },
     onWatch(code) {
-      this.$router.push({ path: `/productDetail/${code}/0` });
+      this.$router.push({path: `/productDetail/${code}/0`});
     },
     handleSizeChange(val) {
-      this.page = { ...this.page, pageSize: val };
+      this.page = {...this.page, pageSize: val};
       this._productGetList();
     },
     handleCurrentChange(val) {
-      this.page = { ...this.page, pageNo: val };
+      this.page = {...this.page, pageNo: val};
       this._productGetList();
     },
   },
@@ -550,21 +554,25 @@ export default {
 <style lang="scss" scoped>
 .main-wrap {
   padding: 30px;
+
   ::v-deep .el-table {
     .del-red span {
       color: #f56c6c;
     }
+
     tbody .td-center {
       .cell {
         line-height: 0;
         height: 48px;
       }
     }
+
     .el-progress-circle {
       height: 10px;
       width: 10px;
     }
   }
+
   .icon-ziyuan1662,
   .icon-file-delete-fill {
     margin-left: calc(50% - 14px);
@@ -579,6 +587,7 @@ export default {
   max-height: 80% !important;
   max-width: 80% !important;
 }
+
 .el-progress-circle {
   height: 50px !important;
   width: 50px !important;

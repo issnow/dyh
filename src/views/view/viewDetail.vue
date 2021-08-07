@@ -1,127 +1,123 @@
 <template>
   <div class="work-detail">
-    <div class="work-detail-suggest">
-      <div class="work-detail-base">
-        <div class="header">基本信息:</div>
-        <div class="content">
-          <div class="info-item">
-            <div class="info-label">名称:</div>
-            <div class="info-content">{{ product.title }}</div>
-          </div>
-          <div class="info-item">
-            <div class="info-label">类型:</div>
-            <div class="info-content">{{ product.media_type_title }}</div>
-          </div>
-          <div class="info-item">
-            <div class="info-label">精神文明:</div>
-            <div class="info-content">
+    <div class="detail-main">
+      <div class="work-detail-suggest">
+        <div class="work-detail-base">
+          <div class="header">基本信息:</div>
+          <div class="content">
+            <div class="info-item">
+              <div class="info-label">名称:</div>
+              <div class="info-content">{{ product.title }}</div>
+            </div>
+            <div class="info-item">
+              <div class="info-label">类型:</div>
+              <div class="info-content">{{ product.media_type_title }}</div>
+            </div>
+            <div class="info-item">
+              <div class="info-label">精神文明:</div>
+              <div class="info-content">
                 {{ product.tag.toString() }}
+              </div>
             </div>
-          </div>
-          <div class="info-item">
-            <div class="info-label">实体:</div>
-            <div class="info-content">
-              <el-tabs type="border-card" v-model="tabActive">
-                <el-tab-pane v-for="item of product.entity" :key="item.f_name" :label="item.f_name" :name="item.f_name">
-                  {{item.s_name.toString()}}
-                </el-tab-pane>
-              </el-tabs>
+            <div class="info-item">
+              <div class="info-label">实体:</div>
+              <div class="info-content">
+                <el-tabs type="border-card" v-model="tabActive">
+                  <el-tab-pane v-for="item of product.entity" :key="item.f_name" :label="item.f_name"
+                               :name="item.f_name">
+                    {{ item.s_name.toString() }}
+                  </el-tab-pane>
+                </el-tabs>
+              </div>
             </div>
-          </div>
-          <div class="info-item">
-            <div class="info-label">描述:</div>
-            <div class="info-content">{{ product.description }}</div>
+            <div class="info-item">
+              <div class="info-label">描述:</div>
+              <div class="info-content">{{ product.description }}</div>
+            </div>
           </div>
         </div>
-      </div>
-      <video-info v-if="product.media_type === 1" style="margin-top: 30px;" :product="product"></video-info>
-      <audio-info v-if="product.media_type === 2" style="margin-top: 30px" :product="product"></audio-info>
-      <pic-info v-if="product.media_type === 3" style="margin-top: 30px;" :product="product"></pic-info>
-      <text-info v-if="product.media_type === 4" style="margin-top: 30px" :product="product"></text-info>
-      <div class="work-detail-audit">
-        <div class="header">审核结果:</div>
-        <div class="content">
-          <div class="info-item" v-if="product.upload_type === 1">
-            <div class="info-label">AI审核:</div>
-            <div class="info-content">
-              <ai-audit title="视频" :audit="task.ai.frame" :duration="product.duration"></ai-audit>
-              <ai-audit style="margin-top: 5px;" title="字幕" :audit="task.ai.ocr"
-                        :duration="product.duration"></ai-audit>
-              <ai-audit style="margin-top: 5px;" title="声音" :audit="task.ai.voice"
-                        :duration="product.duration"></ai-audit>
-              <div class="ai-legend">
-                <div class="ai-legend-item">
-                  <span>说明:</span>
-                </div>
-                <div class="ai-legend-item">
-                  <i style="background: #facd91"></i>
-                  <span>涉政</span>
-                </div>
-                <div class="ai-legend-item">
-                  <i style="background: #ffff80"></i>
-                  <span>涉黄</span>
-                </div>
-                <div class="ai-legend-item">
-                  <i style="background: #ec808d"></i>
-                  <span>涉暴</span>
-                </div>
-                <div class="ai-legend-item">
-                  <i style="background: #c280ff"></i>
-                  <span>其他</span>
+        <video-info v-if="product.media_type === 1" style="margin-top: 30px;" :product="product"></video-info>
+        <audio-info v-if="product.media_type === 2" style="margin-top: 30px" :product="product"></audio-info>
+        <pic-info v-if="product.media_type === 3" style="margin-top: 30px;" :product="product"></pic-info>
+        <text-info v-if="product.media_type === 4" style="margin-top: 30px" :product="product"></text-info>
+        <div class="work-detail-audit">
+          <div class="header">审核结果:</div>
+          <div class="content">
+            <div class="info-item" v-if="product.upload_type === 1">
+              <div class="info-label">AI审核:</div>
+              <div class="info-content">
+                <ai-audit title="视频" :audit="task.ai.frame" :duration="product.duration"></ai-audit>
+                <ai-audit style="margin-top: 5px;" title="字幕" :audit="task.ai.ocr"
+                          :duration="product.duration"></ai-audit>
+                <ai-audit style="margin-top: 5px;" title="声音" :audit="task.ai.voice"
+                          :duration="product.duration"></ai-audit>
+                <div class="ai-legend">
+                  <div class="ai-legend-item">
+                    <span>说明:</span>
+                  </div>
+                  <div class="ai-legend-item">
+                    <i style="background: #facd91"></i>
+                    <span>涉政</span>
+                  </div>
+                  <div class="ai-legend-item">
+                    <i style="background: #ffff80"></i>
+                    <span>涉黄</span>
+                  </div>
+                  <div class="ai-legend-item">
+                    <i style="background: #ec808d"></i>
+                    <span>涉暴</span>
+                  </div>
+                  <div class="ai-legend-item">
+                    <i style="background: #c280ff"></i>
+                    <span>其他</span>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-          <div class="info-item">
-            <div class="info-label">人工审核:</div>
-            <div class="info-content">
-              <el-input
-                  type="textarea"
-                  :rows="4"
-                  placeholder="请输入内容"
-                  v-model="audit_note"
-                  maxlength="200"
-                  show-word-limit
-                  :readonly="task.audit_status !== 6"
-              >
-              </el-input>
+            <div class="info-item">
+              <div class="info-label">人工审核:</div>
+              <div class="info-content">
+                <el-input
+                    type="textarea"
+                    :rows="4"
+                    placeholder="请输入内容"
+                    v-model="audit_note"
+                    maxlength="200"
+                    show-word-limit
+                    :readonly="task.audit_status !== 6"
+                >
+                </el-input>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-    <div class="work-detail-info">
-      <div class="header">预览</div>
-      <div class="content">
-        <!-- <player
-          v-if="!!product.trans_url && product.media_type === 1"
-          :src="product.trans_url"
-          :bgImage="product.cover_url"
-          ref="mPlayer"
-        /> -->
-        <div class="preview-content">
-          <div class="file-none" v-if="product.is_del === 1">
-            <img class="icon" src="../../assets/file-none.png">
-            <div style="color: #C0C4CC; margin-top: 30px;">作品违规，文件已被管理员删除！</div>
+      <div class="work-detail-info">
+        <div class="header">预览:</div>
+        <div class="content">
+          <div class="preview-content">
+            <div class="file-none" v-if="product.is_del === 1">
+              <img class="icon" src="../../assets/file-none.png">
+              <div style="color: #C0C4CC; margin-top: 30px;">作品违规，文件已被管理员删除！</div>
+            </div>
+            <video class="video" v-else-if="product.media_type === 1" :src="product.trans_url || product.url"
+                   controls controlslist="nodownload"></video>
+            <audio class="audio" v-else-if="product.media_type === 2" :src="product.trans_url || product.url"
+                   controls controlslist="nodownload"></audio>
+            <img v-else-if="product.media_type === 3" :src="product.trans_url || product.url">
+            <pdf-view :url="product.trans_url || product.url" v-else-if="product.media_type === 4"></pdf-view>
           </div>
-          <video class="video" v-else-if="product.media_type === 1" :src="product.trans_url || product.url"
-                 controls controlslist="nodownload"></video>
-          <audio class="audio" v-else-if="product.media_type === 2" :src="product.trans_url || product.url"
-                 controls controlslist="nodownload"></audio>
-          <img v-else-if="product.media_type === 3" :src="product.trans_url || product.url">
-          <pdf-view :url="product.trans_url || product.url" v-else-if="product.media_type === 4"></pdf-view>
         </div>
-
-
-      </div>
-      <div class="footer">
-        <el-button v-if="task.audit_status === 6" type="primary" @click="submitForm(1)" :loading="loading"
-        >审核通过
-        </el-button>
-        <el-button v-if="task.audit_status === 6" type="danger" @click="submitForm(2)">审核驳回</el-button>
-        <el-button @click="back">返 回</el-button>
       </div>
     </div>
+    <div class="footer">
+      <el-button v-if="task.audit_status === 6" type="primary" @click="submitForm(1)" :loading="loading"
+      >审核通过
+      </el-button>
+      <el-button v-if="task.audit_status === 6" type="danger" @click="submitForm(2)">审核驳回</el-button>
+      <el-button @click="back">返 回</el-button>
+    </div>
+
   </div>
 </template>
 
@@ -159,7 +155,9 @@ export default {
       code: '',
       // audit_status: '',   // 审核状态
       audit_note: '',   //审核内容
-      product: {},
+      product: {
+        tag: [],
+      },
       task: {},
 
       entityList: [],
@@ -274,17 +272,19 @@ export default {
 .work-detail {
   box-sizing: border-box;
   width: 100%;
-  height: 100%;
-  display: flex;
-  padding: 20px 30px;
+
+  .detail-main {
+    display: flex;
+    padding: 20px 30px;
+  }
+
 
   // 左边信息
   .work-detail-suggest {
     width: 50%;
-    height: 100%;
+    //height: 100%;
     padding-right: 30px;
     border-right: 1px dashed $dark;
-    overflow: auto;
 
     .work-detail-base {
       .header {
@@ -331,7 +331,7 @@ export default {
           align-items: center;
           width: 100%;
           height: 40px;
-          font-size: 12px;
+          font-size: 14px;
 
           .ai-legend-item {
             margin-right: 20px;
@@ -360,9 +360,9 @@ export default {
       align-items: first;
 
       .info-label {
-        width: 60px;
+        width: 100px;
         text-align: right;
-        margin-right: 10px;
+        padding-right: 12px;
       }
 
       .info-content {
@@ -375,12 +375,7 @@ export default {
   // 右边预览
   .work-detail-info {
     position: relative;
-    //padding-left: 40px;
     width: 50%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
 
     .header {
       font-size: 16px;
@@ -393,8 +388,8 @@ export default {
     }
 
     .content {
-      height: calc(100% - 80px);
       width: 100%;
+      height: calc(100% - 40px);
       padding-left: 40px;
       padding-top: 20px;
       padding-bottom: 20px;
@@ -419,6 +414,15 @@ export default {
         &:focus {
           outline: none;
         }
+
+
+      }
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: scale-down;
+        display: block;
       }
 
       .preview-content {
@@ -455,21 +459,16 @@ export default {
 
     }
 
-    .footer {
-      height: 40px;
-      width: 100%;
-      display: flex;
-      justify-content: flex-end;
-    }
+
   }
 
-
-  img {
+  .footer {
+    height: 40px;
     width: 100%;
-    height: 100%;
-    object-fit: contain;
-    object-position: top;
-    display: block;
+    display: flex;
+    justify-content: flex-end;
+    padding-right: 50px;
   }
+
 }
 </style>

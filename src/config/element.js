@@ -49,6 +49,9 @@ import {
     Link,
     Tabs,
     TabPane,
+    Badge,
+    Popover,
+    Popconfirm
 } from 'element-ui';
 
 Vue.use(Button);
@@ -98,6 +101,9 @@ Vue.use(Progress);
 Vue.use(Link);
 Vue.use(Tabs);
 Vue.use(TabPane);
+Vue.use(Badge);
+Vue.use(Popover);
+Vue.use(Popconfirm);
 
 
 Vue.prototype.$loading = Loading.service;

@@ -34,7 +34,9 @@
       >
         <el-table-column prop="title" label="成品名称" min-width="200">
           <template slot-scope="scope">
-            <span class="table-column-text" :title="scope.row.title">{{ scope.row.title }}</span>
+            <el-tooltip :content="scope.row.title" placement="top" effect="light">
+              <span class="table-column-text">{{ scope.row.title }}</span>
+            </el-tooltip>
           </template>
         </el-table-column>
         <el-table-column prop="media_type_title" width="100">
@@ -56,8 +58,32 @@
             </el-select>
           </template>
         </el-table-column>
-        <el-table-column prop="upload_type" label="来源" width="80"></el-table-column>
-        <el-table-column prop="name" label="创作人" width="100"></el-table-column>
+        <el-table-column prop="upload_type" label="来源" width="100">
+          <template slot="header" scope="scope">
+            <el-select
+                class="select-color"
+                v-model="form.upload_type"
+                placeholder="来源"
+                clearable
+                @change="filterSelect($event, 'upload_type')"
+            >
+              <el-option
+                  v-for="item in uploadTypeList"
+                  :key="item.key"
+                  :value="item.key"
+                  :label="item.name"
+              >
+              </el-option>
+            </el-select>
+          </template>
+        </el-table-column>
+        <el-table-column prop="name" label="创作人" width="100">
+          <template slot-scope="scope">
+            <el-tooltip :content="scope.row.name" placement="top" effect="light">
+              <span class="table-column-text">{{ scope.row.name }}</span>
+            </el-tooltip>
+          </template>
+        </el-table-column>
         <el-table-column prop="resolution" label="分辨率" width="120" align="right">
           <template slot="header" scope="scope">
             <el-select
@@ -145,9 +171,9 @@
           </template>
           <template scope="scope" slot="">
             <el-tooltip v-if="scope.row.status === 7" :content="scope.row.audit_note" placement="top">
-              <span>{{scope.row.status_title}}</span>
+              <span>{{ scope.row.status_title }}</span>
             </el-tooltip>
-            <span v-else>{{scope.row.status_title}}</span>
+            <span v-else>{{ scope.row.status_title }}</span>
           </template>
         </el-table-column>
         <el-table-column prop="created_at" label="创建时间" width="180" align="right" sortable></el-table-column>
@@ -225,6 +251,7 @@ export default {
       sizeList: [],  //分辨率列表
       statusList: [],  //状态列表
       mediaTypeList: [], // 类型列表
+      uploadTypeList: [], // 来源列表
 
 
       page: {
@@ -280,6 +307,7 @@ export default {
           this.sizeList = res.element.resolution;
           this.statusList = res.element.status;
           this.mediaTypeList = res.element.media_type;
+          this.uploadTypeList = res.element.upload_type;
         } else {
           this.$message({
             type: "error",
@@ -329,6 +357,9 @@ export default {
         case "media_type":
           this.form.media_type = value;
           break;
+        case 'upload_type':
+          this.form.upload_type = value;
+          break;
 
       }
       this.page.pageNo = 1;
@@ -348,6 +379,7 @@ export default {
         resolution: this.form.resolution,
         status: this.form.status,
         media_type: this.form.media_type,
+        upload_type: this.form.upload_type,
       };
 
       sessionStorage.setItem('viewList', JSON.stringify(params));
@@ -415,10 +447,6 @@ export default {
 
     // 下载文件
     download(row) {
-      this.$message({
-        type: 'success',
-        message: '文件正在下载,请稍候...',
-      });
       download(row.url, row.title);
       // window.open(row.url);
     },
@@ -429,8 +457,6 @@ export default {
 <style lang="scss" scoped>
 .view-list {
   width: 100%;
-  height: 100%;
-  overflow: auto;
   position: relative;
 
   .main-wrap {
