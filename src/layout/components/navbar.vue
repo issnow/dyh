@@ -41,7 +41,7 @@
         :visible="passwordVisible"
         @hideDialog="passwordVisible = false"
     />
-    <download></download>
+<!--    <download></download>-->
   </div>
 </template>
 
