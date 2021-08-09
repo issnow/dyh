@@ -101,7 +101,7 @@
               <div style="color: #C0C4CC; margin-top: 30px;">作品违规，文件已被管理员删除！</div>
             </div>
             <video class="video" v-else-if="product.media_type === 1" :src="product.trans_url || product.url"
-                   controls controlslist="nodownload"></video>
+                   controls controlslist="nodownload" :disablePictureInPicture="true"></video>
             <audio class="audio" v-else-if="product.media_type === 2" :src="product.trans_url || product.url"
                    controls controlslist="nodownload"></audio>
             <img v-else-if="product.media_type === 3" :src="product.trans_url || product.url">

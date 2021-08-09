@@ -1,5 +1,5 @@
 <template>
-  <video :src="src" controls preload controlslist="nodownload"></video>
+  <video :src="src" controls preload controlslist="nodownload" :disablePictureInPicture="true"></video>
 </template>
 
 <script>

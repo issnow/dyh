@@ -179,7 +179,7 @@
         :resizable="false"
         label="状态"
         prop="status_title"
-        width="100"
+        width="140"
       >
         <template slot="header" scope="scope">
           <el-select
@@ -199,7 +199,7 @@
         </template>
         <template slot-scope="scope">
           <el-tooltip
-            v-if="scope.row.status == 7"
+            v-if="scope.row.status == 7 || scope.row.status == 5"
             class="item"
             effect="dark"
             :content="scope.row.audit_note"

@@ -34,8 +34,6 @@ export const download = async (url, title) => {
 
     }, function (err, result) {
 
-        console.log(result);
-
         const href = result.InterfaceResult.Content.SignedUrl;
         const downloadElement = document.createElement('a');
         downloadElement.href = href;
