@@ -43,7 +43,7 @@
         <div class="work-detail-audit">
           <div class="header">审核结果:</div>
           <div class="content">
-            <div class="info-item" v-if="product.upload_type === 1">
+            <div class="info-item" v-if="product.upload_type === 1 && product.media_type !== 3">
               <div class="info-label">AI审核:</div>
               <div class="info-content">
                 <ai-audit title="视频" :audit="task.ai.frame" :duration="product.duration"></ai-audit>

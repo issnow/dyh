@@ -4,7 +4,7 @@
       <div class="work-detail-info">
         <div class="title" v-if="hideTask">审核结果:</div>
         <ul class="list" v-if="hideTask">
-          <li v-if="!isProductDetail">
+          <li v-if="!isProductDetail && viewInfo.media_type !== 3">
             <div class="label">AI审核:</div>
             <div class="content">
               <template class="ai_note" v-if="!task.ai">
