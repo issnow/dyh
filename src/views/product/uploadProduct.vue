@@ -223,7 +223,7 @@ export default {
       //   4: ["PDF"],
       let reg = {
         1: /(mp4|mov|wmv|m2v|mpg)$/gi,
-        2: /(MP3|FLAC|AAC|M4A|)$/gi,
+        2: /(MP3|FLAC|AAC|M4A)$/gi,
         3: /(JPE?G|PNG)$/gi,
         4: /PDF$/gi,
       };
