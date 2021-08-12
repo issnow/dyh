@@ -71,6 +71,9 @@
                 }
               "
               :loading="selectLoading"
+              @focus='()=>{
+                setData(e)
+              }'
             >
               <el-option
                 v-for="item in e.s_name"
@@ -158,6 +161,9 @@ export default {
     visibleChange(visi, i) {
       if (!visi) this.$refs.form.validateField(`thing${i}`);
     },
+    setData(e) {
+      if(e.temp) e.s_name = JSON.parse(JSON.stringify(e.temp))
+    },
     async onFocus(e, query = "") {
       this.selectLoading = true;
       let res = await newSearchEntity({ f_name: e.f_name, s_name: query });
@@ -169,6 +175,9 @@ export default {
     async asyncGetEntityList() {
       let { status, element } = await newAllEntity();
       if (status == 1) {
+        element.forEach(e=>{
+          e.temp = JSON.parse(JSON.stringify(e.s_name))
+        })
         this.entityList = element;
         let arr = [];
         element.forEach((e, i) => {
