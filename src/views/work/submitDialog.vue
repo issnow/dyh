@@ -67,7 +67,7 @@
               "
               @visible-change="
                 (visi) => {
-                  visibleChange(visi, i, e);
+                  visibleChange(visi, i);
                 }
               "
               :loading="selectLoading"
