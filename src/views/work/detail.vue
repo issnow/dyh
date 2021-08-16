@@ -652,7 +652,7 @@ export default {
 
           .pdf-wrap {
             width: 100%;
-            height: calc(100vh - 370px);
+            height: 100%;
           }
 
           audio {
