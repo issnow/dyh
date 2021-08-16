@@ -12,21 +12,24 @@
               </template>
               <template v-else>
                 <ai-audit
-                  title="视频"
-                  :audit="task.ai.frame"
-                  :duration="viewInfo.duration"
+                    title="视频"
+                    :audit="task.ai.frame"
+                    :duration="viewInfo.duration"
+                    :audit-note="auditNoteVideo"
                 ></ai-audit>
                 <ai-audit
-                  style="margin-top: 5px"
-                  title="字幕"
-                  :audit="task.ai.ocr"
-                  :duration="viewInfo.duration"
+                    style="margin-top: 5px"
+                    title="字幕"
+                    :audit="task.ai.ocr"
+                    :duration="viewInfo.duration"
+                    :audit-note="auditNoteOCR"
                 ></ai-audit>
                 <ai-audit
-                  style="margin-top: 5px"
-                  title="声音"
-                  :audit="task.ai.voice"
-                  :duration="viewInfo.duration"
+                    style="margin-top: 5px"
+                    title="声音"
+                    :audit="task.ai.voice"
+                    :duration="viewInfo.duration"
+                    :audit-note="auditNoteAudio"
                 ></ai-audit>
                 <div class="item circel">
                   <div class="label">说明:</div>
@@ -46,28 +49,28 @@
           </li>
           <li>
             <div class="label">人工审核意见:</div>
-            <div class="content">{{ task.manual }}</div>
+            <div class="content">{{ task.manual ? task.manual : '-' }}</div>
           </li>
         </ul>
 
         <div class="title">{{ isProductDetail ? "成" : "作" }}品信息:</div>
         <el-form
-          :model="form"
-          :rules="rules"
-          ref="form"
-          label-width="100px"
-          class="info-form"
-          :disabled="!isEdit"
+            :model="form"
+            :rules="rules"
+            ref="form"
+            label-width="100px"
+            class="info-form"
+            :disabled="!isEdit"
         >
           <el-form-item label="名称:" prop="title">
             <el-input
-              v-show="isEdit"
-              type="textarea"
-              :rows="2"
-              placeholder="请输入内容"
-              v-model.trim="form.title"
-              maxlength="50"
-              show-word-limit
+                v-show="isEdit"
+                type="textarea"
+                :rows="2"
+                placeholder="请输入内容"
+                v-model.trim="form.title"
+                maxlength="50"
+                show-word-limit
             >
             </el-input>
             <span v-show="!isEdit">{{ viewInfo.title }}</span>
@@ -77,16 +80,16 @@
           </el-form-item>
           <el-form-item label="精神文明:" prop="tag">
             <el-select
-              v-show="isEdit"
-              v-model="form.tag"
-              placeholder="请选择"
-              multiple
+                v-show="isEdit"
+                v-model="form.tag"
+                placeholder="请选择"
+                multiple
             >
               <el-option
-                v-for="item in options"
-                :key="item"
-                :label="item"
-                :value="item"
+                  v-for="item in options"
+                  :key="item"
+                  :label="item"
+                  :value="item"
               >
               </el-option>
             </el-select>
@@ -95,9 +98,9 @@
 
           <div class="shiti">
             <div
-              class="label"
-              :class="{ require: isEdit }"
-              style="font-size: 14px; color: #606266"
+                class="label"
+                :class="{ require: isEdit }"
+                style="font-size: 14px; color: #606266"
             >
               实体:
             </div>
@@ -148,48 +151,48 @@
               >
                 {{
                   e.s_name.length
-                    ? e.s_name.reduce((p, n) => p + "," + n)
-                    : null
-                }}
-              </el-form-item> -->
+                      ? e.s_name.reduce((p, n) => p + "," + n)
+                      : null
+              }}
+            </el-form-item> -->
 
               <el-tabs type="border-card" v-model="tabActive">
                 <el-tab-pane
-                  v-for="(e, i) of entityList"
-                  :key="e.f_name"
-                  :label="e.f_name"
-                  :name="e.f_name"
+                    v-for="(e, i) of entityList"
+                    :key="e.f_name"
+                    :label="e.f_name"
+                    :name="e.f_name"
                 >
                   <el-form-item
-                    v-show="isEdit"
-                    :key="e.f_name"
-                    :prop="'thing' + i"
-                    label-width="60px"
+                      v-show="isEdit"
+                      :key="e.f_name"
+                      :prop="'thing' + i"
+                      label-width="60px"
                   >
                     <el-select
-                      v-model="form['thing' + i]"
-                      placeholder="请选择"
-                      filterable
-                      multiple
-                      ref="search"
-                      remote
-                      :remote-method="
+                        v-model="form['thing' + i]"
+                        placeholder="请选择"
+                        filterable
+                        multiple
+                        ref="search"
+                        remote
+                        :remote-method="
                         (query) => {
                           remoteMethod(query, e);
                         }
                       "
-                      @visible-change="
+                        @visible-change="
                         (visi) => {
                           visibleChange(visi, i);
                         }
                       "
-                      :loading="loading"
+                        :loading="loading"
                     >
                       <el-option
-                        v-for="item in e.s_name"
-                        :key="item"
-                        :label="item"
-                        :value="item"
+                          v-for="item in e.s_name"
+                          :key="item"
+                          :label="item"
+                          :value="item"
                       >
                       </el-option>
                     </el-select>
@@ -197,10 +200,10 @@
                   <span v-show="!isEdit" style="font-size: 14px">
                     {{
                       viewInfo.entity[i] && viewInfo.entity[i].s_name.length
-                        ? viewInfo.entity[i].s_name.reduce(
-                            (p, n) => p + "," + n
+                          ? viewInfo.entity[i].s_name.reduce(
+                              (p, n) => p + "," + n
                           )
-                        : null
+                          : null
                     }}
                   </span>
                 </el-tab-pane>
@@ -210,18 +213,18 @@
 
           <el-form-item label="描述:" prop="description" class="desc-item">
             <el-input
-              v-show="isEdit"
-              type="textarea"
-              :rows="3"
-              placeholder="请输入内容"
-              v-model.trim="form.description"
-              maxlength="200"
-              show-word-limit
+                v-show="isEdit"
+                type="textarea"
+                :rows="3"
+                placeholder="请输入内容"
+                v-model.trim="form.description"
+                maxlength="200"
+                show-word-limit
             >
             </el-input>
             <span v-show="!isEdit" class="desc">{{
-              viewInfo.description
-            }}</span>
+                viewInfo.description
+              }}</span>
           </el-form-item>
         </el-form>
 
@@ -252,23 +255,23 @@
 
         <!-- 图片信息 -->
         <itemInfo
-          v-if="viewInfo.media_type == 3"
-          :viewInfo="viewInfo"
-          title="图片信息"
+            v-if="viewInfo.media_type == 3"
+            :viewInfo="viewInfo"
+            title="图片信息"
         />
 
         <!-- 音频信息 -->
         <itemInfo
-          v-if="viewInfo.media_type == 2"
-          :viewInfo="viewInfo"
-          title="音频信息"
+            v-if="viewInfo.media_type == 2"
+            :viewInfo="viewInfo"
+            title="音频信息"
         />
 
         <!-- pdf信息 -->
         <itemInfo
-          v-if="viewInfo.media_type == 4"
-          :viewInfo="viewInfo"
-          title="文本信息"
+            v-if="viewInfo.media_type == 4"
+            :viewInfo="viewInfo"
+            title="文本信息"
         />
       </div>
 
@@ -277,8 +280,8 @@
         <div class="content">
           <div class="preview-content">
             <div
-              v-if="viewInfo.is_del === 1"
-              style="
+                v-if="viewInfo.is_del === 1"
+                style="
                 display: flex;
                 flex-direction: column;
                 align-items: center;
@@ -286,32 +289,32 @@
               "
             >
               <i
-                class="iconfont icon-file-delete-fill"
-                style="color: #8e8f93; font-size: 120px"
+                  class="iconfont icon-file-delete-fill"
+                  style="color: #8e8f93; font-size: 120px"
               ></i>
               <div style="color: #c0c4cc; margin-top: 30px">
                 作品违规，文件已被管理员删除！
               </div>
             </div>
             <videoPlay
-              v-else-if="viewInfo.media_type == 1"
-              :src="isProductDetail ? viewInfo.trans_url : viewInfo.url"
+                v-else-if="viewInfo.media_type == 1"
+                :src="isProductDetail ? viewInfo.trans_url : viewInfo.url"
             ></videoPlay>
             <audio
-              v-else-if="viewInfo.media_type == 2"
-              :src="isProductDetail ? viewInfo.trans_url : viewInfo.url"
-              controls
-              preload
-              controlslist="nodownload"
+                v-else-if="viewInfo.media_type == 2"
+                :src="isProductDetail ? viewInfo.trans_url : viewInfo.url"
+                controls
+                preload
+                controlslist="nodownload"
             ></audio>
             <img
-              v-else-if="viewInfo.media_type == 3"
-              :src="viewInfo.url"
-              alt=""
+                v-else-if="viewInfo.media_type == 3"
+                :src="viewInfo.url"
+                alt=""
             />
 
             <div class="pdf-wrap" v-else-if="viewInfo.media_type == 4">
-              <pdfView :url="viewInfo.url" />
+              <pdfView :url="viewInfo.url"/>
             </div>
           </div>
         </div>
@@ -320,14 +323,16 @@
 
     <div class="foot-btn">
       <el-button v-show="isEdit" type="primary" @click="submitForm('form')"
-        >提交审核</el-button
+      >提交审核
+      </el-button
       >
       <el-button
-        v-show="!isEdit && viewInfo.status == 7"
-        :loading="editLoading"
-        type="primary"
-        @click="onEdit"
-        >编 辑</el-button
+          v-show="!isEdit && viewInfo.status == 7"
+          :loading="editLoading"
+          type="primary"
+          @click="onEdit"
+      >编 辑
+      </el-button
       >
       <el-button @click="onCancel">{{ !isEdit ? "返 回" : "取 消" }}</el-button>
     </div>
@@ -357,7 +362,7 @@ export default {
   },
   data() {
     let tempRule = {},
-      tempForm = {};
+        tempForm = {};
     for (let i = 0; i < 20; i++) {
       tempRule["thing" + i] = {
         required: true,
@@ -381,13 +386,13 @@ export default {
         entity: [],
       },
       rules:
-        this.$route.params.isEdit === "1"
-          ? {
-              title: [{ required: true, message: "请输入", trigger: "blur" }],
-              tag: [{ required: false, message: "请输入", trigger: "blur" }],
-              ...tempRule,
-            }
-          : {},
+          this.$route.params.isEdit === "1"
+              ? {
+                title: [{required: true, message: "请输入", trigger: "blur"}],
+                tag: [{required: false, message: "请输入", trigger: "blur"}],
+                ...tempRule,
+              }
+              : {},
       // 标签
       options: [],
       data: {},
@@ -424,15 +429,15 @@ export default {
         };
       }
       this.rules = {
-        title: [{ required: true, message: "请输入", trigger: "blur" }],
-        tag: [{ required: false, message: "请输入", trigger: "blur" }],
+        title: [{required: true, message: "请输入", trigger: "blur"}],
+        tag: [{required: false, message: "请输入", trigger: "blur"}],
         // ...tempRule,
       };
       let obj = {};
       this.viewInfo.entity.forEach((e) => {
         obj[this.entityMap.get(e.f_name)] = e.s_name;
       });
-      this.form = { ...this.form, ...obj };
+      this.form = {...this.form, ...obj};
     },
     visibleChange(visi, e) {
       if (!visi) this.$refs.form.validateField(`thing${e}`);
@@ -444,17 +449,17 @@ export default {
     }, 600),
     async onFocus(e, query = "") {
       this.loading = true;
-      let res = await newSearchEntity({ f_name: e.f_name, s_name: query });
+      let res = await newSearchEntity({f_name: e.f_name, s_name: query});
       this.loading = false;
       if (res.status == 1) {
         e.s_name = res.element;
       }
     },
     async asyncGetEntityList() {
-      let { status, element, msg } = await newAllEntity();
+      let {status, element, msg} = await newAllEntity();
       if (status == 1) {
         let arr = [],
-          arr2 = [];
+            arr2 = [];
         this.entityList = element;
         element.forEach((e, i) => {
           arr.push([e.f_name, "thing" + i]);
@@ -465,7 +470,7 @@ export default {
       }
     },
     async _productTagList() {
-      let { status, element, msg } = await productTagList();
+      let {status, element, msg} = await productTagList();
       if (status == 1) {
         this.options = element;
       }
@@ -475,11 +480,11 @@ export default {
       const p = {
         code: this.$route.params.code,
       };
-      let { status, element, msg } = await productDetail(p);
+      let {status, element, msg} = await productDetail(p);
       this.editLoading = false;
       console.log(element, "element");
       if (status == 1) {
-        const { description, url, title, tag, duration } = element.product;
+        const {description, url, title, tag, duration} = element.product;
         this.hideTask = !!element.task;
         // const { audit_note, audit_status, audit_status_title } = element.task;
         this.task = {
@@ -495,9 +500,9 @@ export default {
         };
         this.viewInfo = element.product;
         this.tabActive =
-          element.product.entity.length > 0
-            ? element.product.entity[0].f_name
-            : "";
+            element.product.entity.length > 0
+                ? element.product.entity[0].f_name
+                : "";
       }
     },
     submitForm(formName) {
@@ -510,47 +515,47 @@ export default {
             cancelButtonText: "取消",
             type: "warning",
           })
-            .then(async () => {
-              const entity = [];
-              for (let key in this.form) {
-                let v = this.form[key];
-                if (key.includes("thing") && Array.isArray(v)) {
-                  let cur = {
-                    f_name: this.keyValueMap.get(key),
-                    s_name: v,
-                  };
-                  entity.push(cur);
+              .then(async () => {
+                const entity = [];
+                for (let key in this.form) {
+                  let v = this.form[key];
+                  if (key.includes("thing") && Array.isArray(v)) {
+                    let cur = {
+                      f_name: this.keyValueMap.get(key),
+                      s_name: v,
+                    };
+                    entity.push(cur);
+                  }
                 }
-              }
-              if (entity.every((e) => e.s_name.length == 0)) {
+                if (entity.every((e) => e.s_name.length == 0)) {
+                  this.$message({
+                    type: "error",
+                    message: "请至少选择一个实体",
+                  });
+                  return;
+                }
+                let params = {
+                  title: this.form.title,
+                  code: this.$route.params.code,
+                  desc: this.form.description,
+                  tag: this.form.tag,
+                  entity,
+                };
+                let {msg, status} = await productEdit(params);
+                if (status == 1) {
+                  this.$message({
+                    type: "success",
+                    message: msg,
+                  });
+                  this.onCancel();
+                }
+              })
+              .catch(() => {
                 this.$message({
-                  type: "error",
-                  message: "请至少选择一个实体",
+                  type: "info",
+                  message: "已取消",
                 });
-                return;
-              }
-              let params = {
-                title: this.form.title,
-                code: this.$route.params.code,
-                desc: this.form.description,
-                tag: this.form.tag,
-                entity,
-              };
-              let { msg, status } = await productEdit(params);
-              if (status == 1) {
-                this.$message({
-                  type: "success",
-                  message: msg,
-                });
-                this.onCancel();
-              }
-            })
-            .catch(() => {
-              this.$message({
-                type: "info",
-                message: "已取消",
               });
-            });
         } else {
           console.log("error submit!!");
           return false;
@@ -559,9 +564,40 @@ export default {
     },
     onCancel() {
       this.$router.push(
-        this.isProductDetail ? "/productManager" : "/workManager"
+          this.isProductDetail ? "/productManager" : "/workManager"
       );
       this.$refs.form.resetFields();
+    },
+  },
+  computed: {
+    // 视频AI分析描述
+    auditNoteVideo: function () {
+      if (this.task.ai_fail === 1) {
+        return this.task.ai_audit_note;
+      }
+      if (this.task.ai.frame) {
+        return '';
+      }
+      return '已通过';
+    },
+    // 视频AI分析描述
+    auditNoteOCR: function () {
+      if (this.task.ai_fail === 1) {
+        return this.task.ai_audit_note;
+      }
+      if (this.task.ai.ocr) {
+        return '';
+      }
+      return '已通过';
+    },
+    auditNoteAudio: function () {
+      if (this.task.ai_fail === 1) {
+        return this.task.ai_audit_note;
+      }
+      if (this.task.ai.voice) {
+        return '';
+      }
+      return '已通过';
     },
   },
 };
@@ -569,11 +605,14 @@ export default {
 
 <style lang="scss" scoped>
 @import "@css/var.scss";
+
 .work-detail-wrap {
   padding-bottom: 30px;
+
   .work-detail {
     display: flex;
     padding: 20px 30px;
+
     .title {
       font-size: 16px;
       color: $deepDark;
@@ -581,14 +620,17 @@ export default {
       padding-bottom: 10px;
       border-bottom: 1px solid #e4e7ed;
     }
+
     &-suggest {
       width: 50%;
+
       & > .tit {
         font-size: 16px;
         font-weight: 600;
         height: 40px;
         padding-left: 40px;
       }
+
       & > .content {
         padding: 20px 0 20px 40px;
         height: calc(100% - 80px);
@@ -597,6 +639,7 @@ export default {
         display: flex;
         align-items: center;
         justify-content: center;
+
         .preview-content {
           background: #f4f7fa;
           border: 1px solid #c1c1c1;
@@ -606,13 +649,16 @@ export default {
           border-radius: 8px;
           display: flex;
           align-items: center;
+
           .pdf-wrap {
             width: 100%;
             height: calc(100vh - 370px);
           }
+
           audio {
             width: 100%;
           }
+
           img {
             width: 100%;
             height: 100%;
@@ -621,49 +667,63 @@ export default {
         }
       }
     }
+
     &-info {
       position: relative;
       padding-right: 40px;
       width: 50%;
       border-right: 1px dashed $dark;
+
       .info-form {
         padding-top: 20px;
+
         ::v-deep .el-form-item {
           margin-bottom: 20px;
+
           .el-form-item__label {
             line-height: 16px;
           }
+
           .el-form-item__content {
             line-height: 16px;
           }
+
           &.desc-item {
             .el-form-item__content,
             .el-form-item__label {
               line-height: 30px;
+
               .desc {
                 word-break: break-all;
               }
             }
           }
         }
+
         .el-select {
           width: 100%;
         }
       }
+
       .info-list {
         margin-bottom: 10px;
+
         .wrap {
           width: 100%;
           display: flex;
+
           .left {
             width: 50%;
           }
+
           .right {
             width: 50%;
           }
+
           div:not(.title) {
             margin-top: 20px;
             font-size: 14px;
+
             span {
               color: $gray;
               display: inline-block;
@@ -674,15 +734,19 @@ export default {
           }
         }
       }
+
       .list {
         padding-left: 0;
+
         li {
           font-size: 14px;
           display: flex;
           margin-bottom: 20px;
+
           > div.label {
             font-size: 14px;
           }
+
           .label {
             width: 100px;
             text-align: right;
@@ -690,26 +754,32 @@ export default {
             color: $dark;
             font-size: 13px;
           }
+
           .content {
             flex: 1;
             // color: $gray;
             word-break: break-all;
+
             .item {
               display: flex;
               align-items: center;
+
               .label {
                 width: 60px;
               }
             }
+
             .circel {
               .label {
                 text-align: left;
                 width: 50px;
                 font-size: 14px;
               }
+
               .btn-group {
                 height: 40px;
                 line-height: 40px;
+
                 i {
                   display: inline-block;
                   width: 10px;
@@ -718,20 +788,25 @@ export default {
                   border: 1px solid #ccc;
                   margin-right: 4px;
                   margin-left: 10px;
+
                   &:nth-of-type(1) {
                     background-color: #facd91;
                     margin-left: 0;
                   }
+
                   &:nth-of-type(2) {
                     background-color: #ffff80;
                   }
+
                   &:nth-of-type(3) {
                     background-color: #ec808d;
                   }
+
                   &:nth-of-type(4) {
                     background-color: #c280ff;
                   }
                 }
+
                 span {
                   font-size: 14px;
                 }
@@ -740,35 +815,44 @@ export default {
           }
         }
       }
+
       .tip {
         color: $gray;
       }
+
       .foot-btn {
         position: absolute;
         bottom: 0;
       }
+
       .shiti {
         display: flex;
         margin-bottom: 20px;
+
         > .label {
           width: 100px;
           padding-right: 12px;
           text-align: right;
+
           &.require::before {
             content: "*";
             color: #f56c6c;
             margin-right: 4px;
           }
         }
+
         .right {
           flex: 1;
         }
+
         ::v-deep .el-form-item {
           margin-bottom: 0;
+
           .el-form-item__content {
             margin-left: 20px !important;
           }
         }
+
         ::v-deep .el-form-item__label {
           margin-right: 12px;
           padding-right: 0;
@@ -781,6 +865,7 @@ export default {
       }
     }
   }
+
   .foot-btn {
     text-align: right;
     // padding-top: 50px;
