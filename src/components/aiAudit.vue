@@ -1,6 +1,6 @@
 <template>
   <div class="ai-audit">
-    <div class="ai-audit-title">{{ title }}:{{ (!audit) ? '已通过' : '' }}</div>
+    <div class="ai-audit-title">{{ title }}: {{ auditNote }}</div>
     <div class="ai-audit-content">
       <el-tooltip placement="top" v-for="item of audit" :key="item.frame_begin">
         <div slot="content">
@@ -31,7 +31,7 @@
 <script>
 export default {
   name: "viewDetailVideoInfo",
-  props: ['title', 'audit', 'duration'],
+  props: ['title', 'audit', 'duration', 'auditNote'],
 };
 </script>
 

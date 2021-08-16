@@ -46,11 +46,12 @@
             <div class="info-item" v-if="product.upload_type === 1 && product.media_type !== 3">
               <div class="info-label">AI审核:</div>
               <div class="info-content">
-                <ai-audit title="视频" :audit="task.ai.frame" :duration="product.duration"></ai-audit>
+                <ai-audit title="视频" :audit="task.ai.frame" :duration="product.duration"
+                          :audit-note="auditNoteVideo"></ai-audit>
                 <ai-audit style="margin-top: 5px;" title="字幕" :audit="task.ai.ocr"
-                          :duration="product.duration"></ai-audit>
+                          :duration="product.duration" :audit-note="auditNoteOCR"></ai-audit>
                 <ai-audit style="margin-top: 5px;" title="声音" :audit="task.ai.voice"
-                          :duration="product.duration"></ai-audit>
+                          :duration="product.duration" :audit-note="auditNoteAudio"></ai-audit>
                 <div class="ai-legend">
                   <div class="ai-legend-item">
                     <span>说明:</span>
@@ -262,6 +263,37 @@ export default {
       this.$router.push('/viewList');
     },
 
+  },
+  computed: {
+    // 视频AI分析描述
+    auditNoteVideo: function () {
+      if (this.task.ai_fail === 1) {
+        return this.task.ai_audit_note;
+      }
+      if (this.task.ai.frame) {
+        return '';
+      }
+      return '已通过';
+    },
+    // 视频AI分析描述
+    auditNoteOCR: function () {
+      if (this.task.ai_fail === 1) {
+        return this.task.ai_audit_note;
+      }
+      if (this.task.ai.ocr) {
+        return '';
+      }
+      return '已通过';
+    },
+    auditNoteAudio: function () {
+      if (this.task.ai_fail === 1) {
+        return this.task.ai_audit_note;
+      }
+      if (this.task.ai.voice) {
+        return '';
+      }
+      return '已通过';
+    },
   },
 };
 </script>

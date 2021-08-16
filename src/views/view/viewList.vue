@@ -181,7 +181,7 @@
           <template slot-scope="scope">
             <el-button type="text" @click="onWatch(scope.row)" v-if="scope.row.status === 6">审核</el-button>
             <el-button type="text" @click="onWatch(scope.row)" v-else>查看</el-button>
-            <el-button type="text" @click="download(scope.row)">下载</el-button>
+            <el-button type="text" @click="download(scope.row)" v-if="scope.row.is_del === 0">下载</el-button>
             <el-button :underline="false" type="text" v-if="scope.row.status === 7 && scope.row.is_del === 0"
                        @click="delTask(scope.row)" style="color: #ff7171;">删除文件
             </el-button>
