@@ -8,7 +8,7 @@
       </transition>
       <div class="footer">
         <div class="desc">
-          <span>帮助</span><span>隐私</span><span>条款</span>
+<!--          <span>帮助</span><span>隐私</span><span>条款</span>-->
         </div>
         <p>copyright @ 2021 江苏文投大运河文化传播</p>
       </div>
